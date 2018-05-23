@@ -27,7 +27,7 @@ function nodeRandom(count, options) {
 
 function browserRandom(count, options) {
     const nativeArr = new Uint8Array(count);
-    const crypto = self.crypto || self.msCrypto;
+    const crypto = self.crypto || (self as any).msCrypto;
     crypto.getRandomValues(nativeArr);
 
     switch (options.type) {

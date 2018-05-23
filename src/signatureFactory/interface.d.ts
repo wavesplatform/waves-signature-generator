@@ -83,23 +83,23 @@ export interface ICANCEL_ORDER_PROPS {
 }
 
 export type TTX_NUMBER_MAP = {
-    [TRANSACTION_TYPE_NUMBER.ISSUE]: ISignatureGeneratorConstructor<IISSUE_PROPS>;
-    [TRANSACTION_TYPE_NUMBER.TRANSFER]: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
-    [TRANSACTION_TYPE_NUMBER.REISSUE]: ISignatureGeneratorConstructor<IREISSUE_PROPS>;
-    [TRANSACTION_TYPE_NUMBER.BURN]: ISignatureGeneratorConstructor<IBURN_PROPS>;
-    [TRANSACTION_TYPE_NUMBER.LEASE]: ISignatureGeneratorConstructor<ILEASE_PROPS>;
-    [TRANSACTION_TYPE_NUMBER.LEASE]: ISignatureGeneratorConstructor<ILEASE_PROPS>;
-    [TRANSACTION_TYPE_NUMBER.CANCEL_LEASING]: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS>;
-    [TRANSACTION_TYPE_NUMBER.CREATE_ALIAS]: ISignatureGeneratorConstructor<ICREATE_ALIAS_PROPS>;
+    3: ISignatureGeneratorConstructor<IISSUE_PROPS>;
+    4: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
+    5: ISignatureGeneratorConstructor<IREISSUE_PROPS>;
+    6: ISignatureGeneratorConstructor<IBURN_PROPS>;
+    7: ISignatureGeneratorConstructor<ILEASE_PROPS>;
+    8: ISignatureGeneratorConstructor<ILEASE_PROPS>;
+    9: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS>;
+    10: ISignatureGeneratorConstructor<ICREATE_ALIAS_PROPS>;
 }
 
 export type TTX_TYPE_MAP = {
-    [TRANSACTION_TYPE.ISSUE]: ISignatureGeneratorConstructor<IISSUE_PROPS>;
-    [TRANSACTION_TYPE.TRANSFER]: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
-    [TRANSACTION_TYPE.REISSUE]: ISignatureGeneratorConstructor<IREISSUE_PROPS>;
-    [TRANSACTION_TYPE.BURN]: ISignatureGeneratorConstructor<IBURN_PROPS>;
-    [TRANSACTION_TYPE.LEASE]: ISignatureGeneratorConstructor<ILEASE_PROPS>;
-    [TRANSACTION_TYPE.LEASE]: ISignatureGeneratorConstructor<ILEASE_PROPS>;
-    [TRANSACTION_TYPE.CANCEL_LEASING]: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS>;
-    [TRANSACTION_TYPE.CREATE_ALIAS]: ISignatureGeneratorConstructor<ICREATE_ALIAS_PROPS>;
+    issue: ISignatureGeneratorConstructor<IISSUE_PROPS>;
+    transfer: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
+    reissue: ISignatureGeneratorConstructor<IREISSUE_PROPS>;
+    burn: ISignatureGeneratorConstructor<IBURN_PROPS>;
+    exchange: ISignatureGeneratorConstructor<ILEASE_PROPS>;
+    lease: ISignatureGeneratorConstructor<ILEASE_PROPS>;
+    cancelLeasing: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS>;
+    createAlias: ISignatureGeneratorConstructor<ICREATE_ALIAS_PROPS>;
 }

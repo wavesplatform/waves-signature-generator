@@ -12,7 +12,6 @@ export const enum TRANSACTION_TYPE_NUMBER {
 }
 
 export const enum TRANSACTION_TYPE {
-    SEND_OLD = 'sendOld',
     ISSUE = 'issue',
     TRANSFER = 'transfer',
     REISSUE = 'reissue',
