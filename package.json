@@ -1,6 +1,7 @@
 {
   "name": "@waves/waves-signature-generator",
   "version": "0.0.0",
+  "types": "src/index.ts",
   "dependencies": {
     "crypto-js": "^3.1.9-1"
   }
