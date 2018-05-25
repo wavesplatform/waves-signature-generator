@@ -57,6 +57,25 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
         // Request data provided by user
         private readonly _rawData: object;
 
+        constructor(hashMap: any = {}) {
+
+            // Save all needed values from user data
+            this._rawData = Object.keys(storedFields).reduce((store, key) => {
+                store[key] = hashMap[key];
+                return store;
+            }, {});
+
+            this._dataHolders = byteProviders.map((provider) => {
+                if (typeof provider === 'function') {
+                    // Execute function so that they return promises containing Uint8Array data
+                    return provider(this._rawData);
+                } else {
+                    // Or just pass Uint8Array data
+                    return provider;
+                }
+            });
+        }
+
         public getSignature(privateKey: string): Promise<string> {
             return this.getBytes().then((dataBytes) => {
                 return crypto.buildTransactionSignature(dataBytes, privateKey);
@@ -84,7 +103,6 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
             const byteProcessor = storedFields[fieldName];
             const userData = this._rawData[fieldName];
             return byteProcessor.process(userData);
-
         }
 
     }
