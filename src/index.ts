@@ -4,3 +4,7 @@ export * from './config/Config';
 export * from './config/interface';
 export * from './signatureFactory/interface';
 export * from './signatureFactory/SignatureFactory';
+export * from './utils/concat';
+export * from './utils/crypto';
+export * from './utils/convert';
+export * from './libs/base58';
