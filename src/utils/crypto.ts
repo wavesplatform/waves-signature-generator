@@ -10,6 +10,7 @@ import { keccak256 } from '../libs/sha3';
 import { concatUint8Arrays } from './concat';
 import { config } from '..';
 import { ADDRESS_VERSION, INITIAL_NONCE, PRIVATE_KEY_LENGTH, PUBLIC_KEY_LENGTH } from '../constants';
+import { IKeyPairBytes } from '../interface';
 
 
 function sha256(input: Array<number> | Uint8Array | string): Uint8Array {
@@ -87,22 +88,22 @@ export default {
 
     },
 
-    // buildKeyPair(seed: string): IKeyPairBytes {
-    //
-    //     if (!seed || typeof seed !== 'string') {
-    //         throw new Error('Missing or invalid seed phrase');
-    //     }
-    //
-    //     const seedBytes = Uint8Array.from(converters.stringToByteArray(seed));
-    //     const seedHash = buildSeedHash(seedBytes);
-    //     const keys = axlsign.generateKeyPair(seedHash);
-    //
-    //     return {
-    //         privateKey: keys.private,
-    //         publicKey: keys.public
-    //     };
-    //
-    // },
+    buildKeyPair(seed: string): IKeyPairBytes {
+
+        if (!seed || typeof seed !== 'string') {
+            throw new Error('Missing or invalid seed phrase');
+        }
+
+        const seedBytes = Uint8Array.from(converters.stringToByteArray(seed));
+        const seedHash = buildSeedHash(seedBytes);
+        const keys = axlsign.generateKeyPair(seedHash);
+
+        return {
+            privateKey: keys.private,
+            publicKey: keys.public
+        };
+
+    },
 
     isValidAddress(address: string) {
 
