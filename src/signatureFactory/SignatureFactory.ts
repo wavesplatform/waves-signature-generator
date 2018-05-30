@@ -194,8 +194,8 @@ TX_TYPE_MAP[TRANSACTION_TYPE.BURN] = BURN;
 const LEASE = generate<ILEASE_PROPS>([
     TRANSACTION_TYPE_NUMBER.LEASE,
     new Base58('senderPublicKey'),
-    new MandatoryAssetId('assetId'),
-    new Long('quantity'),
+    new Recipient('recipient'),
+    new Long('amount'),
     new Long('fee'),
     new Long('timestamp')
 ]);
@@ -206,10 +206,9 @@ TX_TYPE_MAP[TRANSACTION_TYPE.LEASE] = LEASE;
 const CANCEL_LEASING = generate<ICANCEL_LEASING_PROPS>([
     TRANSACTION_TYPE_NUMBER.CANCEL_LEASING,
     new Base58('senderPublicKey'),
-    new MandatoryAssetId('assetId'),
-    new Long('quantity'),
     new Long('fee'),
-    new Long('timestamp')
+    new Long('timestamp'),
+    new Base58('transactionId')
 ]);
 
 TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.CANCEL_LEASING] = CANCEL_LEASING;
