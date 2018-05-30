@@ -6,7 +6,7 @@ export * from './signatureFactory/interface';
 export * from './signatureFactory/SignatureFactory';
 import * as concatModule from './utils/concat';
 import * as cryptoModule from './utils/crypto';
-import * as convertModule from './utils/convert';
+import * as convertModule from './libs/converters';
 import * as base58Module from './libs/base58';
 
 export const concat = {
