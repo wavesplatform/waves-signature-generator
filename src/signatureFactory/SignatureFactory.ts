@@ -9,7 +9,7 @@ import {
     Long,
     MandatoryAssetId, OrderType,
     Recipient,
-    StringWithLength
+    StringWithLength, Transfers
 } from '..';
 import {
     IBURN_PROPS, ICANCEL_LEASING_PROPS, ICANCEL_ORDER_PROPS, ICREATE_ALIAS_PROPS, IDEFAULT_PROPS,
@@ -21,7 +21,7 @@ import {
 } from './interface';
 import { concatUint8Arrays } from '../utils/concat';
 import crypto from '../utils/crypto';
-import { TRANSACTION_TYPE, TRANSACTION_TYPE_NUMBER } from '../constants';
+import { MASS_TRANSFER_TX_VERSION, TRANSACTION_TYPE, TRANSACTION_TYPE_NUMBER } from '../constants';
 
 
 export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGeneratorConstructor<T> {
@@ -224,3 +224,17 @@ const CREATE_ALIAS = generate<ICREATE_ALIAS_PROPS>([
 
 TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.CREATE_ALIAS] = CREATE_ALIAS;
 TX_TYPE_MAP[TRANSACTION_TYPE.CREATE_ALIAS] = CREATE_ALIAS;
+
+const MASS_TRANSFER = generate([
+    TRANSACTION_TYPE_NUMBER.MASS_TRANSFER,
+    MASS_TRANSFER_TX_VERSION,
+    new Base58('senderPublicKey'),
+    new AssetId('assetId'),
+    new Transfers('transfers'),
+    new Long('timestamp'),
+    new Long('fee'),
+    new Attachment('attachment')
+]);
+
+TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.MASS_TRANSFER] = MASS_TRANSFER;
+TX_TYPE_MAP[TRANSACTION_TYPE.MASS_TRANSFER] = MASS_TRANSFER;

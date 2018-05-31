@@ -134,3 +134,21 @@ export class Recipient extends ByteProcessor {
     }
 }
 
+export class Transfers extends ByteProcessor {
+    public process(values) {
+        const recipientProcessor = new Recipient('serviceInstance');
+        const amountProcessor = new Long('serviceInstance');
+
+        const promises = [];
+        for (let i = 0; i < values.length; i++) {
+            promises.push(recipientProcessor.process(values[i].recipient));
+            promises.push(amountProcessor.process(values[i].amount));
+        }
+
+        return Promise.all(promises).then((elements) => {
+            const length = convert.shortToByteArray(values.length);
+            const lengthBytes = Uint8Array.from(length);
+            return concatUint8Arrays(lengthBytes, ...elements);
+        });
+    }
+}

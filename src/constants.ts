@@ -37,3 +37,5 @@ export const TRANSFER_ATTACHMENT_BYTE_LIMIT: number = 140;
 export const INITIAL_NONCE: number = 0;
 export const PRIVATE_KEY_LENGTH: number = 32;
 export const PUBLIC_KEY_LENGTH: number = 32;
+
+export const MASS_TRANSFER_TX_VERSION = 1;
