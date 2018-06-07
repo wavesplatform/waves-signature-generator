@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import base58 from '../libs/base58';
 import convert from '../utils/convert';
 import { concatUint8Arrays } from '../utils/concat';
@@ -54,8 +55,16 @@ export class Byte extends ByteProcessor {
 }
 
 export class Long extends ByteProcessor {
-    public process(value: number) {
-        const bytes = convert.longToByteArray(value);
+    public process(value: number | string | BigNumber) {
+        let bytes;
+        if (typeof value === 'number') {
+            bytes = convert.longToByteArray(value);
+        } else {
+            if (typeof value === 'string') {
+                value = new BigNumber(value);
+            }
+            bytes = convert.bigNumberToByteArray(value);
+        }
         return Promise.resolve(Uint8Array.from(bytes));
     }
 }
