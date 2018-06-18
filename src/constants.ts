@@ -39,3 +39,6 @@ export const PRIVATE_KEY_LENGTH: number = 32;
 export const PUBLIC_KEY_LENGTH: number = 32;
 
 export const MASS_TRANSFER_TX_VERSION = 1;
+
+// That is to mark ByteProcessor instances which cannot be affected by user
+export const STUB_NAME = 'reservedName';

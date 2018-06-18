@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import base58 from '../libs/base58';
 import convert from '../utils/convert';
 import { concatUint8Arrays } from '../utils/concat';
+import { STUB_NAME } from '../constants';
 import { config } from '..';
 import { ALIAS_VERSION, TRANSFER_ATTACHMENT_BYTE_LIMIT, WAVES_BLOCKCHAIN_ID, WAVES_ID } from '../constants';
 
@@ -145,8 +146,8 @@ export class Recipient extends ByteProcessor {
 
 export class Transfers extends ByteProcessor {
     public process(values) {
-        const recipientProcessor = new Recipient('serviceInstance');
-        const amountProcessor = new Long('serviceInstance');
+        const recipientProcessor = new Recipient(STUB_NAME);
+        const amountProcessor = new Long(STUB_NAME);
 
         const promises = [];
         for (let i = 0; i < values.length; i++) {
