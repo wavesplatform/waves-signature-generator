@@ -21,7 +21,7 @@ import {
 } from './interface';
 import { concatUint8Arrays } from '../utils/concat';
 import crypto from '../utils/crypto';
-import { MASS_TRANSFER_TX_VERSION, DATA_TRANSFER_TX_VERSION, TRANSACTION_TYPE, TRANSACTION_TYPE_NUMBER } from '../constants';
+import * as constants from '../constants';
 
 
 export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGeneratorConstructor<T> {
@@ -137,7 +137,8 @@ export const CANCEL_ORDER_SIGNATURE = generate<ICANCEL_ORDER_PROPS>([
 ]);
 
 const ISSUE = generate<IISSUE_PROPS>([
-    TRANSACTION_TYPE_NUMBER.ISSUE,
+    constants.TRANSACTION_TYPE_NUMBER.ISSUE,
+    constants.ISSUE_TX_VERSION,
     new Base58('senderPublicKey'),
     new StringWithLength('name'),
     new StringWithLength('description'),
@@ -148,11 +149,12 @@ const ISSUE = generate<IISSUE_PROPS>([
     new Long('timestamp')
 ]);
 
-TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.ISSUE] = ISSUE;
-TX_TYPE_MAP[TRANSACTION_TYPE.ISSUE] = ISSUE;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.ISSUE] = ISSUE;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.ISSUE] = ISSUE;
 
 const TRANSFER = generate<ITRANSFER_PROPS>([
-    TRANSACTION_TYPE_NUMBER.TRANSFER,
+    constants.TRANSACTION_TYPE_NUMBER.TRANSFER,
+    constants.TRANSFER_TX_VERSION,
     new Base58('senderPublicKey'),
     new AssetId('assetId'),
     new AssetId('feeAssetId'),
@@ -163,11 +165,12 @@ const TRANSFER = generate<ITRANSFER_PROPS>([
     new Attachment('attachment')
 ]);
 
-TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.TRANSFER] = TRANSFER;
-TX_TYPE_MAP[TRANSACTION_TYPE.TRANSFER] = TRANSFER;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.TRANSFER] = TRANSFER;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.TRANSFER] = TRANSFER;
 
 const REISSUE = generate<IREISSUE_PROPS>([
-    TRANSACTION_TYPE_NUMBER.REISSUE,
+    constants.TRANSACTION_TYPE_NUMBER.REISSUE,
+    constants.REISSUE_TX_VERSION,
     new Base58('senderPublicKey'),
     new MandatoryAssetId('assetId'),
     new Long('quantity'),
@@ -176,11 +179,12 @@ const REISSUE = generate<IREISSUE_PROPS>([
     new Long('timestamp')
 ]);
 
-TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.REISSUE] = REISSUE;
-TX_TYPE_MAP[TRANSACTION_TYPE.REISSUE] = REISSUE;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.REISSUE] = REISSUE;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.REISSUE] = REISSUE;
 
 const BURN = generate<IBURN_PROPS>([
-    TRANSACTION_TYPE_NUMBER.BURN,
+    constants.TRANSACTION_TYPE_NUMBER.BURN,
+    constants.BURN_TX_VERSION,
     new Base58('senderPublicKey'),
     new MandatoryAssetId('assetId'),
     new Long('quantity'),
@@ -188,11 +192,12 @@ const BURN = generate<IBURN_PROPS>([
     new Long('timestamp')
 ]);
 
-TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.BURN] = BURN;
-TX_TYPE_MAP[TRANSACTION_TYPE.BURN] = BURN;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.BURN] = BURN;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.BURN] = BURN;
 
 const LEASE = generate<ILEASE_PROPS>([
-    TRANSACTION_TYPE_NUMBER.LEASE,
+    constants.TRANSACTION_TYPE_NUMBER.LEASE,
+    constants.LEASE_TX_VERSION,
     new Base58('senderPublicKey'),
     new Recipient('recipient'),
     new Long('amount'),
@@ -200,34 +205,36 @@ const LEASE = generate<ILEASE_PROPS>([
     new Long('timestamp')
 ]);
 
-TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.LEASE] = LEASE;
-TX_TYPE_MAP[TRANSACTION_TYPE.LEASE] = LEASE;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.LEASE] = LEASE;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.LEASE] = LEASE;
 
 const CANCEL_LEASING = generate<ICANCEL_LEASING_PROPS>([
-    TRANSACTION_TYPE_NUMBER.CANCEL_LEASING,
+    constants.TRANSACTION_TYPE_NUMBER.CANCEL_LEASING,
+    constants.CANCEL_LEASING_TX_VERSION,
     new Base58('senderPublicKey'),
     new Long('fee'),
     new Long('timestamp'),
     new Base58('transactionId')
 ]);
 
-TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.CANCEL_LEASING] = CANCEL_LEASING;
-TX_TYPE_MAP[TRANSACTION_TYPE.CANCEL_LEASING] = CANCEL_LEASING;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.CANCEL_LEASING] = CANCEL_LEASING;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.CANCEL_LEASING] = CANCEL_LEASING;
 
 const CREATE_ALIAS = generate<ICREATE_ALIAS_PROPS>([
-    TRANSACTION_TYPE_NUMBER.CREATE_ALIAS,
+    constants.TRANSACTION_TYPE_NUMBER.CREATE_ALIAS,
+    constants.CREATE_ALIAS_TX_VERSION,
     new Base58('senderPublicKey'),
     new Alias('alias'),
     new Long('fee'),
     new Long('timestamp')
 ]);
 
-TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.CREATE_ALIAS] = CREATE_ALIAS;
-TX_TYPE_MAP[TRANSACTION_TYPE.CREATE_ALIAS] = CREATE_ALIAS;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.CREATE_ALIAS] = CREATE_ALIAS;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.CREATE_ALIAS] = CREATE_ALIAS;
 
 const MASS_TRANSFER = generate([
-    TRANSACTION_TYPE_NUMBER.MASS_TRANSFER,
-    MASS_TRANSFER_TX_VERSION,
+    constants.TRANSACTION_TYPE_NUMBER.MASS_TRANSFER,
+    constants.MASS_TRANSFER_TX_VERSION,
     new Base58('senderPublicKey'),
     new AssetId('assetId'),
     new Transfers('transfers'),
@@ -236,17 +243,17 @@ const MASS_TRANSFER = generate([
     new Attachment('attachment')
 ]);
 
-TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.MASS_TRANSFER] = MASS_TRANSFER;
-TX_TYPE_MAP[TRANSACTION_TYPE.MASS_TRANSFER] = MASS_TRANSFER;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.MASS_TRANSFER] = MASS_TRANSFER;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.MASS_TRANSFER] = MASS_TRANSFER;
 
 const DATA = generate([
-    TRANSACTION_TYPE_NUMBER.DATA,
-    DATA_TRANSFER_TX_VERSION,
+    constants.TRANSACTION_TYPE_NUMBER.DATA,
+    constants.DATA_TX_VERSION,
     new Base58('senderPublicKey'),
     new DataEntries('data'),
     new Long('timestamp'),
     new Long('fee')
 ]);
 
-TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.DATA] = DATA;
-TX_TYPE_MAP[TRANSACTION_TYPE.DATA] = DATA;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.DATA] = DATA;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.DATA] = DATA;
