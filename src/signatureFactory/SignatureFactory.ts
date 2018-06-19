@@ -1,15 +1,15 @@
 import {
-    Alias,
-    AssetId,
-    Attachment,
-    Base58,
-    Bool,
-    Byte,
-    ByteProcessor,
-    Long,
-    MandatoryAssetId, OrderType,
-    Recipient,
-    StringWithLength, Transfers
+  Alias,
+  AssetId,
+  Attachment,
+  Base58,
+  Bool,
+  Byte,
+  ByteProcessor, DataEntries,
+  Long,
+  MandatoryAssetId, OrderType,
+  Recipient,
+  StringWithLength, Transfers
 } from '..';
 import {
     IBURN_PROPS, ICANCEL_LEASING_PROPS, ICANCEL_ORDER_PROPS, ICREATE_ALIAS_PROPS, IDEFAULT_PROPS,
@@ -21,7 +21,7 @@ import {
 } from './interface';
 import { concatUint8Arrays } from '../utils/concat';
 import crypto from '../utils/crypto';
-import { MASS_TRANSFER_TX_VERSION, TRANSACTION_TYPE, TRANSACTION_TYPE_NUMBER } from '../constants';
+import { MASS_TRANSFER_TX_VERSION, DATA_TRANSFER_TX_VERSION, TRANSACTION_TYPE, TRANSACTION_TYPE_NUMBER } from '../constants';
 
 
 export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGeneratorConstructor<T> {
@@ -238,3 +238,15 @@ const MASS_TRANSFER = generate([
 
 TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.MASS_TRANSFER] = MASS_TRANSFER;
 TX_TYPE_MAP[TRANSACTION_TYPE.MASS_TRANSFER] = MASS_TRANSFER;
+
+const DATA = generate([
+    TRANSACTION_TYPE_NUMBER.DATA,
+    DATA_TRANSFER_TX_VERSION,
+    new Base58('senderPublicKey'),
+    new DataEntries('data'),
+    new Long('timestamp'),
+    new Long('fee')
+]);
+
+TX_NUMBER_MAP[TRANSACTION_TYPE_NUMBER.DATA] = DATA;
+TX_TYPE_MAP[TRANSACTION_TYPE.DATA] = DATA;

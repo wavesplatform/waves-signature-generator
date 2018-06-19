@@ -73,6 +73,11 @@ export interface IMASS_TRANSFER_PROPS extends IDEFAULT_PROPS {
     attachment: string;
 }
 
+export interface IDATA_PROPS extends IDEFAULT_PROPS {
+  data: Array<IDATA_ENTRY>;
+  fee: string;
+}
+
 export interface IORDER_PROPS extends IDEFAULT_PROPS {
     matcherPublicKey: string;
     amountAsset: string;
@@ -94,6 +99,12 @@ export  interface IMASS_TRANSFER_TRANSFERS {
     amount: string;
 }
 
+export  interface IDATA_ENTRY {
+    key: string;
+    type: number;
+    value: any;
+}
+
 export type TTX_NUMBER_MAP = {
     3: ISignatureGeneratorConstructor<IISSUE_PROPS>;
     4: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
@@ -104,6 +115,7 @@ export type TTX_NUMBER_MAP = {
     9: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS>;
     10: ISignatureGeneratorConstructor<ICREATE_ALIAS_PROPS>;
     11: ISignatureGeneratorConstructor<IMASS_TRANSFER_PROPS>;
+    12: ISignatureGeneratorConstructor<IDATA_PROPS>;
 }
 
 export type TTX_TYPE_MAP = {
@@ -116,4 +128,5 @@ export type TTX_TYPE_MAP = {
     cancelLeasing: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS>;
     createAlias: ISignatureGeneratorConstructor<ICREATE_ALIAS_PROPS>;
     massTransfer: ISignatureGeneratorConstructor<IMASS_TRANSFER_PROPS>;
+    data: ISignatureGeneratorConstructor<IDATA_PROPS>;
 }
