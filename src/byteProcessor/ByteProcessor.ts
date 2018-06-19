@@ -1,8 +1,9 @@
 import BigNumber from 'bignumber.js';
+import base64 from 'base64-js';
 import base58 from '../libs/base58';
 import convert from '../utils/convert';
 import { concatUint8Arrays } from '../utils/concat';
-import { STUB_NAME } from '../constants';
+import { DATA_ENTRIES_BYTE_LIMIT, STUB_NAME } from '../constants';
 import { config } from '..';
 import { ALIAS_VERSION, TRANSFER_ATTACHMENT_BYTE_LIMIT, WAVES_BLOCKCHAIN_ID, WAVES_ID } from '../constants';
 
@@ -167,6 +168,81 @@ export class Transfers extends ByteProcessor {
             const length = convert.shortToByteArray(values.length);
             const lengthBytes = Uint8Array.from(length);
             return concatUint8Arrays(lengthBytes, ...elements);
+        });
+    }
+}
+
+// DATA TRANSACTIONS ONLY
+
+const INTEGER_DATA_TYPE = 0;
+const BOOLEAN_DATA_TYPE = 1;
+const BINARY_DATA_TYPE = 2;
+const STRING_DATA_TYPE = 3;
+
+export class IntegerDataEntry extends ByteProcessor {
+    public process(value: number | string | BigNumber) {
+        return Long.prototype.process.call(this, value).then((longBytes) => {
+            const typeByte = Uint8Array.from([INTEGER_DATA_TYPE]);
+            return concatUint8Arrays(typeByte, longBytes);
+        });
+    }
+}
+
+export class BooleanDataEntry extends ByteProcessor {
+    public process(value: boolean) {
+        return Bool.prototype.process.call(this, value).then((boolByte) => {
+            const typeByte = Uint8Array.from([BOOLEAN_DATA_TYPE]);
+            return concatUint8Arrays(typeByte, boolByte);
+        });
+    }
+}
+
+export class BinaryDataEntry extends ByteProcessor {
+    public process(value: string) {
+        if (typeof value !== 'string') throw new Error('You should pass a string to BinaryDataEntry constructor');
+        if (value.slice(0, 7) !== 'base64:') throw new Error('Blob should be encoded in base64 and prefixed with "base64:"');
+        const typeByte = Uint8Array.from([BINARY_DATA_TYPE]);
+        const b64 = value.slice(7); // Getting the string payload
+        const binaryBytes = Uint8Array.from(base64.toByteArray(b64));
+        return Promise.resolve(concatUint8Arrays(typeByte, binaryBytes));
+    }
+}
+
+export class StringDataEntry extends ByteProcessor {
+    public process(value: string) {
+        return StringWithLength.prototype.process.call(this, value).then((stringBytes) => {
+            const typeByte = Uint8Array.from([STRING_DATA_TYPE]);
+            return concatUint8Arrays(typeByte, stringBytes);
+        });
+    }
+}
+
+export class DataEntries extends ByteProcessor {
+    public process(entries: any[]) {
+        const lengthBytes = Uint8Array.from(convert.shortToByteArray(entries.length));
+        return Promise.all(entries.map((entry) => {
+            const prependKeyBytes = (valueBytes) => {
+                return StringWithLength.prototype.process.call(this, entry.key).then((keyBytes) => {
+                    return concatUint8Arrays(keyBytes, valueBytes);
+                });
+            };
+
+            switch (entry.type) {
+                case 'integer':
+                    return IntegerDataEntry.prototype.process.call(this, entry.value).then(prependKeyBytes);
+                case 'boolean':
+                    return BooleanDataEntry.prototype.process.call(this, entry.value).then(prependKeyBytes);
+                case 'binary':
+                    return BinaryDataEntry.prototype.process.call(this, entry.value).then(prependKeyBytes);
+                case 'string':
+                    return StringDataEntry.prototype.process.call(this, entry.value).then(prependKeyBytes);
+                default:
+                    throw new Error(`There is no data type "${entry.type}"`);
+            }
+        })).then((entriesBytes) => {
+            const bytes = concatUint8Arrays(lengthBytes, ...entriesBytes);
+            if (bytes.length > DATA_ENTRIES_BYTE_LIMIT) throw new Error('Data transaction is too large (140KB max)');
+            return bytes;
         });
     }
 }
