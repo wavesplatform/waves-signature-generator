@@ -220,29 +220,33 @@ export class StringDataEntry extends ByteProcessor {
 export class DataEntries extends ByteProcessor {
     public process(entries: any[]) {
         const lengthBytes = Uint8Array.from(convert.shortToByteArray(entries.length));
-        return Promise.all(entries.map((entry) => {
-            const prependKeyBytes = (valueBytes) => {
-                return StringWithLength.prototype.process.call(this, entry.key).then((keyBytes) => {
-                    return concatUint8Arrays(keyBytes, valueBytes);
-                });
-            };
+        if (entries.length) {
+            return Promise.all(entries.map((entry) => {
+                const prependKeyBytes = (valueBytes) => {
+                    return StringWithLength.prototype.process.call(this, entry.key).then((keyBytes) => {
+                        return concatUint8Arrays(keyBytes, valueBytes);
+                    });
+                };
 
-            switch (entry.type) {
-                case 'integer':
-                    return IntegerDataEntry.prototype.process.call(this, entry.value).then(prependKeyBytes);
-                case 'boolean':
-                    return BooleanDataEntry.prototype.process.call(this, entry.value).then(prependKeyBytes);
-                case 'binary':
-                    return BinaryDataEntry.prototype.process.call(this, entry.value).then(prependKeyBytes);
-                case 'string':
-                    return StringDataEntry.prototype.process.call(this, entry.value).then(prependKeyBytes);
-                default:
-                    throw new Error(`There is no data type "${entry.type}"`);
-            }
-        })).then((entriesBytes) => {
-            const bytes = concatUint8Arrays(lengthBytes, ...entriesBytes);
-            if (bytes.length > DATA_ENTRIES_BYTE_LIMIT) throw new Error('Data transaction is too large (140KB max)');
-            return bytes;
-        });
+                switch (entry.type) {
+                    case 'integer':
+                        return IntegerDataEntry.prototype.process.call(this, entry.value).then(prependKeyBytes);
+                    case 'boolean':
+                        return BooleanDataEntry.prototype.process.call(this, entry.value).then(prependKeyBytes);
+                    case 'binary':
+                        return BinaryDataEntry.prototype.process.call(this, entry.value).then(prependKeyBytes);
+                    case 'string':
+                        return StringDataEntry.prototype.process.call(this, entry.value).then(prependKeyBytes);
+                    default:
+                        throw new Error(`There is no data type "${entry.type}"`);
+                }
+            })).then((entriesBytes) => {
+                const bytes = concatUint8Arrays(lengthBytes, ...entriesBytes);
+                if (bytes.length > DATA_ENTRIES_BYTE_LIMIT) throw new Error('Data transaction is too large (140KB max)');
+                return bytes;
+            });
+        } else {
+            return Promise.resolve(Uint8Array.from([0, 0]));
+        }
     }
 }
