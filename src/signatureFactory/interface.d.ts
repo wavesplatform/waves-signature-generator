@@ -1,6 +1,3 @@
-import { TRANSACTION_TYPE, TRANSACTION_TYPE_NUMBER } from '../constants';
-
-
 export interface ISignatureGenerator {
 
     getSignature(privateKey: string): Promise<string>;
@@ -99,6 +96,13 @@ export  interface IMASS_TRANSFER_TRANSFERS {
     amount: string;
 }
 
+
+export interface ISET_SCRIPT_PROPS extends IDEFAULT_PROPS {
+  script: string;
+  fee: string;
+}
+
+
 export  interface IDATA_ENTRY {
     key: string;
     type: number;
@@ -116,6 +120,7 @@ export type TTX_NUMBER_MAP = {
     10: ISignatureGeneratorConstructor<ICREATE_ALIAS_PROPS>;
     11: ISignatureGeneratorConstructor<IMASS_TRANSFER_PROPS>;
     12: ISignatureGeneratorConstructor<IDATA_PROPS>;
+    13: ISignatureGeneratorConstructor<ISET_SCRIPT_PROPS>;
 }
 
 export type TTX_TYPE_MAP = {
@@ -129,4 +134,5 @@ export type TTX_TYPE_MAP = {
     createAlias: ISignatureGeneratorConstructor<ICREATE_ALIAS_PROPS>;
     massTransfer: ISignatureGeneratorConstructor<IMASS_TRANSFER_PROPS>;
     data: ISignatureGeneratorConstructor<IDATA_PROPS>;
+    setScript: ISignatureGeneratorConstructor<ISET_SCRIPT_PROPS>;
 }

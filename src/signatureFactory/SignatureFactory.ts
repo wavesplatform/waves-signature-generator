@@ -2,7 +2,7 @@ import {
   Alias,
   AssetId,
   Attachment,
-  Base58,
+  Base58, Base64,
   Bool,
   Byte,
   ByteProcessor, DataEntries,
@@ -257,3 +257,15 @@ const DATA = generate([
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.DATA] = DATA;
 TX_TYPE_MAP[constants.TRANSACTION_TYPE.DATA] = DATA;
+
+const SET_SCRIPT = generate([
+    constants.TRANSACTION_TYPE_NUMBER.SET_SCRIPT,
+    constants.SET_SCRIPT_TX_VERSION,
+    new Base58('senderPublicKey'),
+    new Base64('script'),
+    new Long('fee'),
+    new Long('timestamp')
+]);
+
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.SET_SCRIPT] = SET_SCRIPT;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.SET_SCRIPT] = SET_SCRIPT;

@@ -9,7 +9,8 @@ export const enum TRANSACTION_TYPE_NUMBER {
     CANCEL_LEASING = 9,
     CREATE_ALIAS = 10,
     MASS_TRANSFER = 11,
-    DATA = 12
+    DATA = 12,
+    SET_SCRIPT = 13
 }
 
 export const enum TRANSACTION_TYPE {
@@ -22,7 +23,8 @@ export const enum TRANSACTION_TYPE {
     CANCEL_LEASING = 'cancelLeasing',
     CREATE_ALIAS = 'createAlias',
     MASS_TRANSFER = 'massTransfer',
-    DATA = 'data'
+    DATA = 'data',
+    SET_SCRIPT = 'setScript'
 }
 
 export const WAVES_ID = 'WAVES';
@@ -51,6 +53,7 @@ export const CANCEL_LEASING_TX_VERSION = 2;
 export const CREATE_ALIAS_TX_VERSION = 2;
 export const MASS_TRANSFER_TX_VERSION = 1;
 export const DATA_TX_VERSION = 1;
+export const SET_SCRIPT_TX_VERSION = 1;
 
 // That is to mark ByteProcessor instances which cannot be affected by user
 export const STUB_NAME = 'reservedName';
