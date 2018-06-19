@@ -1,6 +1,6 @@
 {
   "name": "@waves/waves-signature-generator",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "main": "dist/index.js",
   "types": "src/index.ts",
   "dependencies": {
