@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import base64 from 'base64-js';
+import * as base64 from 'base64-js';
 import base58 from '../libs/base58';
 import convert from '../utils/convert';
 import { concatUint8Arrays } from '../utils/concat';
