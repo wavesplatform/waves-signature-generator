@@ -99,6 +99,7 @@ export  interface IMASS_TRANSFER_TRANSFERS {
 
 export interface ISET_SCRIPT_PROPS extends IDEFAULT_PROPS {
   script: string;
+  chainId: number;
   fee: string;
 }
 

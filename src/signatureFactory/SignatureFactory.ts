@@ -263,6 +263,7 @@ const SET_SCRIPT = generate([
     constants.SET_SCRIPT_TX_VERSION,
     new Base58('senderPublicKey'),
     new Base64('script'),
+    new Byte('chainId'),
     new Long('fee'),
     new Long('timestamp')
 ]);
