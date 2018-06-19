@@ -41,6 +41,15 @@ export class Base58 extends ByteProcessor {
     }
 }
 
+export class Base64 extends ByteProcessor {
+    public process(value: string) {
+        if (typeof value !== 'string') throw new Error('You should pass a string to BinaryDataEntry constructor');
+        if (value.slice(0, 7) !== 'base64:') throw new Error('Blob should be encoded in base64 and prefixed with "base64:"');
+        const b64 = value.slice(7); // Getting the string payload
+        return Promise.resolve(Uint8Array.from(base64.toByteArray(b64)));
+    }
+}
+
 export class Bool extends ByteProcessor {
     public process(value: boolean) {
         const bytes = convert.booleanToBytes(value);
@@ -199,12 +208,10 @@ export class BooleanDataEntry extends ByteProcessor {
 
 export class BinaryDataEntry extends ByteProcessor {
     public process(value: string) {
-        if (typeof value !== 'string') throw new Error('You should pass a string to BinaryDataEntry constructor');
-        if (value.slice(0, 7) !== 'base64:') throw new Error('Blob should be encoded in base64 and prefixed with "base64:"');
-        const typeByte = Uint8Array.from([BINARY_DATA_TYPE]);
-        const b64 = value.slice(7); // Getting the string payload
-        const binaryBytes = Uint8Array.from(base64.toByteArray(b64));
-        return Promise.resolve(concatUint8Arrays(typeByte, binaryBytes));
+        return Base64.prototype.process.call(this, value).then((binaryBytes) => {
+            const typeByte = Uint8Array.from([BINARY_DATA_TYPE]);
+            return Promise.resolve(concatUint8Arrays(typeByte, binaryBytes));
+        });
     }
 }
 
