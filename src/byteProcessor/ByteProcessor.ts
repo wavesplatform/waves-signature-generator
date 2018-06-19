@@ -70,6 +70,14 @@ export class Long extends ByteProcessor {
     }
 }
 
+export class Short extends ByteProcessor {
+    public process(value: number) {
+        if (typeof value !== 'number') throw new Error('You should pass a number to Short constructor');
+        if (value < 0 || value > 65535) throw new Error('Short value must fit between 0 and 65535');
+        return Promise.resolve(Uint8Array.from(convert.shortToByteArray(value)));
+    }
+}
+
 export class StringWithLength extends ByteProcessor {
     public process(value: string) {
         const bytesWithLength = convert.stringToByteArrayWithSize(value);
