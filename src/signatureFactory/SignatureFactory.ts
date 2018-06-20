@@ -271,3 +271,16 @@ const SET_SCRIPT = generate([
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.SET_SCRIPT] = SET_SCRIPT;
 TX_TYPE_MAP[constants.TRANSACTION_TYPE.SET_SCRIPT] = SET_SCRIPT;
+
+const SPONSORSHIP = generate([
+    constants.TRANSACTION_TYPE_NUMBER.SPONSORSHIP,
+    constants.SPONSORSHIP_TX_VERSION,
+    new Base58('senderPublicKey'),
+    new Base58('assetId'), // Not the AssetId byte processor
+    new Long('minSponsoredAssetFee'),
+    new Long('timestamp'),
+    new Long('fee')
+]);
+
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.SPONSORSHIP] = SPONSORSHIP;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.SPONSORSHIP] = SPONSORSHIP;

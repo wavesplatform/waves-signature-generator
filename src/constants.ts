@@ -10,7 +10,8 @@ export const enum TRANSACTION_TYPE_NUMBER {
     CREATE_ALIAS = 10,
     MASS_TRANSFER = 11,
     DATA = 12,
-    SET_SCRIPT = 13
+    SET_SCRIPT = 13,
+    SPONSORSHIP = 14
 }
 
 export const enum TRANSACTION_TYPE {
@@ -24,7 +25,8 @@ export const enum TRANSACTION_TYPE {
     CREATE_ALIAS = 'createAlias',
     MASS_TRANSFER = 'massTransfer',
     DATA = 'data',
-    SET_SCRIPT = 'setScript'
+    SET_SCRIPT = 'setScript',
+    SPONSORSHIP = 'sponsorship'
 }
 
 export const WAVES_ID = 'WAVES';
@@ -37,7 +39,8 @@ export const ADDRESS_VERSION: number = 1;
 export const ALIAS_VERSION: number = 2;
 
 export const TRANSFER_ATTACHMENT_BYTE_LIMIT: number = 140;
-export const DATA_ENTRIES_BYTE_LIMIT: number = 135 * 1024; // 140 kb for whole tx // TODO : make it strict!
+export const DATA_TX_SIZE_WITHOUT_ENTRIES = 52;
+export const DATA_ENTRIES_BYTE_LIMIT: number = 140 * 1024 - DATA_TX_SIZE_WITHOUT_ENTRIES; // 140 kb for the whole tx
 
 export const INITIAL_NONCE: number = 0;
 export const PRIVATE_KEY_LENGTH: number = 32;
@@ -54,6 +57,7 @@ export const CREATE_ALIAS_TX_VERSION = 2;
 export const MASS_TRANSFER_TX_VERSION = 1;
 export const DATA_TX_VERSION = 1;
 export const SET_SCRIPT_TX_VERSION = 1;
+export const SPONSORSHIP_TX_VERSION = 1;
 
 // That is to mark ByteProcessor instances which cannot be affected by user
 export const STUB_NAME = 'reservedName';

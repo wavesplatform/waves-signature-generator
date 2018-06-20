@@ -103,6 +103,12 @@ export interface ISET_SCRIPT_PROPS extends IDEFAULT_PROPS {
   fee: string;
 }
 
+export interface ISPONSORSHIP_PROPS extends IDEFAULT_PROPS {
+    assetId: string;
+    minSponsoredAssetFee: string;
+    fee: string;
+}
+
 
 export  interface IDATA_ENTRY {
     key: string;
@@ -122,6 +128,7 @@ export type TTX_NUMBER_MAP = {
     11: ISignatureGeneratorConstructor<IMASS_TRANSFER_PROPS>;
     12: ISignatureGeneratorConstructor<IDATA_PROPS>;
     13: ISignatureGeneratorConstructor<ISET_SCRIPT_PROPS>;
+    14: ISignatureGeneratorConstructor<ISPONSORSHIP_PROPS>;
 }
 
 export type TTX_TYPE_MAP = {
@@ -136,4 +143,5 @@ export type TTX_TYPE_MAP = {
     massTransfer: ISignatureGeneratorConstructor<IMASS_TRANSFER_PROPS>;
     data: ISignatureGeneratorConstructor<IDATA_PROPS>;
     setScript: ISignatureGeneratorConstructor<ISET_SCRIPT_PROPS>;
+    sponsorship: ISignatureGeneratorConstructor<ISPONSORSHIP_PROPS>;
 }
