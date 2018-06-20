@@ -29,6 +29,21 @@ export const enum TRANSACTION_TYPE {
     SPONSORSHIP = 'sponsorship'
 }
 
+export const enum TRANSACTION_TYPE_VERSION {
+    ISSUE = 2,
+    TRANSFER = 2,
+    REISSUE = 2,
+    BURN = 2,
+    EXCHANGE = 2,
+    LEASE = 2,
+    CANCEL_LEASING = 2,
+    CREATE_ALIAS = 2,
+    MASS_TRANSFER = 1,
+    DATA = 1,
+    SET_SCRIPT = 1,
+    SPONSORSHIP = 1
+}
+
 export const WAVES_ID = 'WAVES';
 export const WAVES_BLOCKCHAIN_ID = '';
 
@@ -45,19 +60,6 @@ export const DATA_ENTRIES_BYTE_LIMIT: number = 140 * 1024 - DATA_TX_SIZE_WITHOUT
 export const INITIAL_NONCE: number = 0;
 export const PRIVATE_KEY_LENGTH: number = 32;
 export const PUBLIC_KEY_LENGTH: number = 32;
-
-export const ISSUE_TX_VERSION = 2;
-export const TRANSFER_TX_VERSION = 2;
-export const REISSUE_TX_VERSION = 2;
-export const BURN_TX_VERSION = 2;
-export const EXCHANGE_TX_VERSION = 2;
-export const LEASE_TX_VERSION = 2;
-export const CANCEL_LEASING_TX_VERSION = 2;
-export const CREATE_ALIAS_TX_VERSION = 2;
-export const MASS_TRANSFER_TX_VERSION = 1;
-export const DATA_TX_VERSION = 1;
-export const SET_SCRIPT_TX_VERSION = 1;
-export const SPONSORSHIP_TX_VERSION = 1;
 
 // That is to mark ByteProcessor instances which cannot be affected by user
 export const STUB_NAME = 'reservedName';

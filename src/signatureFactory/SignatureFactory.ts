@@ -138,7 +138,7 @@ export const CANCEL_ORDER_SIGNATURE = generate<ICANCEL_ORDER_PROPS>([
 
 const ISSUE = generate<IISSUE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.ISSUE,
-    constants.ISSUE_TX_VERSION,
+    constants.TRANSACTION_TYPE_VERSION.ISSUE,
     new Base58('senderPublicKey'),
     new StringWithLength('name'),
     new StringWithLength('description'),
@@ -154,7 +154,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.ISSUE] = ISSUE;
 
 const TRANSFER = generate<ITRANSFER_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.TRANSFER,
-    constants.TRANSFER_TX_VERSION,
+    constants.TRANSACTION_TYPE_VERSION.TRANSFER,
     new Base58('senderPublicKey'),
     new AssetId('assetId'),
     new AssetId('feeAssetId'),
@@ -170,7 +170,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.TRANSFER] = TRANSFER;
 
 const REISSUE = generate<IREISSUE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.REISSUE,
-    constants.REISSUE_TX_VERSION,
+    constants.TRANSACTION_TYPE_VERSION.REISSUE,
     new Base58('senderPublicKey'),
     new MandatoryAssetId('assetId'),
     new Long('quantity'),
@@ -184,7 +184,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.REISSUE] = REISSUE;
 
 const BURN = generate<IBURN_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.BURN,
-    constants.BURN_TX_VERSION,
+    constants.TRANSACTION_TYPE_VERSION.BURN,
     new Base58('senderPublicKey'),
     new MandatoryAssetId('assetId'),
     new Long('quantity'),
@@ -197,7 +197,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.BURN] = BURN;
 
 const LEASE = generate<ILEASE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.LEASE,
-    constants.LEASE_TX_VERSION,
+    constants.TRANSACTION_TYPE_VERSION.LEASE,
     new Base58('senderPublicKey'),
     new Recipient('recipient'),
     new Long('amount'),
@@ -210,7 +210,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.LEASE] = LEASE;
 
 const CANCEL_LEASING = generate<ICANCEL_LEASING_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.CANCEL_LEASING,
-    constants.CANCEL_LEASING_TX_VERSION,
+    constants.TRANSACTION_TYPE_VERSION.CANCEL_LEASING,
     new Base58('senderPublicKey'),
     new Long('fee'),
     new Long('timestamp'),
@@ -222,7 +222,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.CANCEL_LEASING] = CANCEL_LEASING;
 
 const CREATE_ALIAS = generate<ICREATE_ALIAS_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.CREATE_ALIAS,
-    constants.CREATE_ALIAS_TX_VERSION,
+    constants.TRANSACTION_TYPE_VERSION.CREATE_ALIAS,
     new Base58('senderPublicKey'),
     new Alias('alias'),
     new Long('fee'),
@@ -234,7 +234,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.CREATE_ALIAS] = CREATE_ALIAS;
 
 const MASS_TRANSFER = generate([
     constants.TRANSACTION_TYPE_NUMBER.MASS_TRANSFER,
-    constants.MASS_TRANSFER_TX_VERSION,
+    constants.TRANSACTION_TYPE_VERSION.MASS_TRANSFER,
     new Base58('senderPublicKey'),
     new AssetId('assetId'),
     new Transfers('transfers'),
@@ -248,7 +248,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.MASS_TRANSFER] = MASS_TRANSFER;
 
 const DATA = generate([
     constants.TRANSACTION_TYPE_NUMBER.DATA,
-    constants.DATA_TX_VERSION,
+    constants.TRANSACTION_TYPE_VERSION.DATA,
     new Base58('senderPublicKey'),
     new DataEntries('data'),
     new Long('timestamp'),
@@ -260,7 +260,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.DATA] = DATA;
 
 const SET_SCRIPT = generate([
     constants.TRANSACTION_TYPE_NUMBER.SET_SCRIPT,
-    constants.SET_SCRIPT_TX_VERSION,
+    constants.TRANSACTION_TYPE_VERSION.SET_SCRIPT,
     new Byte('chainId'),
     new Base58('senderPublicKey'),
     1, // Beautiful, isn't it? :)
@@ -274,7 +274,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.SET_SCRIPT] = SET_SCRIPT;
 
 const SPONSORSHIP = generate([
     constants.TRANSACTION_TYPE_NUMBER.SPONSORSHIP,
-    constants.SPONSORSHIP_TX_VERSION,
+    constants.TRANSACTION_TYPE_VERSION.SPONSORSHIP,
     new Base58('senderPublicKey'),
     new Base58('assetId'), // Not the AssetId byte processor
     new Long('minSponsoredAssetFee'),
