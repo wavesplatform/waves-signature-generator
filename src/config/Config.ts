@@ -1,9 +1,11 @@
 import { MAINNET_BYTE } from '../';
 import { IConfig, IConfigOptions } from './interface';
 
+
 const DEFAULT_CONFIG: IConfigOptions = {
     networkByte: MAINNET_BYTE,
-    logLevel: 'warning'
+    logLevel: 'warning',
+    minimalSeedLength: 15
 };
 
 class Config implements IConfig {
@@ -20,6 +22,10 @@ class Config implements IConfig {
 
     public set(config: Partial<IConfigOptions>) {
         Object.assign(this.props, config);
+    }
+
+    public get<T extends keyof IConfigOptions>(key: T): IConfigOptions[T] {
+        return this.props[key];
     }
 
     public clear() {
