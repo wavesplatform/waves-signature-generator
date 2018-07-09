@@ -1,7 +1,7 @@
 {
   "name": "@waves/waves-signature-generator",
   "version": "0.12.0",
-  "main": "dist/index.js",
+  "main": "dist/waves-signature-generator.js",
   "types": "src/index.ts",
   "dependencies": {
     "base64-js": "1.3.0",
@@ -11,10 +11,11 @@
   "scripts": {
     "prepare": "npm run build",
     "test": "tsc -p ./test && jest",
-    "build": "tsc"
+    "build": "tsc && node_modules/.bin/browserify dist/index.js -s wavesSignatureGenerator -o dist/waves-signature-generator.js"
   },
   "devDependencies": {
     "@types/jest": "^23.1.4",
+    "browserify": "^16.2.2",
     "jest": "^23.2.0"
   }
 }
