@@ -80,6 +80,17 @@ export class Seed {
         return new Seed(phrase);
     }
 
+    public static fromExistingPhrase(phrase: string): Seed {
+        const minimumSeedLength = config.get('minimalSeedLength');
+
+        if (phrase.length < minimumSeedLength) {
+            // If you see that error you should increase the number of words or set it lower in the config
+            throw new Error(`The resulted seed length is less than the minimum length (${minimumSeedLength})`);
+        }
+
+        return new Seed(phrase);
+    }
+
     private static _generateNewSeed(length: number): string {
 
         const random = utils.crypto.generateRandomUint32Array(length);

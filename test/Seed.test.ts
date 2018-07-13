@@ -27,17 +27,17 @@ describe('Seed tests', () => {
             });
 
             it('get address from phrase', () => {
-                const seed = new Seed(configure.PHRASE);
+                const seed = Seed.fromExistingPhrase(configure.PHRASE);
                 expect(seed.address).toBe(configure.ADDRESS);
             });
 
             it('get public key from phrase', () => {
-                const seed = new Seed(configure.PHRASE);
+                const seed = Seed.fromExistingPhrase(configure.PHRASE);
                 expect(seed.keyPair.publicKey).toBe(configure.PUBLIC_KEY);
             });
 
             it('get private key from phrase', () => {
-                const seed = new Seed(configure.PHRASE);
+                const seed = Seed.fromExistingPhrase(configure.PHRASE);
                 expect(seed.keyPair.privateKey).toBe(configure.PRIVATE_KEY);
             });
         });
