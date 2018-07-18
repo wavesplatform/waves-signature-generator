@@ -53,6 +53,8 @@ export const TESTNET_BYTE: number = 'T'.charCodeAt(0);
 export const ADDRESS_VERSION: number = 1;
 export const ALIAS_VERSION: number = 2;
 
+export const SET_SCRIPT_LANG_VERSION: number = 1;
+
 export const TRANSFER_ATTACHMENT_BYTE_LIMIT: number = 140;
 export const DATA_TX_SIZE_WITHOUT_ENTRIES = 52;
 export const DATA_ENTRIES_BYTE_LIMIT: number = 140 * 1024 - DATA_TX_SIZE_WITHOUT_ENTRIES; // 140 kb for the whole tx
