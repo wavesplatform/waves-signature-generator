@@ -4,18 +4,27 @@
   "main": "dist/waves-signature-generator.js",
   "types": "src/index.ts",
   "dependencies": {
+    "@waves/data-entities": "^1.6.0",
     "base64-js": "1.3.0",
-    "bignumber.js": "7.2.1",
     "crypto-js": "3.1.9-1"
   },
   "scripts": {
     "prepare": "npm run build",
-    "test": "tsc -p ./test && jest",
-    "build": "tsc && node_modules/.bin/browserify dist/index.js -s wavesSignatureGenerator -o dist/waves-signature-generator.js"
+    "test": "npm run compile-test && jest",
+    "compile": "tsc -p ./",
+    "compile-test": "tsc -p ./test",
+    "prepublish": "npm run test",
+    "uglify": "npm run uglify-full && npm run uglify-partial",
+    "uglify-full": "node_modules/.bin/uglifyjs dist/waves-signature-generator.js -o dist/waves-signature-generator.min.js",
+    "uglify-partial": "node_modules/.bin/uglifyjs dist/waves-signature-generator.partial.js -o dist/waves-signature-generator.partial.min.js",
+    "build-full": "node_modules/.bin/browserify dist/index.js -s wavesSignatureGenerator -o dist/waves-signature-generator.js",
+    "build-partial": "node_modules/.bin/browserify dist/index.js -u @waves/data-entities -s wavesSignatureGenerator -o dist/waves-signature-generator.partial.js",
+    "build": "npm run compile && npm run build-full && npm run build-partial && npm run uglify"
   },
   "devDependencies": {
     "@types/jest": "^23.1.4",
     "browserify": "^16.2.2",
-    "jest": "^23.2.0"
+    "jest": "^23.2.0",
+    "uglify-js": "^3.4.7"
   }
 }

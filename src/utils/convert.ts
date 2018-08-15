@@ -1,6 +1,6 @@
 import { TBuffer } from '../interface';
-import BigNumber from 'bignumber.js';
 import converters from '../libs/converters';
+import { BigNumber } from '@waves/data-entities';
 
 
 function performBitwiseAnd(a: BigNumber, b: BigNumber): number {
