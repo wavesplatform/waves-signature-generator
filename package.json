@@ -1,7 +1,7 @@
 {
   "name": "@waves/signature-generator",
   "version": "0.15.1",
-  "main": "dist/signature-generator.js",
+  "main": "dist/signature-generator.partial.min.js",
   "files": [
     "dist",
     "src"
