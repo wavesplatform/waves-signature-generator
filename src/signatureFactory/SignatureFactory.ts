@@ -1,15 +1,15 @@
 import {
-  Alias,
-  AssetId,
-  Attachment,
-  Base58, Base64,
-  Bool,
-  Byte,
-  ByteProcessor, DataEntries,
-  Long,
-  MandatoryAssetId, OrderType,
-  Recipient,
-  StringWithLength, Transfers
+    Alias,
+    AssetId,
+    Attachment,
+    Base58, Base64,
+    Bool,
+    Byte,
+    ByteProcessor, DataEntries, IDATA_PROPS, IMASS_TRANSFER_PROPS, ISET_SCRIPT_PROPS, ISPONSORSHIP_PROPS,
+    Long,
+    MandatoryAssetId, OrderType,
+    Recipient,
+    StringWithLength, Transfers
 } from '..';
 import {
     IBURN_PROPS, ICANCEL_LEASING_PROPS, ICANCEL_ORDER_PROPS, ICREATE_ALIAS_PROPS, IDEFAULT_PROPS,
@@ -232,7 +232,7 @@ const CREATE_ALIAS = generate<ICREATE_ALIAS_PROPS>([
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.CREATE_ALIAS] = CREATE_ALIAS;
 TX_TYPE_MAP[constants.TRANSACTION_TYPE.CREATE_ALIAS] = CREATE_ALIAS;
 
-const MASS_TRANSFER = generate([
+const MASS_TRANSFER = generate<IMASS_TRANSFER_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.MASS_TRANSFER,
     constants.TRANSACTION_TYPE_VERSION.MASS_TRANSFER,
     new Base58('senderPublicKey'),
@@ -246,7 +246,7 @@ const MASS_TRANSFER = generate([
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.MASS_TRANSFER] = MASS_TRANSFER;
 TX_TYPE_MAP[constants.TRANSACTION_TYPE.MASS_TRANSFER] = MASS_TRANSFER;
 
-const DATA = generate([
+const DATA = generate<IDATA_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.DATA,
     constants.TRANSACTION_TYPE_VERSION.DATA,
     new Base58('senderPublicKey'),
@@ -258,7 +258,7 @@ const DATA = generate([
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.DATA] = DATA;
 TX_TYPE_MAP[constants.TRANSACTION_TYPE.DATA] = DATA;
 
-const SET_SCRIPT = generate([
+const SET_SCRIPT = generate<ISET_SCRIPT_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.SET_SCRIPT,
     constants.TRANSACTION_TYPE_VERSION.SET_SCRIPT,
     new Byte('chainId'),
@@ -272,7 +272,7 @@ const SET_SCRIPT = generate([
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.SET_SCRIPT] = SET_SCRIPT;
 TX_TYPE_MAP[constants.TRANSACTION_TYPE.SET_SCRIPT] = SET_SCRIPT;
 
-const SPONSORSHIP = generate([
+const SPONSORSHIP = generate<ISPONSORSHIP_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.SPONSORSHIP,
     constants.TRANSACTION_TYPE_VERSION.SPONSORSHIP,
     new Base58('senderPublicKey'),
