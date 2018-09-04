@@ -278,8 +278,8 @@ const SPONSORSHIP = generate<ISPONSORSHIP_PROPS>([
     new Base58('senderPublicKey'),
     new Base58('assetId'), // Not the AssetId byte processor
     new Long('minSponsoredAssetFee'),
-    new Long('timestamp'),
-    new Long('fee')
+    new Long('fee'),
+    new Long('timestamp')
 ]);
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.SPONSORSHIP] = SPONSORSHIP;
