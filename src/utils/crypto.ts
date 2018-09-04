@@ -77,6 +77,31 @@ export default {
 
     },
 
+    isValidSignature(dataBytes: Uint8Array, signature: string, publicKey: string): boolean {
+
+        if (!dataBytes || !(dataBytes instanceof Uint8Array)) {
+            throw new Error('Missing or invalid data');
+        }
+
+        if (!signature || typeof signature !== 'string') {
+            throw new Error('Missing or invalid signature');
+        }
+
+        if (!publicKey || typeof publicKey !== 'string') {
+            throw new Error('Missing or invalid public key');
+        }
+
+        const signatureBytes = base58.decode(signature);
+        const publicKeyBytes = base58.decode(publicKey);
+
+        if (publicKeyBytes.length !== PUBLIC_KEY_LENGTH) {
+            throw new Error('Invalid public key');
+        }
+
+        return axlsign.verify(publicKeyBytes, dataBytes, signatureBytes);
+
+    }
+
     buildTransactionId(dataBytes: Uint8Array): string {
 
         if (!dataBytes || !(dataBytes instanceof Uint8Array)) {
