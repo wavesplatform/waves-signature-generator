@@ -100,7 +100,7 @@ export default {
 
         return axlsign.verify(publicKeyBytes, dataBytes, signatureBytes);
 
-    }
+    },
 
     buildTransactionId(dataBytes: Uint8Array): string {
 
