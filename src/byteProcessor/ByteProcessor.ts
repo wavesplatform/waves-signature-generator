@@ -1,5 +1,5 @@
 import { BigNumber } from '@waves/data-entities';
-import * as base64 from 'base64-js';
+import { toByteArray } from 'base64-js';
 import base58 from '../libs/base58';
 import convert from '../utils/convert';
 import { concatUint8Arrays } from '../utils/concat';
@@ -46,7 +46,7 @@ export class Base64 extends ByteProcessor {
         if (typeof value !== 'string') throw new Error('You should pass a string to BinaryDataEntry constructor');
         if (value.slice(0, 7) !== 'base64:') throw new Error('Blob should be encoded in base64 and prefixed with "base64:"');
         const b64 = value.slice(7); // Getting the string payload
-        const bytes = Uint8Array.from(base64.toByteArray(b64));
+        const bytes = Uint8Array.from(toByteArray(b64));
         const lengthBytes = Uint8Array.from(convert.shortToByteArray(bytes.length));
         return Promise.resolve(concatUint8Arrays(lengthBytes, bytes));
     }
