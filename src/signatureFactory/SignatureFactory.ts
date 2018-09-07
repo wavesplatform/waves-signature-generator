@@ -93,6 +93,19 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
             });
         }
 
+        public getDebugBytes() {
+            return Promise.all(fields.map((field: any, i) => {
+                const result = this._dataHolders[i];
+                if (result instanceof Promise) {
+                    return result.then(bytes => {
+                        return { bytes, from: field && field.name || field };
+                    });
+                } else {
+                    return Promise.resolve({ bytes: result, from: field });
+                }
+            }));
+        }
+
         // Get bytes of an exact field from user data
         public getExactBytes(fieldName: string): Promise<Uint8Array> {
 
@@ -139,6 +152,7 @@ export const CANCEL_ORDER_SIGNATURE = generate<ICANCEL_ORDER_PROPS>([
 const ISSUE = generate<IISSUE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.ISSUE,
     constants.TRANSACTION_TYPE_VERSION.ISSUE,
+    new Byte('chainId'),
     new Base58('senderPublicKey'),
     new StringWithLength('name'),
     new StringWithLength('description'),
@@ -146,7 +160,8 @@ const ISSUE = generate<IISSUE_PROPS>([
     new Byte('precision'),
     new Bool('reissuable'),
     new Long('fee'),
-    new Long('timestamp')
+    new Long('timestamp'),
+    0 // Byte for script smart assets.
 ]);
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.ISSUE] = ISSUE;
@@ -171,6 +186,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.TRANSFER] = TRANSFER;
 const REISSUE = generate<IREISSUE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.REISSUE,
     constants.TRANSACTION_TYPE_VERSION.REISSUE,
+    new Byte('chainId'),
     new Base58('senderPublicKey'),
     new MandatoryAssetId('assetId'),
     new Long('quantity'),
@@ -185,6 +201,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.REISSUE] = REISSUE;
 const BURN = generate<IBURN_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.BURN,
     constants.TRANSACTION_TYPE_VERSION.BURN,
+    new Byte('chainId'),
     new Base58('senderPublicKey'),
     new MandatoryAssetId('assetId'),
     new Long('quantity'),
@@ -198,6 +215,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.BURN] = BURN;
 const LEASE = generate<ILEASE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.LEASE,
     constants.TRANSACTION_TYPE_VERSION.LEASE,
+    0, // Asset id for lease custom asset (dos't work)
     new Base58('senderPublicKey'),
     new Recipient('recipient'),
     new Long('amount'),
@@ -211,6 +229,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.LEASE] = LEASE;
 const CANCEL_LEASING = generate<ICANCEL_LEASING_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.CANCEL_LEASING,
     constants.TRANSACTION_TYPE_VERSION.CANCEL_LEASING,
+    new Byte('chainId'),
     new Base58('senderPublicKey'),
     new Long('fee'),
     new Long('timestamp'),
