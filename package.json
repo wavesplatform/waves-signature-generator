@@ -23,8 +23,8 @@
     "uglify": "npm run uglify-full && npm run uglify-partial",
     "uglify-full": "node_modules/.bin/uglifyjs dist/signature-generator.js -o dist/signature-generator.min.js",
     "uglify-partial": "node_modules/.bin/uglifyjs dist/signature-generator.partial.js -o dist/signature-generator.partial.min.js",
-    "build-full": "node_modules/.bin/browserify dist/index.js -s wavesSignatureGenerator -o dist/signature-generator.js",
-    "build-partial": "node_modules/.bin/browserify dist/index.js -u @waves/data-entities -s wavesSignatureGenerator -o dist/signature-generator.partial.js",
+    "build-full": "node_modules/.bin/browserify dist/index.js -s wavesSignatureGenerator --node -o dist/signature-generator.js",
+    "build-partial": "node_modules/.bin/browserify dist/index.js -u @waves/data-entities --node -s wavesSignatureGenerator -o dist/signature-generator.partial.js",
     "build": "npm run compile && npm run build-full && npm run build-partial && npm run uglify"
   },
   "devDependencies": {
