@@ -19,6 +19,11 @@ function getAliasBytes(alias: string): number[] {
     return [ALIAS_VERSION, config.getNetworkByte(), ...aliasBytes];
 }
 
+function isNonEmptyBase64String(value: string) {
+    const pure = value.replace('base64:', '');
+    return pure.length > 0 && pure.length % 4 === 0;
+}
+
 // ABSTRACT PARENT
 
 export abstract class ByteProcessor {
@@ -44,14 +49,14 @@ export class Base58 extends ByteProcessor {
 export class Base64 extends ByteProcessor {
     public process(value: string) {
         if (typeof value !== 'string') throw new Error('You should pass a string to BinaryDataEntry constructor');
-        if (!value.length) {
-            return Promise.resolve(Uint8Array.from([]));
-        } else {
+        if (isNonEmptyBase64String(value)) {
             if (value.slice(0, 7) !== 'base64:') throw new Error('Blob should be encoded in base64 and prefixed with "base64:"');
             const b64 = value.slice(7); // Getting the string payload
             const bytes = Uint8Array.from(toByteArray(b64));
             const lengthBytes = Uint8Array.from(convert.shortToByteArray(bytes.length));
             return Promise.resolve(concatUint8Arrays(lengthBytes, bytes));
+        } else {
+            return Promise.resolve(Uint8Array.from([]));
         }
     }
 }
@@ -170,7 +175,7 @@ export class Recipient extends ByteProcessor {
 
 export class ScriptVersion extends ByteProcessor {
     public process(value: string) {
-        if (value.length) {
+        if (isNonEmptyBase64String(value)) {
             return Promise.resolve(Uint8Array.from([SET_SCRIPT_LANG_VERSION]));
         } else {
             return Promise.resolve(Uint8Array.from([0]));
