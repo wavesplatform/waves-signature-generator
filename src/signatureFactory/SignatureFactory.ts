@@ -9,7 +9,9 @@ import {
     Long,
     MandatoryAssetId, OrderType,
     Recipient,
-    StringWithLength, Transfers
+    StringWithLength,
+    ScriptVersion,
+    Transfers,
 } from '..';
 import {
     IBURN_PROPS, ICANCEL_LEASING_PROPS, ICANCEL_ORDER_PROPS, ICREATE_ALIAS_PROPS, IDEFAULT_PROPS,
@@ -282,7 +284,7 @@ const SET_SCRIPT = generate<ISET_SCRIPT_PROPS>([
     constants.TRANSACTION_TYPE_VERSION.SET_SCRIPT,
     new Byte('chainId'),
     new Base58('senderPublicKey'),
-    constants.SET_SCRIPT_LANG_VERSION,
+    new ScriptVersion('script'),
     new Base64('script'),
     new Long('fee'),
     new Long('timestamp')

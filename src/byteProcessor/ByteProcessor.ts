@@ -3,7 +3,7 @@ import { toByteArray } from 'base64-js';
 import base58 from '../libs/base58';
 import convert from '../utils/convert';
 import { concatUint8Arrays } from '../utils/concat';
-import { DATA_ENTRIES_BYTE_LIMIT, STUB_NAME } from '../constants';
+import { DATA_ENTRIES_BYTE_LIMIT, SET_SCRIPT_LANG_VERSION, STUB_NAME } from '../constants';
 import { config } from '..';
 import { ALIAS_VERSION, TRANSFER_ATTACHMENT_BYTE_LIMIT, WAVES_BLOCKCHAIN_ID, WAVES_ID } from '../constants';
 
@@ -44,11 +44,15 @@ export class Base58 extends ByteProcessor {
 export class Base64 extends ByteProcessor {
     public process(value: string) {
         if (typeof value !== 'string') throw new Error('You should pass a string to BinaryDataEntry constructor');
-        if (value.slice(0, 7) !== 'base64:') throw new Error('Blob should be encoded in base64 and prefixed with "base64:"');
-        const b64 = value.slice(7); // Getting the string payload
-        const bytes = Uint8Array.from(toByteArray(b64));
-        const lengthBytes = Uint8Array.from(convert.shortToByteArray(bytes.length));
-        return Promise.resolve(concatUint8Arrays(lengthBytes, bytes));
+        if (!value.length) {
+            return Promise.resolve(Uint8Array.from([]));
+        } else {
+            if (value.slice(0, 7) !== 'base64:') throw new Error('Blob should be encoded in base64 and prefixed with "base64:"');
+            const b64 = value.slice(7); // Getting the string payload
+            const bytes = Uint8Array.from(toByteArray(b64));
+            const lengthBytes = Uint8Array.from(convert.shortToByteArray(bytes.length));
+            return Promise.resolve(concatUint8Arrays(lengthBytes, bytes));
+        }
     }
 }
 
@@ -160,6 +164,16 @@ export class Recipient extends ByteProcessor {
         } else {
             const addressBytes = base58.decode(value);
             return Promise.resolve(Uint8Array.from(addressBytes));
+        }
+    }
+}
+
+export class ScriptVersion extends ByteProcessor {
+    public process(value: string) {
+        if (value.length) {
+            return Promise.resolve(Uint8Array.from([SET_SCRIPT_LANG_VERSION]));
+        } else {
+            return Promise.resolve(Uint8Array.from([0]));
         }
     }
 }
