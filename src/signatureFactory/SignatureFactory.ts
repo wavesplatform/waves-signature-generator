@@ -25,11 +25,18 @@ import { concatUint8Arrays } from '../utils/concat';
 import crypto from '../utils/crypto';
 import * as constants from '../constants';
 
+const ERRORS = {
+    NO_DATA: { code: 'NO_DATA', message: 'No data' },
+    FIELD_ERROR: { code: 'FIELD_ERROR', message: 'Invalid field', field: null },
+};
+
 
 export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGeneratorConstructor<T> {
 
+    const errors = [];
+    
     if (!fields || !fields.length) {
-        throw new Error('It is not possible to create TransactionClass without fields');
+        errors.push(ERRORS.NO_DATA);
     }
 
     // Fields of the original data object
@@ -43,12 +50,18 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
             // Remember user data fields
             storedFields[field.name] = field;
             // All user data must be represented as bytes
-            byteProviders.push((data) => field.process(data[field.name]));
+            byteProviders.push((data) => {
+                try {
+                    return field.process(data[field.name])
+                } catch (e) {
+                    errors.push({ ...ERRORS.FIELD_ERROR, field: field.name, message: e.message });
+                }
+            });
         } else if (typeof field === 'number') {
             // All static data must be converted to bytes as well
             byteProviders.push(Uint8Array.from([field]));
         } else {
-            throw new Error('Invalid field is passed to the createTransactionClass function');
+            errors.push({ ...ERRORS.FIELD_ERROR, field });
         }
     });
 
@@ -76,6 +89,10 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
                     return provider;
                 }
             });
+            
+            if (errors.length) {
+                throw errors;
+            }
         }
 
         public getSignature(privateKey: string): Promise<string> {
