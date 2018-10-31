@@ -34,7 +34,7 @@ const ERRORS = {
 export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGeneratorConstructor<T> {
 
     const errors = [];
-    
+
     if (!fields || !fields.length) {
         errors.push(ERRORS.NO_DATA);
     }
@@ -52,7 +52,7 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
             // All user data must be represented as bytes
             byteProviders.push((data) => {
                 try {
-                    return field.process(data[field.name])
+                    return field.process(data[field.name]);
                 } catch (e) {
                     errors.push({ ...ERRORS.FIELD_ERROR, field: field.name, message: e.message });
                 }
@@ -89,7 +89,7 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
                     return provider;
                 }
             });
-            
+
             if (errors.length) {
                 throw errors;
             }
@@ -112,15 +112,16 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
             });
         }
 
-        public getDebugBytes() {
+        public getDebugBytes(): Promise<Array<{ bytes: Uint8Array, from: any, value: any }>> {
             return Promise.all(fields.map((field: any, i) => {
+                const value = field && field.name ? this._rawData[field.name] : null;
                 const result = this._dataHolders[i];
                 if (result instanceof Promise) {
                     return result.then(bytes => {
-                        return { bytes, from: field && field.name || field };
+                        return { bytes, from: field && field.name || field, value };
                     });
                 } else {
-                    return Promise.resolve({ bytes: result, from: field });
+                    return Promise.resolve({ bytes: result, from: field, value });
                 }
             }));
         }
