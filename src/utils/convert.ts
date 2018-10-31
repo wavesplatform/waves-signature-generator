@@ -107,7 +107,11 @@ export default {
 
     },
 
-    stringToByteArrayWithSize(input: string): number[] {
+    stringToByteArrayWithSize(input: string | number): number[] {
+
+        if (typeof input === 'number') {
+            input = String(input);
+        }
 
         if (typeof input !== 'string') {
             throw new Error('String input is expected');
