@@ -34,7 +34,7 @@ const ERRORS = {
 export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGeneratorConstructor<T> {
 
     const errors = [];
-
+    
     if (!fields || !fields.length) {
         errors.push(ERRORS.NO_DATA);
     }
@@ -54,7 +54,7 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
                 try {
                     return field.process(data[field.name]);
                 } catch (e) {
-                    errors.push({ ...ERRORS.FIELD_ERROR, field: field.name, message: e.message });
+                    throw { ...ERRORS.FIELD_ERROR, field: field.name, message: e.message };
                 }
             });
         } else if (typeof field === 'number') {
@@ -64,13 +64,19 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
             errors.push({ ...ERRORS.FIELD_ERROR, field });
         }
     });
-
+    
+    if (errors.length) {
+        throw errors;
+    }
+    
     class SignatureGenerator implements ISignatureGenerator {
 
         // Array of Uint8Array and promises which return Uint8Array
         private readonly _dataHolders: Array<Uint8Array | Promise<Uint8Array>>;
         // Request data provided by user
         private readonly _rawData: object;
+        
+        private _errors = [];
 
         constructor(hashMap: any = {}) {
 
@@ -83,15 +89,19 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
             this._dataHolders = byteProviders.map((provider) => {
                 if (typeof provider === 'function') {
                     // Execute function so that they return promises containing Uint8Array data
-                    return provider(this._rawData);
+                    try {
+                        return provider(this._rawData);
+                    } catch (e) {
+                        this._errors.push(e);
+                    }
                 } else {
                     // Or just pass Uint8Array data
                     return provider;
                 }
             });
-
-            if (errors.length) {
-                throw errors;
+            
+            if (this._errors.length) {
+                throw this._errors;
             }
         }
 
