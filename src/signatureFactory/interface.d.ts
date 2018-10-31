@@ -4,6 +4,8 @@ export interface ISignatureGenerator {
 
     getBytes(): Promise<Uint8Array>;
 
+    getDebugBytes(): Promise<Array<{ bytes: Uint8Array, from: any, value: any }>>;
+
     getExactBytes(fieldName: string): Promise<Uint8Array>;
 }
 
@@ -71,8 +73,8 @@ export interface IMASS_TRANSFER_PROPS extends IDEFAULT_PROPS {
 }
 
 export interface IDATA_PROPS extends IDEFAULT_PROPS {
-  data: Array<IDATA_ENTRY>;
-  fee: string;
+    data: Array<IDATA_ENTRY>;
+    fee: string;
 }
 
 export interface IORDER_PROPS extends IDEFAULT_PROPS {
@@ -91,16 +93,16 @@ export interface ICANCEL_ORDER_PROPS {
     orderId: string;
 }
 
-export  interface IMASS_TRANSFER_TRANSFERS {
+export interface IMASS_TRANSFER_TRANSFERS {
     recipient: string;
     amount: string;
 }
 
 
 export interface ISET_SCRIPT_PROPS extends IDEFAULT_PROPS {
-  script: string;
-  chainId: number;
-  fee: string;
+    script: string;
+    chainId: number;
+    fee: string;
 }
 
 export interface ISPONSORSHIP_PROPS extends IDEFAULT_PROPS {
@@ -110,7 +112,7 @@ export interface ISPONSORSHIP_PROPS extends IDEFAULT_PROPS {
 }
 
 
-export  interface IDATA_ENTRY {
+export interface IDATA_ENTRY {
     key: string;
     type: number;
     value: any;
