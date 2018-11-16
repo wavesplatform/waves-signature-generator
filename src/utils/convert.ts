@@ -32,6 +32,14 @@ export default {
 
     },
 
+    bytesToBoolean(bytes: Uint8Array): boolean {
+        if (bytes.length !== 1) {
+            throw new Error('Wrong bytes length');
+        }
+
+        return !!bytes[0];
+    },
+
     shortToByteArray(input: number): number[] {
 
         if (typeof input !== 'number') {
