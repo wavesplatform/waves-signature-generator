@@ -44,6 +44,13 @@ export const enum TRANSACTION_TYPE_VERSION {
     SPONSORSHIP = 1
 }
 
+export const enum DATA_TRANSACTION_FIELD_TYPES {
+    INTEGER,
+    BOOLEAN,
+    BINARY,
+    STRING
+}
+
 export const WAVES_ID = 'WAVES';
 export const WAVES_BLOCKCHAIN_ID = '';
 

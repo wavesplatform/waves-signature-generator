@@ -10,7 +10,7 @@ import {
     toBase58,
     toStringWithLength,
     toTransfers,
-    getNumberFromBytes
+    getNumberFromBytes, toData
 } from './parseByteConscructor';
 import { TRANSACTION_TYPE_NUMBER } from '../constants';
 
@@ -23,6 +23,8 @@ export function parseTransactionBytes(bytes: Uint8Array) {
             return parseIssueTx(bytes);
         case TRANSACTION_TYPE_NUMBER.TRANSFER:
             return parseTransferTx(bytes);
+        case TRANSACTION_TYPE_NUMBER.REISSUE:
+            return parseReissueTx(bytes);
         case TRANSACTION_TYPE_NUMBER.LEASE:
             return parseLeaseTx(bytes);
         case TRANSACTION_TYPE_NUMBER.CANCEL_LEASING:
@@ -34,7 +36,7 @@ export function parseTransactionBytes(bytes: Uint8Array) {
         case TRANSACTION_TYPE_NUMBER.EXCHANGE:
             throw new Error('Exchange transaction parser is not supported!');
         case TRANSACTION_TYPE_NUMBER.DATA:
-            throw new Error('Data transaction parser is not supported!');
+            return parseDataTx(bytes);
         case TRANSACTION_TYPE_NUMBER.SET_SCRIPT:
             return parseSetScriptTx(bytes);
         case TRANSACTION_TYPE_NUMBER.SPONSORSHIP:
@@ -76,6 +78,18 @@ export const parseTransferTx = parseConstructor([
     toStringWithLength('attachment') // TODO! Add attachment parser
 ]);
 
+export const parseReissueTx = parseConstructor([
+    toNumber('type'),
+    toNumber('version'),
+    toNumber('chainId'),
+    toBase58('senderPublicKey'),
+    toBase58('assetId'),
+    toBigNumber('quantity'),
+    toBoolean('reissuable'),
+    toBigNumber('fee'),
+    toBigNumber('timestamp')
+]);
+
 export const parseLeaseTx = parseConstructor([
     toNumber('type'),
     toNumber('version'),
@@ -115,6 +129,15 @@ export const parseMassTransferTx = parseConstructor([
     toBigNumber('timestamp'),
     toBigNumber('fee'),
     toStringWithLength('attachment')
+]);
+
+export const parseDataTx = parseConstructor([
+    toNumber('type'),
+    toNumber('version'),
+    toBase58('senderPublicKey'),
+    toData('data'),
+    toBigNumber('timestamp'),
+    toBigNumber('fee')
 ]);
 
 export const parseSetScriptTx = parseConstructor([

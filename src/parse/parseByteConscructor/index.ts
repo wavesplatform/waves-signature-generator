@@ -1,11 +1,26 @@
 import converters from '../../libs/converters';
 import base58 from '../../libs/base58';
 import { fromByteArray } from 'base64-js';
-import { ALIAS_VERSION } from '../../constants';
+import { ALIAS_VERSION, DATA_TRANSACTION_FIELD_TYPES } from '../../constants';
 
 
 const LENGTH_SIZE = 2;
 const LONG_BYTES_SIZE = 8;
+
+const getDataTxFieldTypeByCode = fieldTypeCode => {
+    switch (fieldTypeCode) {
+        case DATA_TRANSACTION_FIELD_TYPES.INTEGER:
+            return 'integer';
+        case DATA_TRANSACTION_FIELD_TYPES.BOOLEAN:
+            return 'boolean';
+        case DATA_TRANSACTION_FIELD_TYPES.BINARY:
+            return 'binary';
+        case DATA_TRANSACTION_FIELD_TYPES.STRING:
+            return 'string';
+        default:
+            throw new Error(`Unknown data field code ${fieldTypeCode}!`);
+    }
+};
 
 const addAccValue = (name: string, processor: IByteParser<any>) => (acc, bytes) => {
     if (!acc.data) {
@@ -123,6 +138,53 @@ const byteToScript = (bytes, start) => {
     return { value, shift: to - start };
 };
 
+const byteToData = (bytes, start) => {
+    const count = getNumberFromBytes(bytes, LENGTH_SIZE, start);
+    const fields = [];
+    let shift = LENGTH_SIZE;
+
+    for (let i = 0; i < count; i++) {
+
+        const keyLength = getNumberFromBytes(bytes, LENGTH_SIZE, start + shift);
+        shift += LENGTH_SIZE;
+        const key = byteToString(keyLength)(bytes, start + shift).value;
+        shift += keyLength;
+
+        const fieldTypeCode = getNumberFromBytes(bytes, 1, start + shift);
+        shift += 1;
+        const type = getDataTxFieldTypeByCode(fieldTypeCode);
+        let value;
+
+        switch (fieldTypeCode) {
+            case DATA_TRANSACTION_FIELD_TYPES.INTEGER:
+                value = byteToBigNumber(LONG_BYTES_SIZE)(bytes, start + shift).value;
+                shift += LONG_BYTES_SIZE;
+                break;
+            case DATA_TRANSACTION_FIELD_TYPES.BOOLEAN:
+                const booleanData = byteToBoolean(bytes, start + shift);
+                value = booleanData.value;
+                shift += booleanData.shift;
+                break;
+            case DATA_TRANSACTION_FIELD_TYPES.BINARY:
+                const binaryLength = getNumberFromBytes(bytes, LENGTH_SIZE, start + shift);
+                shift += LENGTH_SIZE;
+                value = `base64:${fromByteArray(bytes.slice(start + shift, start + shift + binaryLength))}`;
+                shift += binaryLength;
+                break;
+            case DATA_TRANSACTION_FIELD_TYPES.STRING:
+                const length = getNumberFromBytes(bytes, LENGTH_SIZE, start + shift);
+                shift += LENGTH_SIZE;
+                value = byteToString(length)(bytes, start + shift).value;
+                shift += length;
+                break;
+        }
+
+        fields.push({ key, type, value });
+    }
+
+    return { value: fields, shift };
+};
+
 export const getNumberFromBytes = (bytes, length, start = 0) => {
     return byteToNumber(length)(bytes, start).value;
 };
@@ -165,6 +227,10 @@ export function toTransfers(name) {
 
 export function toAccountScript(name) {
     return addAccValue(name, byteToScript);
+}
+
+export function toData(name) {
+    return addAccValue(name, byteToData);
 }
 
 export function parseConstructor(parts: Array<any>) {

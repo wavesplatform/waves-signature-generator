@@ -1,16 +1,18 @@
 import {
     ISSUE,
     TRANSFER,
+    REISSUE,
     LEASE,
     CANCEL_LEASING,
     CREATE_ALIAS,
     MASS_TRANSFER,
+    DATA,
     SET_SCRIPT,
     SPONSORSHIP,
     MAINNET_BYTE,
     TRANSACTION_TYPE_NUMBER,
     TRANSACTION_TYPE_VERSION,
-    TX_NUMBER_MAP
+    TX_NUMBER_MAP, parseReissueTx, parseDataTx
 } from '../../src';
 import TRANSACTIONS_DATA from './transactionsData';
 import { BigNumber } from '@waves/data-entities';
@@ -43,6 +45,17 @@ describe('parse', () => {
 
         new TRANSFER(data).getBytes().then(bytes => {
             expect(parseTransferTx(bytes)).toEqual(data);
+            done();
+        }).catch(done);
+
+    });
+
+    it('reissue', done => {
+
+        const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.REISSUE];
+
+        new REISSUE(data).getBytes().then(bytes => {
+            expect(parseReissueTx(bytes)).toEqual(data);
             done();
         }).catch(done);
 
@@ -87,6 +100,17 @@ describe('parse', () => {
 
         new MASS_TRANSFER(data).getBytes().then(bytes => {
             expect(parseMassTransferTx(bytes)).toEqual(data);
+            done();
+        }).catch(done);
+
+    });
+
+    it('data', done => {
+
+        const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.DATA];
+
+        new DATA(data).getBytes().then(bytes => {
+            expect(parseDataTx(bytes)).toEqual(data);
             done();
         }).catch(done);
 
@@ -150,10 +174,6 @@ describe('parse', () => {
 
     it('check parseTransactionBytes with wrong transaction type', () => {
         expect(() => parseTransactionBytes(Uint8Array.from([100, 1]))).toThrow('Type 100 is not supported!');
-    });
-
-    it('check not supported data transaction', () => {
-        expect(() => parseTransactionBytes(Uint8Array.from([TRANSACTION_TYPE_NUMBER.DATA, 1]))).toThrow('Data transaction parser is not supported!');
     });
 
     it('check not supported exchange transaction', () => {

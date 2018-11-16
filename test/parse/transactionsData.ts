@@ -29,6 +29,17 @@ export default {
         recipient: '3PCAB4sHXgvtu5NPoen6EXR5yaNbvsEA8Fj',
         attachment: 'some text'
     },
+    [TRANSACTION_TYPE_NUMBER.REISSUE]: {
+        type: TRANSACTION_TYPE_NUMBER.REISSUE,
+        version: TRANSACTION_TYPE_VERSION.REISSUE,
+        chainId: MAINNET_BYTE,
+        senderPublicKey: '2M25DqL2W4rGFLCFadgATboS8EPqyWAN3DjH12AH5Kdr',
+        assetId: '8LQW8f7P5d5PZM7GtZEBgaqRPGSzS3DfPuiXrURJ4AJS',
+        reissuable: true,
+        quantity: new BigNumber('100000000'),
+        fee: new BigNumber('100000000'),
+        timestamp: new BigNumber(1538663245955),
+    },
     [TRANSACTION_TYPE_NUMBER.LEASE]: {
         type: TRANSACTION_TYPE_NUMBER.LEASE,
         version: TRANSACTION_TYPE_VERSION.LEASE,
@@ -74,6 +85,19 @@ export default {
         timestamp: new BigNumber(1538663245955),
         fee: new BigNumber('100000'),
         attachment: 'Some attachment'
+    },
+    [TRANSACTION_TYPE_NUMBER.DATA]: {
+        type: 12,
+        version: 1,
+        senderPublicKey: '2M25DqL2W4rGFLCFadgATboS8EPqyWAN3DjH12AH5Kdr',
+        data: [
+            { key: 'int', type: 'integer', value: new BigNumber(24) },
+            { key: 'bool', type: 'boolean', value: true },
+            { key: 'blob', type: 'binary', value: 'base64:AQa3b8tH' },
+            { key: 'string', type: 'string', value: 'Some string with length' }
+        ],
+        fee: new BigNumber('100000'),
+        timestamp: new BigNumber(1538663245955)
     },
     [TRANSACTION_TYPE_NUMBER.SET_SCRIPT]: {
         type: TRANSACTION_TYPE_NUMBER.SET_SCRIPT,
