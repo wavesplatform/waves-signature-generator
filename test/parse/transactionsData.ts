@@ -1,5 +1,6 @@
 import { MAINNET_BYTE, TRANSACTION_TYPE_NUMBER, TRANSACTION_TYPE_VERSION } from '../../src';
 import { BigNumber } from '@waves/data-entities';
+import { toBigNumber } from '../../src/parse/parseByteConscructor';
 
 
 export default {
@@ -39,6 +40,16 @@ export default {
         quantity: new BigNumber('100000000'),
         fee: new BigNumber('100000000'),
         timestamp: new BigNumber(1538663245955),
+    },
+    [TRANSACTION_TYPE_NUMBER.BURN]: {
+        type: TRANSACTION_TYPE_NUMBER.BURN,
+        version: TRANSACTION_TYPE_VERSION.BURN,
+        chainId: MAINNET_BYTE,
+        senderPublicKey: '2M25DqL2W4rGFLCFadgATboS8EPqyWAN3DjH12AH5Kdr',
+        assetId: '8LQW8f7P5d5PZM7GtZEBgaqRPGSzS3DfPuiXrURJ4AJS',
+        quantity: new BigNumber(1),
+        fee: new BigNumber('100000'),
+        timestamp: new BigNumber(1538663245955)
     },
     [TRANSACTION_TYPE_NUMBER.LEASE]: {
         type: TRANSACTION_TYPE_NUMBER.LEASE,

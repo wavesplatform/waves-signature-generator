@@ -25,6 +25,8 @@ export function parseTransactionBytes(bytes: Uint8Array) {
             return parseTransferTx(bytes);
         case TRANSACTION_TYPE_NUMBER.REISSUE:
             return parseReissueTx(bytes);
+        case TRANSACTION_TYPE_NUMBER.BURN:
+            return parseBurnTx(bytes);
         case TRANSACTION_TYPE_NUMBER.LEASE:
             return parseLeaseTx(bytes);
         case TRANSACTION_TYPE_NUMBER.CANCEL_LEASING:
@@ -86,6 +88,17 @@ export const parseReissueTx = parseConstructor([
     toBase58('assetId'),
     toBigNumber('quantity'),
     toBoolean('reissuable'),
+    toBigNumber('fee'),
+    toBigNumber('timestamp')
+]);
+
+export const parseBurnTx = parseConstructor([
+    toNumber('type'),
+    toNumber('version'),
+    toNumber('chainId'),
+    toBase58('senderPublicKey'),
+    toBase58('assetId'),
+    toBigNumber('quantity'),
     toBigNumber('fee'),
     toBigNumber('timestamp')
 ]);
