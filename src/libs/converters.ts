@@ -1,8 +1,8 @@
 import * as CryptoJS from 'crypto-js';
+import { BigNumber } from '@waves/data-entities';
 
 declare const escape: any;
 declare const unescape: any;
-declare const BigInteger: any;
 
 
 /** START OF THE LICENSED CODE */
@@ -108,16 +108,14 @@ let converters = function () {
             return value;
         },
         byteArrayToBigInteger: function (bytes, opt_startIndex) {
-            let index = this.checkBytesToIntInput(bytes, 8, opt_startIndex);
+            let value = new BigNumber('0', 10);
 
-            let value = new BigInteger('0', 10);
+            let temp1: BigNumber;
 
-            let temp1, temp2;
-
-            for (let i = 7; i >= 0; i--) {
-                temp1 = value.multiply(new BigInteger('256', 10));
-                temp2 = temp1.add(new BigInteger(bytes[opt_startIndex + i].toString(10), 10));
-                value = temp2;
+            for (let i = bytes.length - 1; i >= 0; i--) {
+                temp1 = new BigNumber(bytes[i + opt_startIndex])
+                    .times(new BigNumber('256', 10).pow(bytes.length - 1 - i));
+                value = value.plus(temp1);
             }
 
             return value;

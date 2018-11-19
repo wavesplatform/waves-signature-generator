@@ -1,3 +1,6 @@
+import { BigNumber } from '@waves/data-entities';
+
+
 export interface ISignatureGenerator {
 
     getSignature(privateKey: string): Promise<string>;
@@ -15,66 +18,67 @@ export interface ISignatureGeneratorConstructor<T> {
 
 export interface IDEFAULT_PROPS {
     senderPublicKey: string;
-    timestamp: number;
+    timestamp: string | BigNumber;
 }
 
 export interface IISSUE_PROPS extends IDEFAULT_PROPS {
+    chainId: number;
     name: string;
     description: string;
-    quantity: string;
+    quantity: string | BigNumber;
     precision: number;
     reissuable: boolean;
-    fee: string;
+    fee: string | BigNumber;
 }
 
 export interface ITRANSFER_PROPS extends IDEFAULT_PROPS {
     assetId: string;
     feeAssetId: string;
-    amount: string;
-    fee: string;
+    amount: string | BigNumber;
+    fee: string | BigNumber;
     recipient: string;
     attachment: string;
 }
 
 export interface IREISSUE_PROPS extends IDEFAULT_PROPS {
     assetId: string;
-    quantity: string;
+    quantity: string | BigNumber;
     reissuable: boolean;
-    fee: string;
+    fee: string | BigNumber;
 }
 
 export interface IBURN_PROPS extends IDEFAULT_PROPS {
     assetId: string;
-    quantity: string;
+    quantity: string | BigNumber;
     fee: string;
 }
 
 export interface ILEASE_PROPS extends IDEFAULT_PROPS {
     recipient: string;
-    amount: string;
-    fee: string;
+    amount: string | BigNumber;
+    fee: string | BigNumber;
 }
 
 export interface ICANCEL_LEASING_PROPS extends IDEFAULT_PROPS {
-    fee: string;
+    fee: string | BigNumber;
     transactionId: string;
 }
 
 export interface ICREATE_ALIAS_PROPS extends IDEFAULT_PROPS {
     alias: string;
-    fee: string;
+    fee: string | BigNumber;
 }
 
 export interface IMASS_TRANSFER_PROPS extends IDEFAULT_PROPS {
     assetId: string;
     transfers: Array<IMASS_TRANSFER_TRANSFERS>;
-    fee: string;
+    fee: string | BigNumber;
     attachment: string;
 }
 
 export interface IDATA_PROPS extends IDEFAULT_PROPS {
     data: Array<IDATA_ENTRY>;
-    fee: string;
+    fee: string | BigNumber;
 }
 
 export interface IORDER_PROPS extends IDEFAULT_PROPS {
@@ -95,26 +99,26 @@ export interface ICANCEL_ORDER_PROPS {
 
 export interface IMASS_TRANSFER_TRANSFERS {
     recipient: string;
-    amount: string;
+    amount: string | BigNumber;
 }
 
 
 export interface ISET_SCRIPT_PROPS extends IDEFAULT_PROPS {
     script: string;
     chainId: number;
-    fee: string;
+    fee: string | BigNumber;
 }
 
 export interface ISPONSORSHIP_PROPS extends IDEFAULT_PROPS {
     assetId: string;
-    minSponsoredAssetFee: string;
-    fee: string;
+    minSponsoredAssetFee: string | BigNumber;
+    fee: string | BigNumber;
 }
 
 
 export interface IDATA_ENTRY {
     key: string;
-    type: number;
+    type: string;
     value: any;
 }
 

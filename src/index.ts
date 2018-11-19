@@ -7,6 +7,7 @@ export * from './signatureFactory/interface';
 export * from './signatureFactory/SignatureFactory';
 export * from './Seed';
 export * from './dictionary';
+export * from './parse';
 
 import base58 from './libs/base58';
 import converters from './libs/converters';

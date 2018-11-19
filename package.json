@@ -16,9 +16,8 @@
     "postversion": "npm publish",
     "postpublish": "git push",
     "prepare": "npm run build",
-    "test": "npm run compile-test && jest",
+    "test": "jest",
     "compile": "tsc -p ./",
-    "compile-test": "tsc -p ./test",
     "prepublish": "npm run test",
     "uglify": "npm run uglify-full && npm run uglify-partial",
     "uglify-full": "node_modules/.bin/uglifyjs dist/signature-generator.js -o dist/signature-generator.min.js",
@@ -27,10 +26,30 @@
     "build-partial": "node_modules/.bin/browserify dist/index.js -u @waves/data-entities --node -s wavesSignatureGenerator -o dist/signature-generator.partial.js",
     "build": "npm run compile && npm run build-full && npm run build-partial && npm run uglify"
   },
+  "jest": {
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "testMatch": [
+      "**/test/**/*.test.+(ts|tsx|js)"
+    ]
+  },
   "devDependencies": {
     "@types/jest": "^23.1.4",
     "browserify": "^16.2.2",
     "jest": "^23.2.0",
+    "ts-jest": "^23.10.4",
+    "typescript": "^3.1.6",
     "uglify-js": "^3.4.7"
   }
 }
