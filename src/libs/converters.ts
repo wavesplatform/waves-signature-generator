@@ -1,8 +1,6 @@
 import * as CryptoJS from 'crypto-js';
 import { BigNumber } from '@waves/data-entities';
 
-declare const escape: any;
-
 
 /** START OF THE LICENSED CODE */
 
