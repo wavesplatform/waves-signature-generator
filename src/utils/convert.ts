@@ -72,7 +72,7 @@ export default {
         if (typeof input !== 'number') {
             throw new Error('Numeric input is expected');
         }
-
+        input = input < 0 ? 0xffffffff + input + 1 : input;
         const bytes = new Array(7);
         for (let k = 7; k >= 0; k--) {
             bytes[k] = input & (255);
