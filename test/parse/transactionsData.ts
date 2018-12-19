@@ -105,7 +105,8 @@ export default {
             { key: 'int', type: 'integer', value: new BigNumber(24) },
             { key: 'bool', type: 'boolean', value: true },
             { key: 'blob', type: 'binary', value: 'base64:AQa3b8tH' },
-            { key: 'string', type: 'string', value: 'Some string with length' }
+            { key: 'string', type: 'string', value: 'Some string with length' },
+            { key: 'lessInt', type: 'integer', value: new BigNumber(-1) },
         ],
         fee: new BigNumber('100000'),
         timestamp: new BigNumber(1538663245955)

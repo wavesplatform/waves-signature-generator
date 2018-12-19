@@ -125,12 +125,21 @@ let converters = function () {
             return value;
         },
         byteArrayToBigInteger: function (bytes, opt_startIndex) {
+            const isMinus = bytes[0] >= 128 && bytes.length === 8;
+            
             let value = new BigNumber('0', 10);
 
             let temp1: BigNumber;
 
             for (let i = bytes.length - 1; i >= 0; i--) {
-                temp1 = new BigNumber(bytes[i + opt_startIndex])
+                let byte = bytes[i + opt_startIndex];
+                if (isMinus) {
+                    if (i === bytes.length - 1) {
+                        byte--;
+                    }
+                    byte -= 255;
+                }
+                temp1 = new BigNumber(byte)
                     .times(new BigNumber('256', 10).pow(bytes.length - 1 - i));
                 value = value.plus(temp1);
             }

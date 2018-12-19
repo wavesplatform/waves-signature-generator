@@ -76,7 +76,7 @@ export default {
         const bytes = new Array(7);
         for (let k = 7; k >= 0; k--) {
             bytes[k] = input & (255);
-            input = input / 256;
+            input = input >> 8;
         }
 
         return bytes;
@@ -88,12 +88,19 @@ export default {
         if (!(input instanceof BigNumber)) {
             throw new Error('BigNumber input is expected');
         }
-
+        const isMinus = input.lt(new BigNumber(0));
         const performBitwiseAnd255 = performBitwiseAnd.bind(null, new BigNumber(255));
-
+        if (isMinus) {
+            input = input.plus(1);
+        }
+        
         const bytes = new Array(7);
+        
         for (let k = 7; k >= 0; k--) {
             bytes[k] = performBitwiseAnd255(input);
+            if (isMinus) {
+                bytes[k] = new BigNumber(255).minus(bytes[k]);
+            }
             input = input.div(256);
         }
 
