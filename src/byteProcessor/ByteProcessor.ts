@@ -91,6 +91,21 @@ export class Long extends ByteProcessor {
     }
 }
 
+export class SignLong extends ByteProcessor {
+    public process(value: number | string | BigNumber) {
+        let bytes;
+        if (typeof value === 'number') {
+            bytes = convert.signLongToByteArray(value);
+        } else {
+            if (typeof value === 'string') {
+                value = new BigNumber(value);
+            }
+            bytes = convert.signBigNumberToByteArray(value);
+        }
+        return Promise.resolve(Uint8Array.from(bytes));
+    }
+}
+
 export class Short extends ByteProcessor {
     public process(value: number) {
         if (typeof value !== 'number') throw new Error('You should pass a number to Short constructor');
@@ -211,7 +226,7 @@ const STRING_DATA_TYPE = 3;
 
 export class IntegerDataEntry extends ByteProcessor {
     public process(value: number | string | BigNumber) {
-        return Long.prototype.process.call(this, value).then((longBytes) => {
+        return SignLong.prototype.process.call(this, value).then((longBytes) => {
             const typeByte = Uint8Array.from([INTEGER_DATA_TYPE]);
             return concatUint8Arrays(typeByte, longBytes);
         });

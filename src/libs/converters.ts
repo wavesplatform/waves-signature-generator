@@ -124,15 +124,29 @@ let converters = function () {
             value += bytes[index + 3] << 24;
             return value;
         },
-        byteArrayToBigInteger: function (bytes, opt_startIndex) {
-            const isMinus = bytes[0] >= 128 && bytes.length === 8;
-            
+        byteArrayToBigInteger: function (bytes) {
+            const baseNumber = new BigNumber('256', 10);
             let value = new BigNumber('0', 10);
-
             let temp1: BigNumber;
 
             for (let i = bytes.length - 1; i >= 0; i--) {
-                let byte = bytes[i + opt_startIndex];
+                let byte = bytes[i];
+                temp1 = new BigNumber(byte)
+                    .times(baseNumber.pow(bytes.length - 1 - i));
+                value = value.plus(temp1);
+            }
+
+            return value;
+        },
+        byteArrayToSignBigInteger: function (bytes) {
+            const isMinus = bytes[0] >= 128 && bytes.length === 8;
+        
+            let value = new BigNumber('0', 10);
+        
+            let temp1: BigNumber;
+        
+            for (let i = bytes.length - 1; i >= 0; i--) {
+                let byte = bytes[i];
                 if (isMinus) {
                     if (i === bytes.length - 1) {
                         byte--;
@@ -143,7 +157,7 @@ let converters = function () {
                     .times(new BigNumber('256', 10).pow(bytes.length - 1 - i));
                 value = value.plus(temp1);
             }
-
+        
             return value;
         },
         // create a wordArray that is Big-Endian
