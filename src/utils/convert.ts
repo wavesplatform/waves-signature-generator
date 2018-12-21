@@ -104,7 +104,7 @@ export default {
 
         const performBitwiseAnd255 = performBitwiseAnd.bind(null, new BigNumber(255));
 
-        const bytes = new Array(git add );
+        const bytes = new Array();
         for (let k = 7; k >= 0; k--) {
             bytes[k] = performBitwiseAnd255(input);
             input = input.div(256);
