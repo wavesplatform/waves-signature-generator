@@ -88,7 +88,7 @@ export default {
         }
 
         const bytes = new Array();
-        for (let i = 0; i <= 64 ; i+= 8) {
+        for (let i = 0; i < 64 ; i+= 8) {
             input = input >> i;
             bytes.push(input & 0xff);
         }
