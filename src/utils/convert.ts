@@ -86,14 +86,16 @@ export default {
         if (typeof input !== 'number') {
             throw new Error('Numeric input is expected');
         }
-
-        const bytes = new Array();
-        for (let i = 0; i < 64 ; i+= 8) {
-            input = input >> i;
-            bytes.push(input & 0xff);
+    
+        const byteArray = [0, 0, 0, 0, 0, 0, 0, 0];
+    
+        for ( let index = 0; index < byteArray.length; index ++ ) {
+            let byte = input & 0xff;
+            byteArray [ index ] = byte;
+            input = (input - byte) / 256 ;
         }
-        return bytes.reverse();
-        
+
+        return byteArray.reverse();
     },
 
     bigNumberToByteArray(input: BigNumber): number[] {
