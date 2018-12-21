@@ -148,16 +148,17 @@ let converters = function () {
             for (let i = bytes.length - 1; i >= 0; i--) {
                 let byte = bytes[i];
                 if (isMinus) {
-                    if (i === bytes.length - 1) {
-                        byte--;
-                    }
-                    byte -= 255;
+                    byte = (~byte) & 255;
                 }
                 temp1 = new BigNumber(byte)
                     .times(new BigNumber('256', 10).pow(bytes.length - 1 - i));
                 value = value.plus(temp1);
             }
         
+            if (isMinus) {
+                value = value.plus(1);
+                value = new BigNumber(0).minus(value);
+            }
             return value;
         },
         // create a wordArray that is Big-Endian

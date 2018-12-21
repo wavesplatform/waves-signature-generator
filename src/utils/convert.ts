@@ -85,21 +85,15 @@ export default {
     },
     
     signLongToByteArray(input: number): number[] {
-        
         if (typeof input !== 'number') {
             throw new Error('Numeric input is expected');
         }
-        
-        const isNegative =  input < 0;
-        
-        input += isNegative ? 1 : 0;
-        const bytes = new Array(7);
-        for (let k = 7; k >= 0; k--) {
-            bytes[k] = input & (255);
-            bytes[k] = isNegative ? 255 - bytes[k] : bytes[k];
-            input = input >> 8;
+
+        const bytes = new Array(8);
+        for (let i = 0; i <= 64 ; i+= 8) {
+            input = input >> i;
+            bytes.push(input & 0xff);
         }
-        
         return bytes;
         
     },
@@ -111,7 +105,7 @@ export default {
         }
         const performBitwiseAnd255 = performBitwiseAnd.bind(null, new BigNumber(255));
 
-        const bytes = new Array(7);
+        const bytes = new Array(8);
         
         for (let k = 7; k >= 0; k--) {
             bytes[k] = performBitwiseAnd255(input);
@@ -123,26 +117,24 @@ export default {
     },
     
     signBigNumberToByteArray(input: BigNumber): number[] {
-        
         if (!(input instanceof BigNumber)) {
             throw new Error('BigNumber input is expected');
         }
         const isMinus = input.lt(new BigNumber(0));
         const performBitwiseAnd255 = performBitwiseAnd.bind(null, new BigNumber(255));
         if (isMinus) {
-            input = input.plus(1);
+            input = input.plus(1, 10);
         }
         
-        const bytes = new Array(7);
+        const bytes = new Array(8);
         
         for (let k = 7; k >= 0; k--) {
             bytes[k] = performBitwiseAnd255(input);
             if (isMinus) {
-                bytes[k] = new BigNumber(255).minus(bytes[k]);
+                bytes[k] = (~bytes[k]) & 255;
             }
             input = input.div(256);
         }
-        
         return bytes;
         
     },

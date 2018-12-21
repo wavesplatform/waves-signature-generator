@@ -107,6 +107,8 @@ export default {
             { key: 'blob', type: 'binary', value: 'base64:AQa3b8tH' },
             { key: 'string', type: 'string', value: 'Some string with length' },
             { key: 'lessInt', type: 'integer', value: new BigNumber(-1) },
+            { key: 'lessInt2', type: 'integer', value: new BigNumber(-2) },
+            { key: 'lessInt3', type: 'integer', value: new BigNumber(-10) },
         ],
         fee: new BigNumber('100000'),
         timestamp: new BigNumber(1538663245955)
