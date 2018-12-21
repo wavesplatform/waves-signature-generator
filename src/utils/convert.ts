@@ -29,7 +29,6 @@ export default {
         }
 
         return input ? [1] : [0];
-
     },
 
     bytesToBoolean(bytes: Uint8Array): boolean {
@@ -72,12 +71,11 @@ export default {
         if (typeof input !== 'number') {
             throw new Error('Numeric input is expected');
         }
-        
+
         const bytes = new Array(7);
-        
         for (let k = 7; k >= 0; k--) {
             bytes[k] = input & (255);
-            input = input >> 8;
+            input = input / 256;
         }
 
         return bytes;
@@ -89,12 +87,12 @@ export default {
             throw new Error('Numeric input is expected');
         }
 
-        const bytes = new Array(8);
+        const bytes = new Array();
         for (let i = 0; i <= 64 ; i+= 8) {
             input = input >> i;
             bytes.push(input & 0xff);
         }
-        return bytes;
+        return bytes.reverse();
         
     },
 
@@ -103,10 +101,10 @@ export default {
         if (!(input instanceof BigNumber)) {
             throw new Error('BigNumber input is expected');
         }
+
         const performBitwiseAnd255 = performBitwiseAnd.bind(null, new BigNumber(255));
 
-        const bytes = new Array(8);
-        
+        const bytes = new Array(git add );
         for (let k = 7; k >= 0; k--) {
             bytes[k] = performBitwiseAnd255(input);
             input = input.div(256);
