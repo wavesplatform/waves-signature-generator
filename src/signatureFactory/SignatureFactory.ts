@@ -210,12 +210,6 @@ export const CANCEL_ORDER_SIGNATURE = generate<ICANCEL_ORDER_PROPS>([
     new Base58('orderId')
 ]);
 
-export const CANCEL_ORDER_SIGNATURE_V2 = generate<ICANCEL_ORDER_PROPS>([
-    constants.ORDER_VERSION,
-    new Base58('senderPublicKey'),
-    new Base58('orderId')
-]);
-
 export const ISSUE = generate<IISSUE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.ISSUE,
     constants.TRANSACTION_TYPE_VERSION.ISSUE,
@@ -416,7 +410,6 @@ export const MATCHER_BYTES_GENERATOR_MAP = {
         0: AUTH_ORDER_SIGNATURE
     },
     CANCEL_ORDER: {
-        0: CANCEL_ORDER_SIGNATURE,
-        2: CANCEL_ORDER_SIGNATURE_V2
+        0: CANCEL_ORDER_SIGNATURE
     }
 };
