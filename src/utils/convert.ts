@@ -1,5 +1,5 @@
 import { TBuffer } from '../interface';
-import converters from '../libs/converters';
+import converters from '../../libs/converters';
 import { BigNumber } from '@waves/data-entities';
 
 

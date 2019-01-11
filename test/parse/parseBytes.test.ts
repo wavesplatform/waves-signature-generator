@@ -158,12 +158,14 @@ describe('parse', () => {
 
     Object.keys(TRANSACTIONS_DATA).forEach(stringType => {
         const type = Number(stringType);
+        //@ts-ignore
         const data = TRANSACTIONS_DATA[stringType];
 
         it(`check parseTransactionBytes with transaction type ${type}`, done => {
-
+            //@ts-ignore
             const Generator = TX_NUMBER_MAP[type];
 
+            //@ts-ignore
             new Generator(data).getBytes().then(bytes => {
                 expect(parseTransactionBytes(bytes)).toEqual(data);
                 done();

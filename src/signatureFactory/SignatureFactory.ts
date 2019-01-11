@@ -11,7 +11,7 @@ import {
     Recipient,
     StringWithLength,
     ScriptVersion,
-    Transfers,
+    Transfers, TRANSACTION_TYPE,
 } from '..';
 import {
     IBURN_PROPS, ICANCEL_LEASING_PROPS, ICANCEL_ORDER_PROPS, ICREATE_ALIAS_PROPS, IDEFAULT_PROPS,
@@ -33,24 +33,24 @@ const ERRORS = {
 
 export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGeneratorConstructor<T> {
 
-    const errors = [];
-    
+    const errors: Array<any> = [];
+
     if (!fields || !fields.length) {
         errors.push(ERRORS.NO_DATA);
     }
 
     // Fields of the original data object
-    const storedFields: object = Object.create(null);
+    const storedFields: Record<string, ByteProcessor> = Object.create(null);
 
     // Data bytes or functions returning data bytes via promises
     const byteProviders: Array<Function | Uint8Array> = [];
 
-    fields.forEach(function (field: ByteProcessor) {
+    fields.forEach((field: ByteProcessor | number) => {
         if (field instanceof ByteProcessor) {
             // Remember user data fields
             storedFields[field.name] = field;
             // All user data must be represented as bytes
-            byteProviders.push((data) => {
+            byteProviders.push((data: any) => {
                 try {
                     return field.process(data[field.name]);
                 } catch (e) {
@@ -64,24 +64,24 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
             errors.push({ ...ERRORS.FIELD_ERROR, field });
         }
     });
-    
+
     if (errors.length) {
         throw errors;
     }
-    
+
     class SignatureGenerator implements ISignatureGenerator {
 
         // Array of Uint8Array and promises which return Uint8Array
         private readonly _dataHolders: Array<Uint8Array | Promise<Uint8Array>>;
         // Request data provided by user
-        private readonly _rawData: object;
-        
+        private readonly _rawData: any;
+
         private _errors = [];
 
         constructor(hashMap: any = {}) {
 
             // Save all needed values from user data
-            this._rawData = Object.keys(storedFields).reduce((store, key) => {
+            this._rawData = Object.keys(storedFields).reduce((store: any, key: any) => {
                 store[key] = hashMap[key];
                 return store;
             }, {});
@@ -92,6 +92,7 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
                     try {
                         return provider(this._rawData);
                     } catch (e) {
+                        // @ts-ignore
                         this._errors.push(e);
                     }
                 } else {
@@ -99,7 +100,7 @@ export function generate<T>(fields: Array<ByteProcessor | number>): ISignatureGe
                     return provider;
                 }
             });
-            
+
             if (this._errors.length) {
                 throw this._errors;
             }
@@ -169,12 +170,32 @@ export const CREATE_ORDER_SIGNATURE = generate<IORDER_PROPS>([
     new Long('matcherFee')
 ]);
 
+export const CREATE_ORDER_SIGNATURE_V2 = generate<IORDER_PROPS>([
+    constants.ORDER_VERSION,
+    new Base58('senderPublicKey'),
+    new Base58('matcherPublicKey'),
+    new AssetId('amountAsset'),
+    new AssetId('priceAsset'),
+    new OrderType('orderType'),
+    new Long('price'),
+    new Long('amount'),
+    new Long('timestamp'),
+    new Long('expiration'),
+    new Long('matcherFee')
+]);
+
 export const AUTH_ORDER_SIGNATURE = generate<IDEFAULT_PROPS>([
     new Base58('senderPublicKey'),
     new Long('timestamp')
 ]);
 
 export const CANCEL_ORDER_SIGNATURE = generate<ICANCEL_ORDER_PROPS>([
+    new Base58('senderPublicKey'),
+    new Base58('orderId')
+]);
+
+export const CANCEL_ORDER_SIGNATURE_V2 = generate<ICANCEL_ORDER_PROPS>([
+    constants.ORDER_VERSION,
     new Base58('senderPublicKey'),
     new Base58('orderId')
 ]);
@@ -333,3 +354,53 @@ export const SPONSORSHIP = generate<ISPONSORSHIP_PROPS>([
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.SPONSORSHIP] = SPONSORSHIP;
 TX_TYPE_MAP[constants.TRANSACTION_TYPE.SPONSORSHIP] = SPONSORSHIP;
+
+export const BYTES_GENERATORS_MAP: Record<TRANSACTION_TYPE, Record<number, ISignatureGeneratorConstructor<any>>> = {
+    [TRANSACTION_TYPE.ISSUE]: {
+        2: ISSUE
+    },
+    [TRANSACTION_TYPE.TRANSFER]: {
+        2: TRANSFER
+    },
+    [TRANSACTION_TYPE.REISSUE]: {
+        2: REISSUE
+    },
+    [TRANSACTION_TYPE.BURN]: {
+        2: BURN
+    },
+    [TRANSACTION_TYPE.LEASE]: {
+        2: LEASE
+    },
+    [TRANSACTION_TYPE.CANCEL_LEASING]: {
+        2: CANCEL_LEASING
+    },
+    [TRANSACTION_TYPE.CREATE_ALIAS]: {
+        2: CREATE_ALIAS
+    },
+    [TRANSACTION_TYPE.MASS_TRANSFER]: {
+        1: MASS_TRANSFER
+    },
+    [TRANSACTION_TYPE.DATA]: {
+        1: DATA
+    },
+    [TRANSACTION_TYPE.SET_SCRIPT]: {
+        1: SET_SCRIPT
+    },
+    [TRANSACTION_TYPE.SPONSORSHIP]: {
+        1: SPONSORSHIP
+    }
+} as any;
+
+export const MATCHER_BYTES_GENERATOR_MAP = {
+    CREATE_ORDER: {
+        0: CREATE_ORDER_SIGNATURE,
+        2: CREATE_ORDER_SIGNATURE_V2
+    },
+    AUTH_ORDER: {
+        0: AUTH_ORDER_SIGNATURE
+    },
+    CANCEL_ORDER: {
+        0: CANCEL_ORDER_SIGNATURE,
+        2: CANCEL_ORDER_SIGNATURE_V2
+    }
+};

@@ -44,6 +44,8 @@ export const enum TRANSACTION_TYPE_VERSION {
     SPONSORSHIP = 1
 }
 
+export const ORDER_VERSION = 2;
+
 export const enum DATA_TRANSACTION_FIELD_TYPES {
     INTEGER,
     BOOLEAN,

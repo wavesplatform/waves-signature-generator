@@ -184,7 +184,7 @@ export class ScriptVersion extends ByteProcessor {
 }
 
 export class Transfers extends ByteProcessor {
-    public process(values) {
+    public process(values: any) {
         const recipientProcessor = new Recipient(STUB_NAME);
         const amountProcessor = new Long(STUB_NAME);
 
@@ -211,7 +211,7 @@ const STRING_DATA_TYPE = 3;
 
 export class IntegerDataEntry extends ByteProcessor {
     public process(value: number | string | BigNumber) {
-        return Long.prototype.process.call(this, value).then((longBytes) => {
+        return Long.prototype.process.call(this, value).then((longBytes: any) => {
             const typeByte = Uint8Array.from([INTEGER_DATA_TYPE]);
             return concatUint8Arrays(typeByte, longBytes);
         });
@@ -220,7 +220,7 @@ export class IntegerDataEntry extends ByteProcessor {
 
 export class BooleanDataEntry extends ByteProcessor {
     public process(value: boolean) {
-        return Bool.prototype.process.call(this, value).then((boolByte) => {
+        return Bool.prototype.process.call(this, value).then((boolByte: any) => {
             const typeByte = Uint8Array.from([BOOLEAN_DATA_TYPE]);
             return concatUint8Arrays(typeByte, boolByte);
         });
@@ -229,7 +229,7 @@ export class BooleanDataEntry extends ByteProcessor {
 
 export class BinaryDataEntry extends ByteProcessor {
     public process(value: string) {
-        return Base64.prototype.process.call(this, value).then((binaryBytes) => {
+        return Base64.prototype.process.call(this, value).then((binaryBytes: Uint8Array) => {
             const typeByte = Uint8Array.from([BINARY_DATA_TYPE]);
             return Promise.resolve(concatUint8Arrays(typeByte, binaryBytes));
         });
@@ -238,7 +238,7 @@ export class BinaryDataEntry extends ByteProcessor {
 
 export class StringDataEntry extends ByteProcessor {
     public process(value: string) {
-        return StringWithLength.prototype.process.call(this, value).then((stringBytes) => {
+        return StringWithLength.prototype.process.call(this, value).then((stringBytes: Uint8Array) => {
             const typeByte = Uint8Array.from([STRING_DATA_TYPE]);
             return concatUint8Arrays(typeByte, stringBytes);
         });
@@ -250,10 +250,11 @@ export class DataEntries extends ByteProcessor {
         const lengthBytes = Uint8Array.from(convert.shortToByteArray(entries.length));
         if (entries.length) {
             return Promise.all(entries.map((entry) => {
-                const prependKeyBytes = (valueBytes) => {
-                    return StringWithLength.prototype.process.call(this, entry.key).then((keyBytes) => {
-                        return concatUint8Arrays(keyBytes, valueBytes);
-                    });
+                const prependKeyBytes = (valueBytes: Uint8Array) => {
+                    return StringWithLength.prototype.process.call(this, entry.key)
+                        .then((keyBytes: Uint8Array) => {
+                            return concatUint8Arrays(keyBytes, valueBytes);
+                        });
                 };
 
                 switch (entry.type) {
