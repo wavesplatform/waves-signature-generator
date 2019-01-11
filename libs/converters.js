@@ -125,12 +125,12 @@ var converters = function () {
             return value;
         },
         byteArrayToBigInteger: function (bytes) {
-            const baseNumber = new BigNumber('256', 10);
-            let value = new BigNumber('0', 10);
-            let temp1;
+            var baseNumber = new BigNumber('256', 10);
+            var value = new BigNumber('0', 10);
+            var temp1;
 
-            for (let i = bytes.length - 1; i >= 0; i--) {
-                let byte = bytes[i];
+            for (var i = bytes.length - 1; i >= 0; i--) {
+                var byte = bytes[i];
                 temp1 = new BigNumber(byte)
                     .times(baseNumber.pow(bytes.length - 1 - i));
                 value = value.plus(temp1);
@@ -139,14 +139,14 @@ var converters = function () {
             return value;
         },
         byteArrayToSignBigInteger: function (bytes) {
-            const isMinus = bytes[0] >= 128 && bytes.length === 8;
+            var isMinus = bytes[0] >= 128 && bytes.length === 8;
 
-            let value = new BigNumber('0', 10);
+            var value = new BigNumber('0', 10);
 
-            let temp1;
+            var temp1;
 
-            for (let i = bytes.length - 1; i >= 0; i--) {
-                let byte = bytes[i];
+            for (var i = bytes.length - 1; i >= 0; i--) {
+                var byte = bytes[i];
                 if (isMinus) {
                     byte = (~byte) & 255;
                 }
