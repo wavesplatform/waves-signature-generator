@@ -4,7 +4,8 @@
   "main": "dist/index.js",
   "files": [
     "dist",
-    "src"
+    "src",
+    "libs"
   ],
   "types": "dist/index.d.ts",
   "dependencies": {
