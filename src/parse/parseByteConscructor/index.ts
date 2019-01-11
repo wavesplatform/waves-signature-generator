@@ -52,7 +52,13 @@ const wrap = processor => (acc, bytes) => {
 
 // @ts-ignore
 const byteToBigNumber = shift => (bytes, start) => {
-    const value = converters.byteArrayToBigInteger(bytes.slice(start, start + shift), 0);
+    const value = converters.byteArrayToBigInteger(bytes.slice(start, start + shift));
+    return { value, shift };
+};
+
+// @ts-ignore
+const byteToSignBigNumber = shift => (bytes, start) => {
+    const value = converters.byteArrayToSignBigInteger(bytes.slice(start, start + shift));
     return { value, shift };
 };
 
@@ -70,7 +76,7 @@ const byteToBoolean = (bytes, start) => {
 
 // @ts-ignore
 const byteToString = shift => (bytes, start) => {
-    const value = converters.byteArrayToString(bytes.slice(start, start + shift), 0);
+    const value = converters.byteArrayToString(bytes.slice(start, start + shift));
     return { shift, value };
 };
 
@@ -173,7 +179,7 @@ const byteToData = (bytes, start) => {
 
         switch (fieldTypeCode) {
             case DATA_TRANSACTION_FIELD_TYPES.INTEGER:
-                value = byteToBigNumber(LONG_BYTES_SIZE)(bytes, start + shift).value;
+                value = byteToSignBigNumber(LONG_BYTES_SIZE)(bytes, start + shift).value;
                 shift += LONG_BYTES_SIZE;
                 break;
             case DATA_TRANSACTION_FIELD_TYPES.BOOLEAN:
