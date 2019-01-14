@@ -61,6 +61,21 @@ export class Base64 extends ByteProcessor {
     }
 }
 
+export class Base64Asset extends ByteProcessor {
+    public process(value: string) {
+        if (value != null && typeof value !== 'string') throw new Error('You should pass a string to BinaryDataEntry constructor');
+        if (value != null && isNonEmptyBase64String(value)) {
+            if (value.slice(0, 7) !== 'base64:') throw new Error('Blob should be encoded in base64 and prefixed with "base64:"');
+            const b64 = value.slice(7); // Getting the string payload
+            const bytes = Uint8Array.from(toByteArray(b64));
+            const lengthBytes = Uint8Array.from(convert.shortToByteArray(bytes.length));
+            return Promise.resolve(concatUint8Arrays(lengthBytes, bytes));
+        } else {
+            return Promise.resolve(Uint8Array.from([0]));
+        }
+    }
+}
+
 export class Bool extends ByteProcessor {
     public process(value: boolean) {
         const bytes = convert.booleanToBytes(value);

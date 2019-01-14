@@ -248,7 +248,7 @@ export function toTransfers(name: string) {
     return addAccValue(name, byteToTransfers);
 }
 
-export function toAccountScript(name: string) {
+export function toScript(name: string) {
     return addAccValue(name, byteToScript);
 }
 

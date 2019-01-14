@@ -2,7 +2,7 @@ import {
     Alias,
     AssetId,
     Attachment,
-    Base58, Base64,
+    Base58, Base64, Base64Asset,
     Bool,
     Byte,
     ByteProcessor,
@@ -10,6 +10,7 @@ import {
     IDATA_PROPS,
     IMASS_TRANSFER_PROPS,
     ISET_SCRIPT_PROPS,
+    ISET_ASSET_SCRIPT_PROPS,
     ISPONSORSHIP_PROPS,
     Long,
     MandatoryAssetId,
@@ -222,7 +223,7 @@ export const ISSUE = generate<IISSUE_PROPS>([
     new Bool('reissuable'),
     new Long('fee'),
     new Long('timestamp'),
-    0 // Byte for script smart assets.
+    new Base64Asset('script'),
 ]);
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.ISSUE] = ISSUE;
@@ -351,6 +352,21 @@ export const SET_SCRIPT = generate<ISET_SCRIPT_PROPS>([
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.SET_SCRIPT] = SET_SCRIPT;
 TX_TYPE_MAP[constants.TRANSACTION_TYPE.SET_SCRIPT] = SET_SCRIPT;
+
+export const SET_ASSET_SCRIPT = generate<ISET_ASSET_SCRIPT_PROPS>([
+    constants.TRANSACTION_TYPE_NUMBER.SET_ASSET_SCRIPT,
+    constants.TRANSACTION_TYPE_VERSION.SET_ASSET_SCRIPT,
+    new Byte('chainId'),
+    new Base58('senderPublicKey'),
+    new MandatoryAssetId('assetId'),
+    new Long('fee'),
+    new Long('timestamp'),
+    new ScriptVersion('script'),
+    new Base64('script'),
+]);
+
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.SET_ASSET_SCRIPT] = SET_ASSET_SCRIPT;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.SET_ASSET_SCRIPT] = SET_ASSET_SCRIPT;
 
 export const SPONSORSHIP = generate<ISPONSORSHIP_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.SPONSORSHIP,

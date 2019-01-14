@@ -11,7 +11,8 @@ export const enum TRANSACTION_TYPE_NUMBER {
     MASS_TRANSFER = 11,
     DATA = 12,
     SET_SCRIPT = 13,
-    SPONSORSHIP = 14
+    SPONSORSHIP = 14,
+    SET_ASSET_SCRIPT = 15,
 }
 
 export const enum TRANSACTION_TYPE {
@@ -26,6 +27,7 @@ export const enum TRANSACTION_TYPE {
     MASS_TRANSFER = 'massTransfer',
     DATA = 'data',
     SET_SCRIPT = 'setScript',
+    SET_ASSET_SCRIPT = 'setAssetScript',
     SPONSORSHIP = 'sponsorship'
 }
 
@@ -41,6 +43,7 @@ export const enum TRANSACTION_TYPE_VERSION {
     MASS_TRANSFER = 1,
     DATA = 1,
     SET_SCRIPT = 1,
+    SET_ASSET_SCRIPT = 1,
     SPONSORSHIP = 1
 }
 

@@ -28,6 +28,7 @@ export interface IISSUE_PROPS extends IDEFAULT_PROPS {
     quantity: string | BigNumber;
     precision: number;
     reissuable: boolean;
+    script: string;
     fee: string | BigNumber;
 }
 
@@ -109,6 +110,13 @@ export interface ISET_SCRIPT_PROPS extends IDEFAULT_PROPS {
     fee: string | BigNumber;
 }
 
+export interface ISET_ASSET_SCRIPT_PROPS extends IDEFAULT_PROPS {
+    script: string;
+    assetId: string;
+    chainId: number;
+    fee: string | BigNumber;
+}
+
 export interface ISPONSORSHIP_PROPS extends IDEFAULT_PROPS {
     assetId: string;
     minSponsoredAssetFee: string | BigNumber;
@@ -135,6 +143,7 @@ export type TTX_NUMBER_MAP = {
     12: ISignatureGeneratorConstructor<IDATA_PROPS>;
     13: ISignatureGeneratorConstructor<ISET_SCRIPT_PROPS>;
     14: ISignatureGeneratorConstructor<ISPONSORSHIP_PROPS>;
+    15: ISignatureGeneratorConstructor<ISET_ASSET_SCRIPT_PROPS>;
 }
 
 export type TTX_TYPE_MAP = {
@@ -149,5 +158,6 @@ export type TTX_TYPE_MAP = {
     massTransfer: ISignatureGeneratorConstructor<IMASS_TRANSFER_PROPS>;
     data: ISignatureGeneratorConstructor<IDATA_PROPS>;
     setScript: ISignatureGeneratorConstructor<ISET_SCRIPT_PROPS>;
+    setAssetScript: ISignatureGeneratorConstructor<ISET_ASSET_SCRIPT_PROPS>;
     sponsorship: ISignatureGeneratorConstructor<ISPONSORSHIP_PROPS>;
 }

@@ -1,6 +1,6 @@
 import {
     parseConstructor,
-    toAccountScript,
+    toScript,
     toAddressOrAlias,
     toAssetId,
     toBigNumber,
@@ -43,6 +43,8 @@ export function parseTransactionBytes(bytes: Uint8Array) {
             return parseSetScriptTx(bytes);
         case TRANSACTION_TYPE_NUMBER.SPONSORSHIP:
             return parseSponsorshipTx(bytes);
+        case TRANSACTION_TYPE_NUMBER.SET_ASSET_SCRIPT:
+            return parseSetAssetScriptTx(bytes);
         default:
             throw new Error(`Type ${type} is not supported!`);
     }
@@ -64,7 +66,7 @@ export const parseIssueTx = parseConstructor([
     toBoolean('reissuable'),
     toBigNumber('fee'),
     toBigNumber('timestamp'),
-    toBoolean('hasScript')
+    toScript('script'),
 ]);
 
 export const parseTransferTx = parseConstructor([
@@ -158,9 +160,20 @@ export const parseSetScriptTx = parseConstructor([
     toNumber('version'),
     toNumber('chainId'),
     toBase58('senderPublicKey'),
-    toAccountScript('script'),
+    toScript('script'),
     toBigNumber('fee'),
     toBigNumber('timestamp')
+]);
+
+export const parseSetAssetScriptTx = parseConstructor([
+    toNumber('type'),
+    toNumber('version'),
+    toNumber('chainId'),
+    toBase58('senderPublicKey'),
+    toBase58('assetId'),
+    toBigNumber('fee'),
+    toBigNumber('timestamp'),
+    toScript('script'),
 ]);
 
 export const parseSponsorshipTx = parseConstructor([
