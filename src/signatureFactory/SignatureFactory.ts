@@ -223,6 +223,7 @@ export const ISSUE = generate<IISSUE_PROPS>([
     new Bool('reissuable'),
     new Long('fee'),
     new Long('timestamp'),
+    new ScriptVersion('script'),
     new Base64Asset('script'),
 ]);
 

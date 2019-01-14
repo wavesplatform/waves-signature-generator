@@ -71,7 +71,7 @@ export class Base64Asset extends ByteProcessor {
             const lengthBytes = Uint8Array.from(convert.shortToByteArray(bytes.length));
             return Promise.resolve(concatUint8Arrays(lengthBytes, bytes));
         } else {
-            return Promise.resolve(Uint8Array.from([0]));
+            return Promise.resolve(Uint8Array.from([]));
         }
     }
 }
