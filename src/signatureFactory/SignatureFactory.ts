@@ -414,6 +414,9 @@ export const BYTES_GENERATORS_MAP: Record<TRANSACTION_TYPE, Record<number, ISign
     },
     [TRANSACTION_TYPE_NUMBER.SPONSORSHIP]: {
         1: SPONSORSHIP
+    },
+    [TRANSACTION_TYPE_NUMBER.SET_ASSET_SCRIPT]: {
+        1: SET_ASSET_SCRIPT
     }
 } as any;
 
