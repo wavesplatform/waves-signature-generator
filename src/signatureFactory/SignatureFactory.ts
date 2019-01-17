@@ -4,7 +4,6 @@ import {
     Attachment,
     Base58, Base64, Base64Asset,
     Bool,
-    Byte,
     ByteProcessor,
     DataEntries,
     IDATA_PROPS,
@@ -12,15 +11,13 @@ import {
     ISET_SCRIPT_PROPS,
     ISET_ASSET_SCRIPT_PROPS,
     ISPONSORSHIP_PROPS,
-    Long,
     MandatoryAssetId,
     OrderType,
     Recipient,
     StringWithLength,
     ScriptVersion,
     Transfers,
-    TRANSACTION_TYPE,
-    TRANSACTION_TYPE_NUMBER,
+    TRANSACTION_TYPE_NUMBER, IEXCHANGE_PROPS, IEXCHANGE_PROPS_V2, Int,
 } from '..';
 import {
     IBURN_PROPS,
@@ -41,6 +38,8 @@ import {
 import { concatUint8Arrays } from '../utils/concat';
 import crypto from '../utils/crypto';
 import * as constants from '../constants';
+import convert from '../utils/convert';
+import base58 from '../libs/base58';
 
 const ERRORS = {
     NO_DATA: { code: 'NO_DATA', message: 'No data' },
@@ -180,11 +179,11 @@ export const CREATE_ORDER_SIGNATURE = generate<IORDER_PROPS>([
     new AssetId('amountAsset'),
     new AssetId('priceAsset'),
     new OrderType('orderType'),
-    new Long('price'),
-    new Long('amount'),
-    new Long('timestamp'),
-    new Long('expiration'),
-    new Long('matcherFee')
+    new Int('price', 8),
+    new Int('amount', 8),
+    new Int('timestamp', 8),
+    new Int('expiration', 8),
+    new Int('matcherFee', 8)
 ]);
 
 export const CREATE_ORDER_SIGNATURE_V2 = generate<IORDER_PROPS>([
@@ -194,16 +193,16 @@ export const CREATE_ORDER_SIGNATURE_V2 = generate<IORDER_PROPS>([
     new AssetId('amountAsset'),
     new AssetId('priceAsset'),
     new OrderType('orderType'),
-    new Long('price'),
-    new Long('amount'),
-    new Long('timestamp'),
-    new Long('expiration'),
-    new Long('matcherFee')
+    new Int('price', 8),
+    new Int('amount', 8),
+    new Int('timestamp', 8),
+    new Int('expiration', 8),
+    new Int('matcherFee', 8)
 ]);
 
 export const AUTH_ORDER_SIGNATURE = generate<IDEFAULT_PROPS>([
     new Base58('senderPublicKey'),
-    new Long('timestamp')
+    new Int('timestamp', 8)
 ]);
 
 export const CANCEL_ORDER_SIGNATURE = generate<ICANCEL_ORDER_PROPS>([
@@ -211,18 +210,31 @@ export const CANCEL_ORDER_SIGNATURE = generate<ICANCEL_ORDER_PROPS>([
     new Base58('orderId')
 ]);
 
+export const MATCHER_BYTES_GENERATOR_MAP = {
+    CREATE_ORDER: {
+        0: CREATE_ORDER_SIGNATURE,
+        2: CREATE_ORDER_SIGNATURE_V2
+    },
+    AUTH_ORDER: {
+        0: AUTH_ORDER_SIGNATURE
+    },
+    CANCEL_ORDER: {
+        0: CANCEL_ORDER_SIGNATURE
+    }
+};
+
 export const ISSUE = generate<IISSUE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.ISSUE,
     constants.TRANSACTION_TYPE_VERSION.ISSUE,
-    new Byte('chainId'),
+    new Int('chainId', 1),
     new Base58('senderPublicKey'),
     new StringWithLength('name'),
     new StringWithLength('description'),
-    new Long('quantity'),
-    new Byte('precision'),
+    new Int('quantity', 8),
+    new Int('precision', 1),
     new Bool('reissuable'),
-    new Long('fee'),
-    new Long('timestamp'),
+    new Int('fee', 8),
+    new Int('timestamp', 8),
     new ScriptVersion('script'),
     new Base64Asset('script'),
 ]);
@@ -236,9 +248,9 @@ export const TRANSFER = generate<ITRANSFER_PROPS>([
     new Base58('senderPublicKey'),
     new AssetId('assetId'),
     new AssetId('feeAssetId'),
-    new Long('timestamp'),
-    new Long('amount'),
-    new Long('fee'),
+    new Int('timestamp', 8),
+    new Int('amount', 8),
+    new Int('fee', 8),
     new Recipient('recipient'),
     new Attachment('attachment')
 ]);
@@ -249,13 +261,13 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.TRANSFER] = TRANSFER;
 export const REISSUE = generate<IREISSUE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.REISSUE,
     constants.TRANSACTION_TYPE_VERSION.REISSUE,
-    new Byte('chainId'),
+    new Int('chainId', 1),
     new Base58('senderPublicKey'),
     new MandatoryAssetId('assetId'),
-    new Long('quantity'),
+    new Int('quantity', 8),
     new Bool('reissuable'),
-    new Long('fee'),
-    new Long('timestamp')
+    new Int('fee', 8),
+    new Int('timestamp', 8)
 ]);
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.REISSUE] = REISSUE;
@@ -264,16 +276,86 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.REISSUE] = REISSUE;
 export const BURN = generate<IBURN_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.BURN,
     constants.TRANSACTION_TYPE_VERSION.BURN,
-    new Byte('chainId'),
+    new Int('chainId', 1),
     new Base58('senderPublicKey'),
     new MandatoryAssetId('assetId'),
-    new Long('quantity'),
-    new Long('fee'),
-    new Long('timestamp')
+    new Int('quantity', 8),
+    new Int('fee', 8),
+    new Int('timestamp', 8)
 ]);
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.BURN] = BURN;
 TX_TYPE_MAP[constants.TRANSACTION_TYPE.BURN] = BURN;
+
+export class Order extends ByteProcessor {
+
+    public process(value: IORDER_PROPS & ({ proofs: Array<string> } | { signature: string })): Promise<Uint8Array> {
+        const version = value.version || 0;
+        const generator = (MATCHER_BYTES_GENERATOR_MAP as any).CREATE_ORDER[version] as ISignatureGeneratorConstructor<IORDER_PROPS>;
+
+        if (!generator) {
+            throw new Error(`Has no order schema with version "${version}"`);
+        }
+
+        let signatureBytes: Uint8Array;
+
+        if ('proofs' in value) {
+            const proofsBytes = value.proofs.map(proof => {
+                const proofBytes = base58.decode(proof);
+
+                return concatUint8Arrays(
+                    Uint8Array.from(convert.longToByteArray(proofBytes.length, 2)),
+                    proofBytes
+                )
+            });
+
+            signatureBytes = concatUint8Arrays(
+                Uint8Array.from([1]),
+                Uint8Array.from(convert.longToByteArray(value.proofs.length, 2)),
+                ...proofsBytes
+            )
+        } else {
+            signatureBytes = base58.decode(value.signature);
+        }
+
+        return new generator(value).getBytes().then(bytes => {
+            console.log('Order length', convert.longToByteArray(bytes.length, 4));
+            return concatUint8Arrays(
+                Uint8Array.from(convert.longToByteArray(bytes.length + signatureBytes.length, 4)),
+                Uint8Array.from(convert.longToByteArray(version || 1, 1)),
+                bytes,
+                signatureBytes
+            );
+        });
+    }
+
+}
+
+export const EXCHANGE = generate<IEXCHANGE_PROPS>([
+    constants.TRANSACTION_TYPE_NUMBER.EXCHANGE,
+    new Order('buyOrder'),
+    new Order('sellOrder'),
+    new Int('price', 8),
+    new Int('amount', 8),
+    new Int('buyMatcherFee', 8),
+    new Int('sellMatcherFee', 8),
+    new Int('fee', 8),
+    new Int('timestamp', 8)
+]);
+
+export const EXCHANGE_V2 = generate<IEXCHANGE_PROPS_V2>([
+    0,
+    constants.TRANSACTION_TYPE_NUMBER.EXCHANGE,
+    constants.TRANSACTION_TYPE_VERSION.EXCHANGE,
+    new Order('buyOrder'),
+    new Order('sellOrder'),
+    new Int('price', 8),
+    new Int('amount', 8),
+    new Int('buyMatcherFee', 8),
+    new Int('sellMatcherFee', 8),
+    new Int('fee', 8),
+    new Int('timestamp', 8)
+]);
 
 export const LEASE = generate<ILEASE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.LEASE,
@@ -281,9 +363,9 @@ export const LEASE = generate<ILEASE_PROPS>([
     0, // Asset id for lease custom asset (dos't work)
     new Base58('senderPublicKey'),
     new Recipient('recipient'),
-    new Long('amount'),
-    new Long('fee'),
-    new Long('timestamp')
+    new Int('amount', 8),
+    new Int('fee', 8),
+    new Int('timestamp', 8)
 ]);
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.LEASE] = LEASE;
@@ -292,10 +374,10 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.LEASE] = LEASE;
 export const CANCEL_LEASING = generate<ICANCEL_LEASING_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.CANCEL_LEASING,
     constants.TRANSACTION_TYPE_VERSION.CANCEL_LEASING,
-    new Byte('chainId'),
+    new Int('chainId', 1),
     new Base58('senderPublicKey'),
-    new Long('fee'),
-    new Long('timestamp'),
+    new Int('fee', 8),
+    new Int('timestamp', 8),
     new Base58('transactionId')
 ]);
 
@@ -307,8 +389,8 @@ export const CREATE_ALIAS = generate<ICREATE_ALIAS_PROPS>([
     constants.TRANSACTION_TYPE_VERSION.CREATE_ALIAS,
     new Base58('senderPublicKey'),
     new Alias('alias'),
-    new Long('fee'),
-    new Long('timestamp')
+    new Int('fee', 8),
+    new Int('timestamp', 8)
 ]);
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.CREATE_ALIAS] = CREATE_ALIAS;
@@ -320,8 +402,8 @@ export const MASS_TRANSFER = generate<IMASS_TRANSFER_PROPS>([
     new Base58('senderPublicKey'),
     new AssetId('assetId'),
     new Transfers('transfers'),
-    new Long('timestamp'),
-    new Long('fee'),
+    new Int('timestamp', 8),
+    new Int('fee', 8),
     new Attachment('attachment')
 ]);
 
@@ -333,8 +415,8 @@ export const DATA = generate<IDATA_PROPS>([
     constants.TRANSACTION_TYPE_VERSION.DATA,
     new Base58('senderPublicKey'),
     new DataEntries('data'),
-    new Long('timestamp'),
-    new Long('fee')
+    new Int('timestamp', 8),
+    new Int('fee', 8)
 ]);
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.DATA] = DATA;
@@ -343,12 +425,12 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.DATA] = DATA;
 export const SET_SCRIPT = generate<ISET_SCRIPT_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.SET_SCRIPT,
     constants.TRANSACTION_TYPE_VERSION.SET_SCRIPT,
-    new Byte('chainId'),
+    new Int('chainId', 1),
     new Base58('senderPublicKey'),
     new ScriptVersion('script'),
     new Base64('script'),
-    new Long('fee'),
-    new Long('timestamp')
+    new Int('fee', 8),
+    new Int('timestamp', 8)
 ]);
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.SET_SCRIPT] = SET_SCRIPT;
@@ -357,11 +439,11 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.SET_SCRIPT] = SET_SCRIPT;
 export const SET_ASSET_SCRIPT = generate<ISET_ASSET_SCRIPT_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.SET_ASSET_SCRIPT,
     constants.TRANSACTION_TYPE_VERSION.SET_ASSET_SCRIPT,
-    new Byte('chainId'),
+    new Int('chainId', 1),
     new Base58('senderPublicKey'),
     new MandatoryAssetId('assetId'),
-    new Long('fee'),
-    new Long('timestamp'),
+    new Int('fee', 8),
+    new Int('timestamp', 8),
     new ScriptVersion('script'),
     new Base64('script'),
 ]);
@@ -374,15 +456,15 @@ export const SPONSORSHIP = generate<ISPONSORSHIP_PROPS>([
     constants.TRANSACTION_TYPE_VERSION.SPONSORSHIP,
     new Base58('senderPublicKey'),
     new Base58('assetId'), // Not the AssetId byte processor
-    new Long('minSponsoredAssetFee'),
-    new Long('fee'),
-    new Long('timestamp')
+    new Int('minSponsoredAssetFee', 8),
+    new Int('fee', 8),
+    new Int('timestamp', 8)
 ]);
 
 TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.SPONSORSHIP] = SPONSORSHIP;
 TX_TYPE_MAP[constants.TRANSACTION_TYPE.SPONSORSHIP] = SPONSORSHIP;
 
-export const BYTES_GENERATORS_MAP: Record<TRANSACTION_TYPE, Record<number, ISignatureGeneratorConstructor<any>>> = {
+export const BYTES_GENERATORS_MAP: Record<TRANSACTION_TYPE_NUMBER, Record<number, ISignatureGeneratorConstructor<any>>> = {
     [TRANSACTION_TYPE_NUMBER.ISSUE]: {
         2: ISSUE
     },
@@ -394,6 +476,10 @@ export const BYTES_GENERATORS_MAP: Record<TRANSACTION_TYPE, Record<number, ISign
     },
     [TRANSACTION_TYPE_NUMBER.BURN]: {
         2: BURN
+    },
+    [TRANSACTION_TYPE_NUMBER.EXCHANGE]: {
+        0: EXCHANGE,
+        2: EXCHANGE_V2
     },
     [TRANSACTION_TYPE_NUMBER.LEASE]: {
         2: LEASE
@@ -420,16 +506,3 @@ export const BYTES_GENERATORS_MAP: Record<TRANSACTION_TYPE, Record<number, ISign
         1: SET_ASSET_SCRIPT
     }
 } as any;
-
-export const MATCHER_BYTES_GENERATOR_MAP = {
-    CREATE_ORDER: {
-        0: CREATE_ORDER_SIGNATURE,
-        2: CREATE_ORDER_SIGNATURE_V2
-    },
-    AUTH_ORDER: {
-        0: AUTH_ORDER_SIGNATURE
-    },
-    CANCEL_ORDER: {
-        0: CANCEL_ORDER_SIGNATURE
-    }
-};

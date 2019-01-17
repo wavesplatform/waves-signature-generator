@@ -66,14 +66,14 @@ export default {
 
     },
 
-    longToByteArray(input: number): number[] {
+    longToByteArray(input: number, length: number): number[] {
 
         if (typeof input !== 'number') {
             throw new Error('Numeric input is expected');
         }
 
-        const bytes = new Array(7);
-        for (let k = 7; k >= 0; k--) {
+        const bytes = new Array(length);
+        for (let k = length - 1; k >= 0; k--) {
             bytes[k] = input & (255);
             input = input / 256;
         }

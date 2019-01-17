@@ -4,7 +4,7 @@ import base58 from '../libs/base58';
 import convert from '../utils/convert';
 import { concatUint8Arrays } from '../utils/concat';
 import { DATA_ENTRIES_BYTE_LIMIT, SET_SCRIPT_LANG_VERSION, STUB_NAME } from '../constants';
-import { config } from '..';
+import { config, TLong } from '..';
 import { ALIAS_VERSION, TRANSFER_ATTACHMENT_BYTE_LIMIT, WAVES_BLOCKCHAIN_ID, WAVES_ID } from '../constants';
 
 
@@ -83,25 +83,27 @@ export class Bool extends ByteProcessor {
     }
 }
 
-export class Byte extends ByteProcessor {
-    public process(value: number) {
-        if (typeof value !== 'number') throw new Error('You should pass a number to Byte constructor');
-        if (value < 0 || value > 255) throw new Error('Byte value must fit between 0 and 255');
-        return Promise.resolve(Uint8Array.from([value]));
-    }
-}
+export class Int extends ByteProcessor {
 
-export class Long extends ByteProcessor {
-    public process(value: number | string | BigNumber) {
+    private readonly length: number;
+
+    constructor(name: string, length: number) {
+        super(name);
+        this.length = length;
+    }
+
+    public process(value: number | TLong): Promise<Uint8Array> {
         let bytes;
+
         if (typeof value === 'number') {
-            bytes = convert.longToByteArray(value);
+            bytes = convert.longToByteArray(value, this.length);
         } else {
             if (typeof value === 'string') {
                 value = new BigNumber(value);
             }
             bytes = convert.bigNumberToByteArray(value);
         }
+
         return Promise.resolve(Uint8Array.from(bytes));
     }
 }
@@ -216,7 +218,7 @@ export class ScriptVersion extends ByteProcessor {
 export class Transfers extends ByteProcessor {
     public process(values: any) {
         const recipientProcessor = new Recipient(STUB_NAME);
-        const amountProcessor = new Long(STUB_NAME);
+        const amountProcessor = new Int(STUB_NAME, 8);
 
         const promises = [];
         for (let i = 0; i < values.length; i++) {
