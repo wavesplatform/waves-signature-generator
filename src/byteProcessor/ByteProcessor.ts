@@ -112,7 +112,7 @@ export class SignLong extends ByteProcessor {
     public process(value: number | string | BigNumber) {
         let bytes;
         if (typeof value === 'number') {
-            bytes = convert.signLongToByteArray(value);
+            bytes = convert.longToByteArray(value, 8);
         } else {
             if (typeof value === 'string') {
                 value = new BigNumber(value);

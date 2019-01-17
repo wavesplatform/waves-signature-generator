@@ -319,7 +319,6 @@ export class Order extends ByteProcessor {
         }
 
         return new generator(value).getBytes().then(bytes => {
-            console.log('Order length', convert.longToByteArray(bytes.length, 4));
             return concatUint8Arrays(
                 Uint8Array.from(convert.longToByteArray(bytes.length + signatureBytes.length, 4)),
                 Uint8Array.from(convert.longToByteArray(version || 1, 1)),

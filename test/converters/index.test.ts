@@ -23,11 +23,11 @@ it('byte array to string', () => {
 
 it('Sign Number to byte Array', () => {
     const converter = utils.convert.signLongToByteArray;
-    const converter2 = utils.convert.longToByteArray;
+    const converter2 = (n: number) => utils.convert.longToByteArray(n, 8);
     const bytes = converter(70000);
     const bytes2 = converter2(70000);
     expect(bytes.join()).toBe(bytes2.join());
-    
+
     const bytes3 = converter(-9999999999);
     expect(bytes3.join()).toBe([255, 255, 255, 253, 171, 244, 28, 1].join());
 });
@@ -38,7 +38,7 @@ it('Sign BigNumber to byte Array', () => {
     const bytes = converter(new BigNumber(70000));
     const bytes2 = converter2(new BigNumber(70000));
     expect(bytes.join()).toBe(bytes2.join());
-    
+
     const bytes3 = converter(new BigNumber('-9999999999'));
     expect(bytes3.join()).toBe([255, 255, 255, 253, 171, 244, 28, 1].join());
 });
