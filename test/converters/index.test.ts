@@ -36,7 +36,7 @@ it('Sign BigNumber to byte Array', () => {
     const converter = utils.convert.signBigNumberToByteArray;
     const converter2 = utils.convert.bigNumberToByteArray;
     const bytes = converter(new BigNumber(70000));
-    const bytes2 = converter2(new BigNumber(70000));
+    const bytes2 = converter2(new BigNumber(70000), 8);
     expect(bytes.join()).toBe(bytes2.join());
 
     const bytes3 = converter(new BigNumber('-9999999999'));

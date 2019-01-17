@@ -101,7 +101,7 @@ export class Int extends ByteProcessor {
             if (typeof value === 'string') {
                 value = new BigNumber(value);
             }
-            bytes = convert.bigNumberToByteArray(value);
+            bytes = convert.bigNumberToByteArray(value, this.length);
         }
 
         return Promise.resolve(Uint8Array.from(bytes));

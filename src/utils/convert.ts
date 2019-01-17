@@ -81,24 +81,24 @@ export default {
         return bytes;
 
     },
-    
+
     signLongToByteArray(input: number): number[] {
         if (typeof input !== 'number') {
             throw new Error('Numeric input is expected');
         }
-    
+
         const byteArray = [0, 0, 0, 0, 0, 0, 0, 0];
-    
-        for ( let index = 0; index < byteArray.length; index ++ ) {
+
+        for (let index = 0; index < byteArray.length; index++) {
             let byte = input & 0xff;
-            byteArray [ index ] = byte;
-            input = (input - byte) / 256 ;
+            byteArray [index] = byte;
+            input = (input - byte) / 256;
         }
 
         return byteArray.reverse();
     },
 
-    bigNumberToByteArray(input: BigNumber): number[] {
+    bigNumberToByteArray(input: BigNumber, length: number): number[] {
 
         if (!(input instanceof BigNumber)) {
             throw new Error('BigNumber input is expected');
@@ -106,8 +106,8 @@ export default {
 
         const performBitwiseAnd255 = performBitwiseAnd.bind(null, new BigNumber(255));
 
-        const bytes = new Array();
-        for (let k = 7; k >= 0; k--) {
+        const bytes = [];
+        for (let k = length - 1; k >= 0; k--) {
             bytes[k] = performBitwiseAnd255(input);
             input = input.div(256);
         }
@@ -115,7 +115,7 @@ export default {
         return bytes;
 
     },
-    
+
     signBigNumberToByteArray(input: BigNumber): number[] {
         if (!(input instanceof BigNumber)) {
             throw new Error('BigNumber input is expected');
@@ -125,9 +125,9 @@ export default {
         if (isMinus) {
             input = input.plus(1, 10);
         }
-        
+
         const bytes = new Array(8);
-        
+
         for (let k = 7; k >= 0; k--) {
             bytes[k] = performBitwiseAnd255(input);
             if (isMinus) {
@@ -136,7 +136,7 @@ export default {
             input = input.div(256);
         }
         return bytes;
-        
+
     },
 
     stringToByteArray(input: string | number): number[] {
