@@ -41,6 +41,7 @@ import * as constants from '../constants';
 import convert from '../utils/convert';
 import base58 from '../libs/base58';
 
+
 const ERRORS = {
     NO_DATA: { code: 'NO_DATA', message: 'No data' },
     FIELD_ERROR: { code: 'FIELD_ERROR', message: 'Invalid field', field: null },
@@ -290,7 +291,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.BURN] = BURN;
 export class Order extends ByteProcessor {
 
     public process(value: IORDER_PROPS & ({ proofs: Array<string> } | { signature: string })): Promise<Uint8Array> {
-        const version = value.version || 0;
+        const version = value.version === 1 ? 0 : value.version || 0;
         const generator = (MATCHER_BYTES_GENERATOR_MAP as any).CREATE_ORDER[version] as ISignatureGeneratorConstructor<IORDER_PROPS>;
 
         if (!generator) {
@@ -306,14 +307,14 @@ export class Order extends ByteProcessor {
                 return concatUint8Arrays(
                     Uint8Array.from(convert.longToByteArray(proofBytes.length, 2)),
                     proofBytes
-                )
+                );
             });
 
             signatureBytes = concatUint8Arrays(
                 Uint8Array.from([1]),
                 Uint8Array.from(convert.longToByteArray(value.proofs.length, 2)),
                 ...proofsBytes
-            )
+            );
         } else {
             signatureBytes = base58.decode(value.signature);
         }
