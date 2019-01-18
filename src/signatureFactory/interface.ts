@@ -1,4 +1,4 @@
-import { BigNumber } from '@waves/data-entities';
+import { TLong, TOrderType } from '../interface';
 
 
 export interface ISignatureGenerator {
@@ -18,78 +18,80 @@ export interface ISignatureGeneratorConstructor<T> {
 
 export interface IDEFAULT_PROPS {
     senderPublicKey: string;
-    timestamp: string | BigNumber;
+    timestamp: number | TLong;
 }
 
 export interface IISSUE_PROPS extends IDEFAULT_PROPS {
     chainId: number;
     name: string;
     description: string;
-    quantity: string | BigNumber;
+    quantity: TLong;
     precision: number;
     reissuable: boolean;
-    fee: string | BigNumber;
+    script: string;
+    fee: TLong;
 }
 
 export interface ITRANSFER_PROPS extends IDEFAULT_PROPS {
     assetId: string;
     feeAssetId: string;
-    amount: string | BigNumber;
-    fee: string | BigNumber;
+    amount: TLong;
+    fee: TLong;
     recipient: string;
     attachment: string;
 }
 
 export interface IREISSUE_PROPS extends IDEFAULT_PROPS {
     assetId: string;
-    quantity: string | BigNumber;
+    quantity: TLong;
     reissuable: boolean;
-    fee: string | BigNumber;
+    fee: TLong;
 }
 
 export interface IBURN_PROPS extends IDEFAULT_PROPS {
     assetId: string;
-    quantity: string | BigNumber;
+    quantity: TLong;
     fee: string;
 }
 
 export interface ILEASE_PROPS extends IDEFAULT_PROPS {
     recipient: string;
-    amount: string | BigNumber;
-    fee: string | BigNumber;
+    amount: TLong;
+    fee: TLong;
 }
 
 export interface ICANCEL_LEASING_PROPS extends IDEFAULT_PROPS {
-    fee: string | BigNumber;
+    fee: TLong;
     transactionId: string;
 }
 
 export interface ICREATE_ALIAS_PROPS extends IDEFAULT_PROPS {
     alias: string;
-    fee: string | BigNumber;
+    fee: TLong;
 }
 
 export interface IMASS_TRANSFER_PROPS extends IDEFAULT_PROPS {
     assetId: string;
     transfers: Array<IMASS_TRANSFER_TRANSFERS>;
-    fee: string | BigNumber;
+    fee: TLong;
     attachment: string;
 }
 
 export interface IDATA_PROPS extends IDEFAULT_PROPS {
     data: Array<IDATA_ENTRY>;
-    fee: string | BigNumber;
+    fee: TLong;
 }
 
 export interface IORDER_PROPS extends IDEFAULT_PROPS {
+    version?: number
     matcherPublicKey: string;
     amountAsset: string;
     priceAsset: string;
-    orderType: string;
-    price: string;
-    amount: string;
+    orderType: TOrderType;
+    price: TLong;
+    amount: TLong;
     expiration: number;
-    matcherFee: string;
+    matcherFee: TLong;
 }
 
 export interface ICANCEL_ORDER_PROPS {
@@ -99,22 +101,42 @@ export interface ICANCEL_ORDER_PROPS {
 
 export interface IMASS_TRANSFER_TRANSFERS {
     recipient: string;
-    amount: string | BigNumber;
+    amount: TLong;
 }
 
 
 export interface ISET_SCRIPT_PROPS extends IDEFAULT_PROPS {
     script: string;
     chainId: number;
-    fee: string | BigNumber;
+    fee: TLong;
+}
+
+export interface ISET_ASSET_SCRIPT_PROPS extends IDEFAULT_PROPS {
+    script: string;
+    assetId: string;
+    chainId: number;
+    fee: TLong;
 }
 
 export interface ISPONSORSHIP_PROPS extends IDEFAULT_PROPS {
     assetId: string;
-    minSponsoredAssetFee: string | BigNumber;
-    fee: string | BigNumber;
+    minSponsoredAssetFee: TLong;
+    fee: TLong;
 }
 
+export interface IEXCHANGE_PROPS extends IDEFAULT_PROPS {
+    buyOrder: IORDER_PROPS;
+    sellOrder: IORDER_PROPS;
+    price: TLong;
+    amount: TLong;
+    buyMatcherFee: TLong;
+    sellMatcherFee: TLong;
+    fee: TLong;
+}
+
+export interface IEXCHANGE_PROPS_V2 extends IEXCHANGE_PROPS {
+    version: number;
+}
 
 export interface IDATA_ENTRY {
     key: string;
@@ -135,6 +157,7 @@ export type TTX_NUMBER_MAP = {
     12: ISignatureGeneratorConstructor<IDATA_PROPS>;
     13: ISignatureGeneratorConstructor<ISET_SCRIPT_PROPS>;
     14: ISignatureGeneratorConstructor<ISPONSORSHIP_PROPS>;
+    15: ISignatureGeneratorConstructor<ISET_ASSET_SCRIPT_PROPS>;
 }
 
 export type TTX_TYPE_MAP = {
@@ -149,5 +172,6 @@ export type TTX_TYPE_MAP = {
     massTransfer: ISignatureGeneratorConstructor<IMASS_TRANSFER_PROPS>;
     data: ISignatureGeneratorConstructor<IDATA_PROPS>;
     setScript: ISignatureGeneratorConstructor<ISET_SCRIPT_PROPS>;
+    setAssetScript: ISignatureGeneratorConstructor<ISET_ASSET_SCRIPT_PROPS>;
     sponsorship: ISignatureGeneratorConstructor<ISPONSORSHIP_PROPS>;
 }

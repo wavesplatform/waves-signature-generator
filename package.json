@@ -1,13 +1,15 @@
 {
   "name": "@waves/signature-generator",
-  "version": "1.0.9",
+  "version": "4.0.0",
   "main": "dist/index.js",
   "files": [
     "dist",
-    "src"
+    "src",
+    "libs"
   ],
-  "types": "src/index.ts",
+  "types": "dist/index.d.ts",
   "dependencies": {
+    "@types/crypto-js": "^3.1.43",
     "@waves/data-entities": "^1.6.0",
     "base64-js": "1.3.0",
     "crypto-js": "3.1.9-1"
@@ -34,14 +36,13 @@
     ],
     "moduleFileExtensions": [
       "ts",
-      "tsx",
       "js"
     ],
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
     "testMatch": [
-      "**/test/**/*.test.+(ts|tsx|js)"
+      "**/test/**/*.test.+(ts|js)"
     ]
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import converters from '../../libs/converters';
+import converters from '../../../libs/converters';
 import base58 from '../../libs/base58';
 import { fromByteArray } from 'base64-js';
 import { ALIAS_VERSION, DATA_TRANSACTION_FIELD_TYPES } from '../../constants';
@@ -7,6 +7,7 @@ import { ALIAS_VERSION, DATA_TRANSACTION_FIELD_TYPES } from '../../constants';
 const LENGTH_SIZE = 2;
 const LONG_BYTES_SIZE = 8;
 
+// @ts-ignore
 const getDataTxFieldTypeByCode = fieldTypeCode => {
     switch (fieldTypeCode) {
         case DATA_TRANSACTION_FIELD_TYPES.INTEGER:
@@ -22,6 +23,7 @@ const getDataTxFieldTypeByCode = fieldTypeCode => {
     }
 };
 
+// @ts-ignore
 const addAccValue = (name: string, processor: IByteParser<any>) => (acc, bytes) => {
     if (!acc.data) {
         acc.data = Object.create(null);
@@ -30,6 +32,7 @@ const addAccValue = (name: string, processor: IByteParser<any>) => (acc, bytes) 
     return acc;
 };
 
+// @ts-ignore
 const moveCursor = (acc, shift) => {
     if (!acc.cursor) {
         acc.cursor = 0;
@@ -38,6 +41,7 @@ const moveCursor = (acc, shift) => {
     return acc;
 };
 
+// @ts-ignore
 const wrap = processor => (acc, bytes) => {
     const start = acc.cursor || 0;
     const { shift, value } = processor(bytes, start);
@@ -46,38 +50,51 @@ const wrap = processor => (acc, bytes) => {
 };
 
 
+// @ts-ignore
 const byteToBigNumber = shift => (bytes, start) => {
-    const value = converters.byteArrayToBigInteger(bytes.slice(start, start + shift), 0);
+    const value = converters.byteArrayToBigInteger(bytes.slice(start, start + shift));
     return { value, shift };
 };
 
+// @ts-ignore
+const byteToSignBigNumber = shift => (bytes, start) => {
+    const value = converters.byteArrayToSignBigInteger(bytes.slice(start, start + shift));
+    return { value, shift };
+};
+
+// @ts-ignore
 const byteToNumber = shift => (bytes, start) => {
     const result = byteToBigNumber(shift)(bytes, start);
     return { shift, value: result.value.toNumber() };
 };
 
+// @ts-ignore
 const byteToBoolean = (bytes, start) => {
     const value = !!bytes[start];
     return { value, shift: 1 };
 };
 
+// @ts-ignore
 const byteToString = shift => (bytes, start) => {
-    const value = converters.byteArrayToString(bytes.slice(start, start + shift), 0);
+    const value = converters.byteArrayToString(bytes.slice(start, start + shift));
     return { shift, value };
 };
 
+// @ts-ignore
 const byteToStringWithLength = (bytes, start) => {
     const lengthInfo = byteToNumber(LENGTH_SIZE)(bytes, start);
     const { value } = byteToString(lengthInfo.value)(bytes, start + LENGTH_SIZE);
     return { shift: lengthInfo.value + LENGTH_SIZE, value };
 };
 
+// @ts-ignore
 const byteToBase58 = (bytes, start, length?) => { // TODO!
     const shift = length || 32;
     const value = base58.encode(bytes.slice(start, start + shift));
     return { value, shift };
 };
 
+// @ts-ignore
 const byteToAssetId = (bytes, start) => {
     const shift = 33;
     const isWaves = !bytes[start];
@@ -88,6 +105,7 @@ const byteToAssetId = (bytes, start) => {
     return { shift, value };
 };
 
+// @ts-ignore
 const byteToAddressOrAlias = (bytes, start) => {
     if (bytes[start] === ALIAS_VERSION) {
         const aliasData = byteToStringWithLength(bytes, start + 2);
@@ -97,12 +115,14 @@ const byteToAddressOrAlias = (bytes, start) => {
     }
 };
 
+// @ts-ignore
 const byteNewAliasToString = (bytes, start) => {
     const shift = byteToNumber(LENGTH_SIZE)(bytes, start).value + LENGTH_SIZE;
     const { value } = byteToStringWithLength(bytes, start + 4);
     return { shift, value };
 };
 
+// @ts-ignore
 const byteToTransfers = (bytes, start) => {
     const count = byteToNumber(LENGTH_SIZE)(bytes, start).value;
     const transfers = [];
@@ -123,6 +143,7 @@ const byteToTransfers = (bytes, start) => {
     return { shift, value: transfers };
 };
 
+// @ts-ignore
 const byteToScript = (bytes, start) => {
     const VERSION_LENGTH = 1;
 
@@ -138,6 +159,7 @@ const byteToScript = (bytes, start) => {
     return { value, shift: to - start };
 };
 
+// @ts-ignore
 const byteToData = (bytes, start) => {
     const count = getNumberFromBytes(bytes, LENGTH_SIZE, start);
     const fields = [];
@@ -157,7 +179,7 @@ const byteToData = (bytes, start) => {
 
         switch (fieldTypeCode) {
             case DATA_TRANSACTION_FIELD_TYPES.INTEGER:
-                value = byteToBigNumber(LONG_BYTES_SIZE)(bytes, start + shift).value;
+                value = byteToSignBigNumber(LONG_BYTES_SIZE)(bytes, start + shift).value;
                 shift += LONG_BYTES_SIZE;
                 break;
             case DATA_TRANSACTION_FIELD_TYPES.BOOLEAN:
@@ -185,6 +207,7 @@ const byteToData = (bytes, start) => {
     return { value: fields, shift };
 };
 
+// @ts-ignore
 export const getNumberFromBytes = (bytes, length, start = 0) => {
     return byteToNumber(length)(bytes, start).value;
 };
@@ -193,47 +216,48 @@ export function toBoolean(name: string) {
     return addAccValue(name, byteToBoolean);
 }
 
-export function toBigNumber(name) {
+export function toBigNumber(name: string) {
     return addAccValue(name, byteToBigNumber(LONG_BYTES_SIZE));
 }
 
-export function toNumber(name) {
+export function toNumber(name: string) {
     return addAccValue(name, byteToNumber(1));
 }
 
-export function toStringWithLength(name) {
+export function toStringWithLength(name: string) {
     return addAccValue(name, byteToStringWithLength);
 }
 
-export function toBase58(name) {
+export function toBase58(name: string) {
     return addAccValue(name, byteToBase58);
 }
 
-export function toAssetId(name) {
+export function toAssetId(name: string) {
     return addAccValue(name, byteToAssetId);
 }
 
-export function toAddressOrAlias(name) {
+export function toAddressOrAlias(name: string) {
     return addAccValue(name, byteToAddressOrAlias);
 }
 
-export function toNewAlias(name) {
+export function toNewAlias(name: string) {
     return addAccValue(name, byteNewAliasToString);
 }
 
-export function toTransfers(name) {
+export function toTransfers(name: string) {
     return addAccValue(name, byteToTransfers);
 }
 
-export function toAccountScript(name) {
+export function toScript(name: string) {
     return addAccValue(name, byteToScript);
 }
 
-export function toData(name) {
+export function toData(name: string) {
     return addAccValue(name, byteToData);
 }
 
 export function parseConstructor(parts: Array<any>) {
+    // @ts-ignore
     return bytes => parts.reduce((acc, part) => part(acc, bytes), Object.create(null)).data;
 }
 

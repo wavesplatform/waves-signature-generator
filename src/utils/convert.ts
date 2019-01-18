@@ -1,5 +1,5 @@
 import { TBuffer } from '../interface';
-import converters from '../libs/converters';
+import converters from '../../libs/converters';
 import { BigNumber } from '@waves/data-entities';
 
 
@@ -29,7 +29,6 @@ export default {
         }
 
         return input ? [1] : [0];
-
     },
 
     bytesToBoolean(bytes: Uint8Array): boolean {
@@ -67,14 +66,14 @@ export default {
 
     },
 
-    longToByteArray(input: number): number[] {
+    longToByteArray(input: number, length: number): number[] {
 
         if (typeof input !== 'number') {
             throw new Error('Numeric input is expected');
         }
 
-        const bytes = new Array(7);
-        for (let k = 7; k >= 0; k--) {
+        const bytes = new Array(length);
+        for (let k = length - 1; k >= 0; k--) {
             bytes[k] = input & (255);
             input = input / 256;
         }
@@ -83,7 +82,23 @@ export default {
 
     },
 
-    bigNumberToByteArray(input: BigNumber): number[] {
+    signLongToByteArray(input: number): number[] {
+        if (typeof input !== 'number') {
+            throw new Error('Numeric input is expected');
+        }
+
+        const byteArray = [0, 0, 0, 0, 0, 0, 0, 0];
+
+        for (let index = 0; index < byteArray.length; index++) {
+            let byte = input & 0xff;
+            byteArray [index] = byte;
+            input = (input - byte) / 256;
+        }
+
+        return byteArray.reverse();
+    },
+
+    bigNumberToByteArray(input: BigNumber, length: number): number[] {
 
         if (!(input instanceof BigNumber)) {
             throw new Error('BigNumber input is expected');
@@ -91,12 +106,35 @@ export default {
 
         const performBitwiseAnd255 = performBitwiseAnd.bind(null, new BigNumber(255));
 
-        const bytes = new Array(7);
-        for (let k = 7; k >= 0; k--) {
+        const bytes = [];
+        for (let k = length - 1; k >= 0; k--) {
             bytes[k] = performBitwiseAnd255(input);
             input = input.div(256);
         }
 
+        return bytes;
+
+    },
+
+    signBigNumberToByteArray(input: BigNumber): number[] {
+        if (!(input instanceof BigNumber)) {
+            throw new Error('BigNumber input is expected');
+        }
+        const isMinus = input.lt(new BigNumber(0));
+        const performBitwiseAnd255 = performBitwiseAnd.bind(null, new BigNumber(255));
+        if (isMinus) {
+            input = input.plus(1, 10);
+        }
+
+        const bytes = new Array(8);
+
+        for (let k = 7; k >= 0; k--) {
+            bytes[k] = performBitwiseAnd255(input);
+            if (isMinus) {
+                bytes[k] = (~bytes[k]) & 255;
+            }
+            input = input.div(256);
+        }
         return bytes;
 
     },

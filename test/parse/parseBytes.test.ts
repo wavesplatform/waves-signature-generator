@@ -8,6 +8,7 @@ import {
     MASS_TRANSFER,
     DATA,
     SET_SCRIPT,
+    SET_ASSET_SCRIPT,
     SPONSORSHIP,
     MAINNET_BYTE,
     TRANSACTION_TYPE_NUMBER,
@@ -22,7 +23,11 @@ import {
     parseTransferTx,
     parseCancelLeaseTx,
     parseCreateAliasTx,
-    parseMassTransferTx, parseSetScriptTx, parseSponsorshipTx, parseTransactionBytes
+    parseMassTransferTx,
+    parseSetScriptTx,
+    parseSponsorshipTx,
+    parseSetAssetScriptTx,
+    parseTransactionBytes
 } from '../../src/parse';
 
 
@@ -144,7 +149,17 @@ describe('parse', () => {
         }).catch(done);
 
     });
-
+    
+    it('set asset script "true"', done => {
+        
+        const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.SET_ASSET_SCRIPT];
+        
+        new SET_ASSET_SCRIPT(data).getBytes().then(bytes => {
+            expect(parseSetAssetScriptTx(bytes)).toEqual(data);
+            done();
+        }).catch(done);
+    });
+    
     it('set sponsorship', done => {
 
         const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.SPONSORSHIP];
@@ -158,12 +173,14 @@ describe('parse', () => {
 
     Object.keys(TRANSACTIONS_DATA).forEach(stringType => {
         const type = Number(stringType);
+        //@ts-ignore
         const data = TRANSACTIONS_DATA[stringType];
 
         it(`check parseTransactionBytes with transaction type ${type}`, done => {
-
+            //@ts-ignore
             const Generator = TX_NUMBER_MAP[type];
 
+            //@ts-ignore
             new Generator(data).getBytes().then(bytes => {
                 expect(parseTransactionBytes(bytes)).toEqual(data);
                 done();

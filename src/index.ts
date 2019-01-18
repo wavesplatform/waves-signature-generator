@@ -10,10 +10,10 @@ export * from './dictionary';
 export * from './parse';
 
 import base58 from './libs/base58';
-import converters from './libs/converters';
-import axlsign from './libs/axlsign';
-import * as blake2b from './libs/blake2b';
-import { keccak256 } from './libs/sha3';
+import converters from '../libs/converters';
+import axlsign from '../libs/axlsign';
+import * as blake2b from '../libs/blake2b';
+import { keccak256 } from '../libs/sha3';
 import secureRandom from './libs/secure-random';
 import * as base64 from 'base64-js';
 

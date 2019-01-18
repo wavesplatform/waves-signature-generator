@@ -1,11 +1,11 @@
 import * as CryptoJS from 'crypto-js';
 
-import axlsign from '../libs/axlsign';
+import axlsign from '../../libs/axlsign';
 import base58 from '../libs/base58';
-import * as blake from '../libs/blake2b';
-import converters from '../libs/converters';
+import * as blake from '../../libs/blake2b';
+import converters from '../../libs/converters';
 import secureRandom from '../libs/secure-random';
-import { keccak256 } from '../libs/sha3';
+import { keccak256 } from '../../libs/sha3';
 
 import { concatUint8Arrays } from './concat';
 import { config } from '../';
@@ -29,11 +29,11 @@ function sha256(input: Array<number> | Uint8Array | string): Uint8Array {
 
 }
 
-function blake2b(input) {
+function blake2b(input: any) {
     return blake.blake2b(input, null, 32);
 }
 
-function keccak(input) {
+function keccak(input: any) {
     return (keccak256 as any).array(input);
 }
 

@@ -1,6 +1,5 @@
 import { MAINNET_BYTE, TRANSACTION_TYPE_NUMBER, TRANSACTION_TYPE_VERSION } from '../../src';
 import { BigNumber } from '@waves/data-entities';
-import { toBigNumber } from '../../src/parse/parseByteConscructor';
 
 
 export default {
@@ -16,7 +15,7 @@ export default {
         reissuable: false,
         fee: new BigNumber('100000000'),
         timestamp: new BigNumber(1538663245955),
-        hasScript: false
+        script: "base64:",
     },
     [TRANSACTION_TYPE_NUMBER.TRANSFER]: {
         type: TRANSACTION_TYPE_NUMBER.TRANSFER,
@@ -105,7 +104,10 @@ export default {
             { key: 'int', type: 'integer', value: new BigNumber(24) },
             { key: 'bool', type: 'boolean', value: true },
             { key: 'blob', type: 'binary', value: 'base64:AQa3b8tH' },
-            { key: 'string', type: 'string', value: 'Some string with length' }
+            { key: 'string', type: 'string', value: 'Some string with length' },
+            { key: 'lessInt', type: 'integer', value: new BigNumber(-1) },
+            { key: 'lessInt2', type: 'integer', value: new BigNumber(-2) },
+            { key: 'lessInt3', type: 'integer', value: new BigNumber(-10) },
         ],
         fee: new BigNumber('100000'),
         timestamp: new BigNumber(1538663245955)
@@ -118,6 +120,16 @@ export default {
         script: 'base64:AQa3b8tH',
         fee: new BigNumber('100000'),
         timestamp: new BigNumber(1538663245955)
+    },
+    [TRANSACTION_TYPE_NUMBER.SET_ASSET_SCRIPT]: {
+        type: TRANSACTION_TYPE_NUMBER.SET_ASSET_SCRIPT,
+        version: TRANSACTION_TYPE_VERSION.SET_ASSET_SCRIPT,
+        chainId: MAINNET_BYTE,
+        senderPublicKey: '2M25DqL2W4rGFLCFadgATboS8EPqyWAN3DjH12AH5Kdr',
+        assetId: '8LQW8f7P5d5PZM7GtZEBgaqRPGSzS3DfPuiXrURJ4AJS',
+        fee: new BigNumber('100000000'),
+        timestamp: new BigNumber(1538663245955),
+        script: 'base64:AQa3b8tH',
     },
     [TRANSACTION_TYPE_NUMBER.SPONSORSHIP]: {
         type: TRANSACTION_TYPE_NUMBER.SPONSORSHIP,

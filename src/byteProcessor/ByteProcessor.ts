@@ -4,7 +4,7 @@ import base58 from '../libs/base58';
 import convert from '../utils/convert';
 import { concatUint8Arrays } from '../utils/concat';
 import { DATA_ENTRIES_BYTE_LIMIT, SET_SCRIPT_LANG_VERSION, STUB_NAME } from '../constants';
-import { config } from '..';
+import { config, TLong } from '..';
 import { ALIAS_VERSION, TRANSFER_ATTACHMENT_BYTE_LIMIT, WAVES_BLOCKCHAIN_ID, WAVES_ID } from '../constants';
 
 
@@ -61,6 +61,21 @@ export class Base64 extends ByteProcessor {
     }
 }
 
+export class Base64Asset extends ByteProcessor {
+    public process(value: string) {
+        if (value != null && typeof value !== 'string') throw new Error('You should pass a string to BinaryDataEntry constructor');
+        if (value != null && isNonEmptyBase64String(value)) {
+            if (value.slice(0, 7) !== 'base64:') throw new Error('Blob should be encoded in base64 and prefixed with "base64:"');
+            const b64 = value.slice(7); // Getting the string payload
+            const bytes = Uint8Array.from(toByteArray(b64));
+            const lengthBytes = Uint8Array.from(convert.shortToByteArray(bytes.length));
+            return Promise.resolve(concatUint8Arrays(lengthBytes, bytes));
+        } else {
+            return Promise.resolve(Uint8Array.from([]));
+        }
+    }
+}
+
 export class Bool extends ByteProcessor {
     public process(value: boolean) {
         const bytes = convert.booleanToBytes(value);
@@ -68,24 +83,41 @@ export class Bool extends ByteProcessor {
     }
 }
 
-export class Byte extends ByteProcessor {
-    public process(value: number) {
-        if (typeof value !== 'number') throw new Error('You should pass a number to Byte constructor');
-        if (value < 0 || value > 255) throw new Error('Byte value must fit between 0 and 255');
-        return Promise.resolve(Uint8Array.from([value]));
-    }
-}
+export class Int extends ByteProcessor {
 
-export class Long extends ByteProcessor {
-    public process(value: number | string | BigNumber) {
+    private readonly length: number;
+
+    constructor(name: string, length: number) {
+        super(name);
+        this.length = length;
+    }
+
+    public process(value: number | TLong): Promise<Uint8Array> {
         let bytes;
+
         if (typeof value === 'number') {
-            bytes = convert.longToByteArray(value);
+            bytes = convert.longToByteArray(value, this.length);
         } else {
             if (typeof value === 'string') {
                 value = new BigNumber(value);
             }
-            bytes = convert.bigNumberToByteArray(value);
+            bytes = convert.bigNumberToByteArray(value, this.length);
+        }
+
+        return Promise.resolve(Uint8Array.from(bytes));
+    }
+}
+
+export class SignLong extends ByteProcessor {
+    public process(value: number | string | BigNumber) {
+        let bytes;
+        if (typeof value === 'number') {
+            bytes = convert.longToByteArray(value, 8);
+        } else {
+            if (typeof value === 'string') {
+                value = new BigNumber(value);
+            }
+            bytes = convert.signBigNumberToByteArray(value);
         }
         return Promise.resolve(Uint8Array.from(bytes));
     }
@@ -184,9 +216,9 @@ export class ScriptVersion extends ByteProcessor {
 }
 
 export class Transfers extends ByteProcessor {
-    public process(values) {
+    public process(values: any) {
         const recipientProcessor = new Recipient(STUB_NAME);
-        const amountProcessor = new Long(STUB_NAME);
+        const amountProcessor = new Int(STUB_NAME, 8);
 
         const promises = [];
         for (let i = 0; i < values.length; i++) {
@@ -211,7 +243,7 @@ const STRING_DATA_TYPE = 3;
 
 export class IntegerDataEntry extends ByteProcessor {
     public process(value: number | string | BigNumber) {
-        return Long.prototype.process.call(this, value).then((longBytes) => {
+        return SignLong.prototype.process.call(this, value).then((longBytes: any) => {
             const typeByte = Uint8Array.from([INTEGER_DATA_TYPE]);
             return concatUint8Arrays(typeByte, longBytes);
         });
@@ -220,7 +252,7 @@ export class IntegerDataEntry extends ByteProcessor {
 
 export class BooleanDataEntry extends ByteProcessor {
     public process(value: boolean) {
-        return Bool.prototype.process.call(this, value).then((boolByte) => {
+        return Bool.prototype.process.call(this, value).then((boolByte: any) => {
             const typeByte = Uint8Array.from([BOOLEAN_DATA_TYPE]);
             return concatUint8Arrays(typeByte, boolByte);
         });
@@ -229,7 +261,7 @@ export class BooleanDataEntry extends ByteProcessor {
 
 export class BinaryDataEntry extends ByteProcessor {
     public process(value: string) {
-        return Base64.prototype.process.call(this, value).then((binaryBytes) => {
+        return Base64.prototype.process.call(this, value).then((binaryBytes: Uint8Array) => {
             const typeByte = Uint8Array.from([BINARY_DATA_TYPE]);
             return Promise.resolve(concatUint8Arrays(typeByte, binaryBytes));
         });
@@ -238,7 +270,7 @@ export class BinaryDataEntry extends ByteProcessor {
 
 export class StringDataEntry extends ByteProcessor {
     public process(value: string) {
-        return StringWithLength.prototype.process.call(this, value).then((stringBytes) => {
+        return StringWithLength.prototype.process.call(this, value).then((stringBytes: Uint8Array) => {
             const typeByte = Uint8Array.from([STRING_DATA_TYPE]);
             return concatUint8Arrays(typeByte, stringBytes);
         });
@@ -250,10 +282,11 @@ export class DataEntries extends ByteProcessor {
         const lengthBytes = Uint8Array.from(convert.shortToByteArray(entries.length));
         if (entries.length) {
             return Promise.all(entries.map((entry) => {
-                const prependKeyBytes = (valueBytes) => {
-                    return StringWithLength.prototype.process.call(this, entry.key).then((keyBytes) => {
-                        return concatUint8Arrays(keyBytes, valueBytes);
-                    });
+                const prependKeyBytes = (valueBytes: Uint8Array) => {
+                    return StringWithLength.prototype.process.call(this, entry.key)
+                        .then((keyBytes: Uint8Array) => {
+                            return concatUint8Arrays(keyBytes, valueBytes);
+                        });
                 };
 
                 switch (entry.type) {
