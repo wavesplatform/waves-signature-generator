@@ -1,6 +1,6 @@
 {
   "name": "@waves/signature-generator",
-  "version": "3.0.2-beta-5",
+  "version": "4.0.0",
   "main": "dist/index.js",
   "files": [
     "dist",
