@@ -18,7 +18,7 @@ export interface ISignatureGeneratorConstructor<T> {
 
 export interface IDEFAULT_PROPS {
     senderPublicKey: string;
-    timestamp: TLong;
+    timestamp: number | TLong;
 }
 
 export interface IISSUE_PROPS extends IDEFAULT_PROPS {
@@ -132,7 +132,6 @@ export interface IEXCHANGE_PROPS extends IDEFAULT_PROPS {
     buyMatcherFee: TLong;
     sellMatcherFee: TLong;
     fee: TLong;
-    timestamp: TLong;
 }
 
 export interface IEXCHANGE_PROPS_V2 extends IEXCHANGE_PROPS {
