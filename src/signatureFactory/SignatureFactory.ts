@@ -17,7 +17,7 @@ import {
     StringWithLength,
     ScriptVersion,
     Transfers,
-    TRANSACTION_TYPE_NUMBER, IEXCHANGE_PROPS, IEXCHANGE_PROPS_V2, Int,
+    TRANSACTION_TYPE_NUMBER, IEXCHANGE_PROPS, IEXCHANGE_PROPS_V2, Int, IISSUE_PROPS_V2,
 } from '..';
 import {
     IBURN_PROPS,
@@ -213,18 +213,32 @@ export const CANCEL_ORDER_SIGNATURE = generate<ICANCEL_ORDER_PROPS>([
 
 export const MATCHER_BYTES_GENERATOR_MAP = {
     CREATE_ORDER: {
-        0: CREATE_ORDER_SIGNATURE,
+        1: CREATE_ORDER_SIGNATURE,
         2: CREATE_ORDER_SIGNATURE_V2
     },
     AUTH_ORDER: {
-        0: AUTH_ORDER_SIGNATURE
+        1: AUTH_ORDER_SIGNATURE
     },
     CANCEL_ORDER: {
-        0: CANCEL_ORDER_SIGNATURE
+        1: CANCEL_ORDER_SIGNATURE
     }
 };
 
 export const ISSUE = generate<IISSUE_PROPS>([
+    constants.TRANSACTION_TYPE_NUMBER.ISSUE,
+    new Base58('senderPublicKey'),
+    new StringWithLength('name'),
+    new StringWithLength('description'),
+    new Int('quantity', 8),
+    new Int('precision', 1),
+    new Bool('reissuable'),
+    new Int('fee', 8),
+    new Int('timestamp', 8),
+    new ScriptVersion('script'),
+    new Base64Asset('script'),
+]);
+
+export const ISSUE_V2 = generate<IISSUE_PROPS_V2>([
     constants.TRANSACTION_TYPE_NUMBER.ISSUE,
     constants.TRANSACTION_TYPE_VERSION.ISSUE,
     new Int('chainId', 1),
@@ -240,8 +254,8 @@ export const ISSUE = generate<IISSUE_PROPS>([
     new Base64Asset('script'),
 ]);
 
-TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.ISSUE] = ISSUE;
-TX_TYPE_MAP[constants.TRANSACTION_TYPE.ISSUE] = ISSUE;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.ISSUE] = ISSUE_V2;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.ISSUE] = ISSUE_V2;
 
 export const TRANSFER = generate<ITRANSFER_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.TRANSFER,
@@ -291,7 +305,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.BURN] = BURN;
 export class Order extends ByteProcessor {
 
     public process(value: IORDER_PROPS & ({ proofs: Array<string> } | { signature: string })): Promise<Uint8Array> {
-        const version = value.version === 1 ? 0 : value.version || 0;
+        const version = value.version || 0;
         const generator = (MATCHER_BYTES_GENERATOR_MAP as any).CREATE_ORDER[version] as ISignatureGeneratorConstructor<IORDER_PROPS>;
 
         if (!generator) {
@@ -466,7 +480,8 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.SPONSORSHIP] = SPONSORSHIP;
 
 export const BYTES_GENERATORS_MAP: Record<TRANSACTION_TYPE_NUMBER, Record<number, ISignatureGeneratorConstructor<any>>> = {
     [TRANSACTION_TYPE_NUMBER.ISSUE]: {
-        2: ISSUE
+        1: ISSUE,
+        2: ISSUE_V2
     },
     [TRANSACTION_TYPE_NUMBER.TRANSFER]: {
         2: TRANSFER
@@ -478,7 +493,7 @@ export const BYTES_GENERATORS_MAP: Record<TRANSACTION_TYPE_NUMBER, Record<number
         2: BURN
     },
     [TRANSACTION_TYPE_NUMBER.EXCHANGE]: {
-        0: EXCHANGE,
+        1: EXCHANGE,
         2: EXCHANGE_V2
     },
     [TRANSACTION_TYPE_NUMBER.LEASE]: {

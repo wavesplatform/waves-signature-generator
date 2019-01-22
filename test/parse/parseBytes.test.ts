@@ -1,5 +1,5 @@
 import {
-    ISSUE,
+    ISSUE_V2,
     TRANSFER,
     REISSUE,
     LEASE,
@@ -37,7 +37,7 @@ describe('parse', () => {
 
         const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.ISSUE];
 
-        new ISSUE(data).getBytes().then(bytes => {
+        new ISSUE_V2(data).getBytes().then(bytes => {
             expect(parseIssueTx(bytes)).toEqual(data);
             done();
         }).catch(done);

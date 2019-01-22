@@ -22,7 +22,6 @@ export interface IDEFAULT_PROPS {
 }
 
 export interface IISSUE_PROPS extends IDEFAULT_PROPS {
-    chainId: number;
     name: string;
     description: string;
     quantity: TLong;
@@ -30,6 +29,11 @@ export interface IISSUE_PROPS extends IDEFAULT_PROPS {
     reissuable: boolean;
     script: string;
     fee: TLong;
+    version: number;
+}
+
+export interface IISSUE_PROPS_V2 extends IISSUE_PROPS {
+    chainId: number;
 }
 
 export interface ITRANSFER_PROPS extends IDEFAULT_PROPS {
@@ -145,7 +149,7 @@ export interface IDATA_ENTRY {
 }
 
 export type TTX_NUMBER_MAP = {
-    3: ISignatureGeneratorConstructor<IISSUE_PROPS>;
+    3: ISignatureGeneratorConstructor<IISSUE_PROPS_V2>;
     4: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
     5: ISignatureGeneratorConstructor<IREISSUE_PROPS>;
     6: ISignatureGeneratorConstructor<IBURN_PROPS>;
@@ -161,7 +165,7 @@ export type TTX_NUMBER_MAP = {
 }
 
 export type TTX_TYPE_MAP = {
-    issue: ISignatureGeneratorConstructor<IISSUE_PROPS>;
+    issue: ISignatureGeneratorConstructor<IISSUE_PROPS_V2>;
     transfer: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
     reissue: ISignatureGeneratorConstructor<IREISSUE_PROPS>;
     burn: ISignatureGeneratorConstructor<IBURN_PROPS>;

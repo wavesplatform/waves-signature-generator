@@ -52,11 +52,34 @@ export const TEST_TRANSACTIONS_DATA: Array<{ data: T_TRANSACTION_PROPS; type: TR
     },
     {
         data: {
+            version: 1,
+            senderPublicKey: 'BJ3Q8kNPByCWHwJ3RLn55UPzUDVgnh64EwYAU5iCj6z6',
+            fee: new BigNumber(100000000),
+            timestamp: 1480424130682,
+            assetId: 'Ft8X1v1LTa1ABafufpaCWyVj8KkaxUWE6xBhW6sNFJck',
+            name: 'WUSD',
+            quantity: new BigNumber(100000000000),
+            reissuable: true,
+            precision: 2,
+            description: 'Official USD token',
+            script: ''
+        } as IISSUE_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.ISSUE,
+        bytes: Uint8Array.from( [
+            3, 152, 242, 116, 149, 219, 83, 90, 95, 55, 8, 180, 179, 174, 99, 15, 27, 159, 122, 21, 140, 1, 6, 190, 165,
+            197, 25, 145, 144, 153, 133, 211, 3, 0, 4, 87, 85, 83, 68, 0, 18, 79, 102, 102, 105, 99, 105, 97, 108, 32,
+            85, 83, 68, 32, 116, 111, 107, 101, 110, 0, 0, 0, 23, 72, 118, 232, 0, 2, 1, 0, 0, 0, 0, 5, 245, 225, 0, 0,
+            0, 1, 88, 176, 39, 136, 122, 0
+        ])
+    },
+    {
+        data: {
             senderPublicKey: '7kPFrHDiGw1rCm7LPszuECwWYL3dMf6iMifLRDJQZMzy',
             fee: new BigNumber(300000),
             timestamp: new BigNumber(1547654553411),
             version: 2,
             buyOrder: {
+                version: 1,
                 sender: '3PCAB4sHXgvtu5NPoen6EXR5yaNbvsEA8Fj',
                 senderPublicKey: '2M25DqL2W4rGFLCFadgATboS8EPqyWAN3DjH12AH5Kdr',
                 matcherPublicKey: '7kPFrHDiGw1rCm7LPszuECwWYL3dMf6iMifLRDJQZMzy',
@@ -71,6 +94,7 @@ export const TEST_TRANSACTIONS_DATA: Array<{ data: T_TRANSACTION_PROPS; type: TR
                 signature: 'wBTgPYwgibq4JEJ3aDjZ882ByMGmapJbHVuzNe4LmPKp5dzZQNKwTzLPMB3VHbJhCmPVYHWPsp8AYMzhMnp4gPC'
             },
             sellOrder: {
+                version: 1,
                 senderPublicKey: '3pu3Nn1NLtvyUntiwGRova6RGGvGLg6gKJ9C8KSviKvn',
                 matcherPublicKey: '7kPFrHDiGw1rCm7LPszuECwWYL3dMf6iMifLRDJQZMzy',
                 amountAsset: '6XJAscmejGPTLAdKsg12MynB5rNQzNiZz8Yj81SWeFrj',
