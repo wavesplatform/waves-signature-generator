@@ -17,7 +17,7 @@ import {
     StringWithLength,
     ScriptVersion,
     Transfers,
-    TRANSACTION_TYPE_NUMBER, IEXCHANGE_PROPS, IEXCHANGE_PROPS_V2, Int, IISSUE_PROPS_V2,
+    TRANSACTION_TYPE_NUMBER, IEXCHANGE_PROPS, IEXCHANGE_PROPS_V2, Int, IREISSUE_PROPS_V2, IBURN_PROPS_V2
 } from '..';
 import {
     IBURN_PROPS,
@@ -238,9 +238,9 @@ export const ISSUE = generate<IISSUE_PROPS>([
     new Base64Asset('script'),
 ]);
 
-export const ISSUE_V2 = generate<IISSUE_PROPS_V2>([
+export const ISSUE_V2 = generate<IISSUE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.ISSUE,
-    constants.TRANSACTION_TYPE_VERSION.ISSUE,
+    2,
     new Int('chainId', 1),
     new Base58('senderPublicKey'),
     new StringWithLength('name'),
@@ -259,7 +259,6 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.ISSUE] = ISSUE_V2;
 
 export const TRANSFER = generate<ITRANSFER_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.TRANSFER,
-    constants.TRANSACTION_TYPE_VERSION.TRANSFER,
     new Base58('senderPublicKey'),
     new AssetId('assetId'),
     new AssetId('feeAssetId'),
@@ -270,12 +269,35 @@ export const TRANSFER = generate<ITRANSFER_PROPS>([
     new Attachment('attachment')
 ]);
 
-TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.TRANSFER] = TRANSFER;
-TX_TYPE_MAP[constants.TRANSACTION_TYPE.TRANSFER] = TRANSFER;
+export const TRANSFER_V2 = generate<ITRANSFER_PROPS>([
+    constants.TRANSACTION_TYPE_NUMBER.TRANSFER,
+    2,
+    new Base58('senderPublicKey'),
+    new AssetId('assetId'),
+    new AssetId('feeAssetId'),
+    new Int('timestamp', 8),
+    new Int('amount', 8),
+    new Int('fee', 8),
+    new Recipient('recipient'),
+    new Attachment('attachment')
+]);
+
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.TRANSFER] = TRANSFER_V2;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.TRANSFER] = TRANSFER_V2;
 
 export const REISSUE = generate<IREISSUE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.REISSUE,
-    constants.TRANSACTION_TYPE_VERSION.REISSUE,
+    new Base58('senderPublicKey'),
+    new MandatoryAssetId('assetId'),
+    new Int('quantity', 8),
+    new Bool('reissuable'),
+    new Int('fee', 8),
+    new Int('timestamp', 8)
+]);
+
+export const REISSUE_V2 = generate<IREISSUE_PROPS_V2>([
+    constants.TRANSACTION_TYPE_NUMBER.REISSUE,
+    2,
     new Int('chainId', 1),
     new Base58('senderPublicKey'),
     new MandatoryAssetId('assetId'),
@@ -285,12 +307,21 @@ export const REISSUE = generate<IREISSUE_PROPS>([
     new Int('timestamp', 8)
 ]);
 
-TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.REISSUE] = REISSUE;
-TX_TYPE_MAP[constants.TRANSACTION_TYPE.REISSUE] = REISSUE;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.REISSUE] = REISSUE_V2;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.REISSUE] = REISSUE_V2;
 
 export const BURN = generate<IBURN_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.BURN,
-    constants.TRANSACTION_TYPE_VERSION.BURN,
+    new Base58('senderPublicKey'),
+    new MandatoryAssetId('assetId'),
+    new Int('quantity', 8),
+    new Int('fee', 8),
+    new Int('timestamp', 8)
+]);
+
+export const BURN_V2 = generate<IBURN_PROPS_V2>([
+    constants.TRANSACTION_TYPE_NUMBER.BURN,
+    2,
     new Int('chainId', 1),
     new Base58('senderPublicKey'),
     new MandatoryAssetId('assetId'),
@@ -299,8 +330,8 @@ export const BURN = generate<IBURN_PROPS>([
     new Int('timestamp', 8)
 ]);
 
-TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.BURN] = BURN;
-TX_TYPE_MAP[constants.TRANSACTION_TYPE.BURN] = BURN;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.BURN] = BURN_V2;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.BURN] = BURN_V2;
 
 export class Order extends ByteProcessor {
 
@@ -484,13 +515,16 @@ export const BYTES_GENERATORS_MAP: Record<TRANSACTION_TYPE_NUMBER, Record<number
         2: ISSUE_V2
     },
     [TRANSACTION_TYPE_NUMBER.TRANSFER]: {
-        2: TRANSFER
+        1: TRANSFER,
+        2: TRANSFER_V2
     },
     [TRANSACTION_TYPE_NUMBER.REISSUE]: {
-        2: REISSUE
+        1: REISSUE,
+        2: REISSUE_V2
     },
     [TRANSACTION_TYPE_NUMBER.BURN]: {
-        2: BURN
+        1: BURN,
+        2: BURN_V2
     },
     [TRANSACTION_TYPE_NUMBER.EXCHANGE]: {
         1: EXCHANGE,

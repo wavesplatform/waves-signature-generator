@@ -46,6 +46,7 @@ export const enum TRANSACTION_TYPE_VERSION {
     SET_ASSET_SCRIPT = 1,
     SPONSORSHIP = 1
 }
+// TODO! Выпилить это
 
 export const ORDER_VERSION = 2;
 

@@ -1,7 +1,6 @@
 import {
     ISSUE_V2,
-    TRANSFER,
-    REISSUE,
+    REISSUE_V2,
     LEASE,
     CANCEL_LEASING,
     CREATE_ALIAS,
@@ -13,7 +12,7 @@ import {
     MAINNET_BYTE,
     TRANSACTION_TYPE_NUMBER,
     TRANSACTION_TYPE_VERSION,
-    TX_NUMBER_MAP, parseReissueTx, parseDataTx
+    TX_NUMBER_MAP, parseReissueTx, parseDataTx, TRANSFER_V2
 } from '../../src';
 import TRANSACTIONS_DATA from './transactionsData';
 import { BigNumber } from '@waves/data-entities';
@@ -48,7 +47,7 @@ describe('parse', () => {
 
         const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.TRANSFER];
 
-        new TRANSFER(data).getBytes().then(bytes => {
+        new TRANSFER_V2(data).getBytes().then(bytes => {
             expect(parseTransferTx(bytes)).toEqual(data);
             done();
         }).catch(done);
@@ -59,7 +58,7 @@ describe('parse', () => {
 
         const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.REISSUE];
 
-        new REISSUE(data).getBytes().then(bytes => {
+        new REISSUE_V2(data).getBytes().then(bytes => {
             expect(parseReissueTx(bytes)).toEqual(data);
             done();
         }).catch(done);

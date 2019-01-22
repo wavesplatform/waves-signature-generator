@@ -1,5 +1,5 @@
 import {
-    IBURN_PROPS,
+    IBURN_PROPS, IBURN_PROPS_V2,
     ICANCEL_LEASING_PROPS,
     IEXCHANGE_PROPS,
     IEXCHANGE_PROPS_V2,
@@ -11,6 +11,7 @@ import {
     ISET_SCRIPT_PROPS,
     ISPONSORSHIP_PROPS,
     ITRANSFER_PROPS,
+    MAINNET_BYTE,
     TRANSACTION_TYPE_NUMBER
 } from '../../src';
 import { BigNumber } from '@waves/data-entities';
@@ -29,6 +30,72 @@ export type T_TRANSACTION_PROPS = IISSUE_PROPS |
     ISPONSORSHIP_PROPS
 
 export const TEST_TRANSACTIONS_DATA: Array<{ data: T_TRANSACTION_PROPS; type: TRANSACTION_TYPE_NUMBER, bytes: Uint8Array }> = [
+    {
+        data: {
+            version: 1,
+            senderPublicKey: 'BJ3Q8kNPByCWHwJ3RLn55UPzUDVgnh64EwYAU5iCj6z6',
+            fee: new BigNumber(100000000),
+            timestamp: 1480424130682,
+            assetId: 'Ft8X1v1LTa1ABafufpaCWyVj8KkaxUWE6xBhW6sNFJck',
+            name: 'WUSD',
+            quantity: new BigNumber(100000000000),
+            reissuable: true,
+            precision: 2,
+            description: 'Official USD token',
+            script: ''
+        } as IISSUE_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.ISSUE,
+        bytes: Uint8Array.from([
+            3, 152, 242, 116, 149, 219, 83, 90, 95, 55, 8, 180, 179, 174, 99, 15, 27, 159, 122, 21, 140, 1, 6, 190, 165,
+            197, 25, 145, 144, 153, 133, 211, 3, 0, 4, 87, 85, 83, 68, 0, 18, 79, 102, 102, 105, 99, 105, 97, 108, 32,
+            85, 83, 68, 32, 116, 111, 107, 101, 110, 0, 0, 0, 23, 72, 118, 232, 0, 2, 1, 0, 0, 0, 0, 5, 245, 225, 0, 0,
+            0, 1, 88, 176, 39, 136, 122, 0
+        ])
+    },
+    {
+        data: {
+            version: 2,
+            chainId: MAINNET_BYTE,
+            senderPublicKey: 'BJ3Q8kNPByCWHwJ3RLn55UPzUDVgnh64EwYAU5iCj6z6',
+            fee: new BigNumber(100000000),
+            timestamp: 1480424130682,
+            assetId: 'Ft8X1v1LTa1ABafufpaCWyVj8KkaxUWE6xBhW6sNFJck',
+            name: 'WUSD',
+            quantity: new BigNumber(100000000000),
+            reissuable: true,
+            precision: 2,
+            description: 'Official USD token',
+            script: ''
+        } as IISSUE_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.ISSUE,
+        bytes: Uint8Array.from([
+            3, 2, 87, 152, 242, 116, 149, 219, 83, 90, 95, 55, 8, 180, 179, 174, 99, 15, 27, 159, 122, 21, 140, 1, 6, 190, 165,
+            197, 25, 145, 144, 153, 133, 211, 3, 0, 4, 87, 85, 83, 68, 0, 18, 79, 102, 102, 105, 99, 105, 97, 108, 32,
+            85, 83, 68, 32, 116, 111, 107, 101, 110, 0, 0, 0, 23, 72, 118, 232, 0, 2, 1, 0, 0, 0, 0, 5, 245, 225, 0, 0,
+            0, 1, 88, 176, 39, 136, 122, 0
+        ])
+    },
+    {
+        data: {
+            senderPublicKey: '2M25DqL2W4rGFLCFadgATboS8EPqyWAN3DjH12AH5Kdr',
+            fee: new BigNumber(100000),
+            timestamp: new BigNumber(1547555878561),
+            version: 1,
+            recipient: '3PAs2qSeUAfgqSKS8LpZPKGYEjJKcud9Djr',
+            assetId: '8LQW8f7P5d5PZM7GtZEBgaqRPGSzS3DfPuiXrURJ4AJS',
+            feeAssetId: 'WAVES',
+            amount: new BigNumber(200000),
+            attachment: 'Kq9Fxqv1fSnyf2kZkdn',
+        },
+        type: TRANSACTION_TYPE_NUMBER.TRANSFER,
+        bytes: Uint8Array.from([4, 19, 252, 132, 31, 108, 218, 109, 24, 75, 198, 202, 86, 159, 217, 210,
+            255, 88, 88, 90, 106, 253, 69, 144, 38, 209, 216, 59, 162, 141, 206, 251, 97, 1, 108, 250, 106, 255,
+            197, 237, 170, 140, 11, 127, 181, 42, 147, 210, 162, 12, 47, 130, 130, 219, 116, 122, 4, 140, 83, 251,
+            253, 19, 31, 115, 160, 255, 0, 0, 0, 1, 104, 81, 132, 182, 161, 0, 0, 0, 0, 0, 3, 13, 64, 0, 0, 0, 0, 0,
+            1, 134, 160, 1, 87, 97, 254, 60, 70, 209, 13, 112, 117, 56, 38, 78, 107, 37, 199, 141, 222, 157, 134, 75,
+            180, 68, 110, 124, 37, 0, 19, 75, 113, 57, 70, 120, 113, 118, 49, 102, 83, 110, 121, 102, 50, 107, 90, 107, 100, 110,
+        ])
+    },
     {
         data: {
             senderPublicKey: '2M25DqL2W4rGFLCFadgATboS8EPqyWAN3DjH12AH5Kdr',
@@ -52,24 +119,54 @@ export const TEST_TRANSACTIONS_DATA: Array<{ data: T_TRANSACTION_PROPS; type: TR
     },
     {
         data: {
-            version: 1,
-            senderPublicKey: 'BJ3Q8kNPByCWHwJ3RLn55UPzUDVgnh64EwYAU5iCj6z6',
+            senderPublicKey: '27C8ksVhVFUXyngF1F8TfyCGLmkDMsm2QuTv4VvhBpJU',
             fee: new BigNumber(100000000),
-            timestamp: 1480424130682,
-            assetId: 'Ft8X1v1LTa1ABafufpaCWyVj8KkaxUWE6xBhW6sNFJck',
-            name: 'WUSD',
+            timestamp: 1540555014220,
+            version: 1,
+            assetId: 'H4r9fS7bn78CPhj7cjTYUMHz3idB2ZxRPx5HcjFRJJCX',
             quantity: new BigNumber(100000000000),
-            reissuable: true,
-            precision: 2,
-            description: 'Official USD token',
-            script: ''
-        } as IISSUE_PROPS,
-        type: TRANSACTION_TYPE_NUMBER.ISSUE,
-        bytes: Uint8Array.from( [
-            3, 152, 242, 116, 149, 219, 83, 90, 95, 55, 8, 180, 179, 174, 99, 15, 27, 159, 122, 21, 140, 1, 6, 190, 165,
-            197, 25, 145, 144, 153, 133, 211, 3, 0, 4, 87, 85, 83, 68, 0, 18, 79, 102, 102, 105, 99, 105, 97, 108, 32,
-            85, 83, 68, 32, 116, 111, 107, 101, 110, 0, 0, 0, 23, 72, 118, 232, 0, 2, 1, 0, 0, 0, 0, 5, 245, 225, 0, 0,
-            0, 1, 88, 176, 39, 136, 122, 0
+            reissuable: true
+        } as IREISSUE_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.REISSUE,
+        bytes: Uint8Array.from([5, 16, 113, 194, 191, 58, 129, 20, 158, 230, 197, 166, 98, 76, 99, 66, 135,
+            118, 233, 165, 158, 26, 117, 23, 246, 57, 123, 217, 249, 243, 168, 55, 65, 238, 183, 78, 125, 131, 37,
+            113, 92, 2, 220, 37, 114, 255, 123, 238, 85, 112, 109, 5, 165, 116, 176, 130, 186, 0, 239, 236, 147, 158,
+            35, 64, 232, 0, 0, 0, 23, 72, 118, 232, 0, 1, 0, 0, 0, 0, 5, 245, 225, 0, 0, 0, 1, 102, 176, 60, 0, 76
+        ])
+    },
+    {
+        data: {
+            senderPublicKey: '27C8ksVhVFUXyngF1F8TfyCGLmkDMsm2QuTv4VvhBpJU',
+            fee: new BigNumber(100000000),
+            timestamp: 1540555014220,
+            version: 2,
+            chainId: 87,
+            assetId: 'H4r9fS7bn78CPhj7cjTYUMHz3idB2ZxRPx5HcjFRJJCX',
+            quantity: new BigNumber(100000000000),
+            reissuable: true
+        } as IREISSUE_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.REISSUE,
+        bytes: Uint8Array.from([5, 2, 87, 16, 113, 194, 191, 58, 129, 20, 158, 230, 197, 166, 98, 76, 99, 66, 135,
+            118, 233, 165, 158, 26, 117, 23, 246, 57, 123, 217, 249, 243, 168, 55, 65, 238, 183, 78, 125, 131, 37,
+            113, 92, 2, 220, 37, 114, 255, 123, 238, 85, 112, 109, 5, 165, 116, 176, 130, 186, 0, 239, 236, 147, 158,
+            35, 64, 232, 0, 0, 0, 23, 72, 118, 232, 0, 1, 0, 0, 0, 0, 5, 245, 225, 0, 0, 0, 1, 102, 176, 60, 0, 76
+        ])
+    },
+    {
+        data: {
+            senderPublicKey: '27C8ksVhVFUXyngF1F8TfyCGLmkDMsm2QuTv4VvhBpJU',
+            fee: new BigNumber(100000),
+            timestamp: 1543422169742,
+            chainId: 87,
+            version: 2,
+            assetId: 'DsMgnQwqwr9JVg24BRk8gQ8Z64zKdjPhn1uHRPVmLpD5',
+            quantity: new BigNumber(100000000),
+        } as IBURN_PROPS_V2,
+        type: TRANSACTION_TYPE_NUMBER.BURN,
+        bytes: Uint8Array.from([6, 2, 87, 16, 113, 194, 191, 58, 129, 20, 158, 230, 197, 166, 98, 76, 99, 66,
+            135, 118, 233, 165, 158, 26, 117, 23, 246, 57, 123, 217, 249, 243, 168, 55, 65, 191, 50, 172, 87, 73, 99,
+            86, 183, 177, 108, 174, 101, 100, 120, 181, 252, 89, 91, 74, 253, 195, 254, 165, 235, 59, 193, 248, 101,
+            152, 81, 127, 16, 0, 0, 0, 0, 5, 245, 225, 0, 0, 0, 0, 0, 0, 1, 134, 160, 0, 0, 1, 103, 91, 33, 82, 142
         ])
     },
     {

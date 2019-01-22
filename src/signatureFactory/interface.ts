@@ -32,10 +32,6 @@ export interface IISSUE_PROPS extends IDEFAULT_PROPS {
     version: number;
 }
 
-export interface IISSUE_PROPS_V2 extends IISSUE_PROPS {
-    chainId: number;
-}
-
 export interface ITRANSFER_PROPS extends IDEFAULT_PROPS {
     assetId: string;
     feeAssetId: string;
@@ -43,6 +39,7 @@ export interface ITRANSFER_PROPS extends IDEFAULT_PROPS {
     fee: TLong;
     recipient: string;
     attachment: string;
+    version: number;
 }
 
 export interface IREISSUE_PROPS extends IDEFAULT_PROPS {
@@ -52,10 +49,19 @@ export interface IREISSUE_PROPS extends IDEFAULT_PROPS {
     fee: TLong;
 }
 
+export interface IREISSUE_PROPS_V2 extends IREISSUE_PROPS {
+    chainId: number;
+}
+
 export interface IBURN_PROPS extends IDEFAULT_PROPS {
     assetId: string;
     quantity: TLong;
-    fee: string;
+    fee: TLong;
+    version: number;
+}
+
+export interface IBURN_PROPS_V2 extends IBURN_PROPS {
+    chainId: number;
 }
 
 export interface ILEASE_PROPS extends IDEFAULT_PROPS {
@@ -149,10 +155,10 @@ export interface IDATA_ENTRY {
 }
 
 export type TTX_NUMBER_MAP = {
-    3: ISignatureGeneratorConstructor<IISSUE_PROPS_V2>;
+    3: ISignatureGeneratorConstructor<IISSUE_PROPS>;
     4: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
-    5: ISignatureGeneratorConstructor<IREISSUE_PROPS>;
-    6: ISignatureGeneratorConstructor<IBURN_PROPS>;
+    5: ISignatureGeneratorConstructor<IREISSUE_PROPS_V2>;
+    6: ISignatureGeneratorConstructor<IBURN_PROPS_V2>;
     7: ISignatureGeneratorConstructor<ILEASE_PROPS>;
     8: ISignatureGeneratorConstructor<ILEASE_PROPS>;
     9: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS>;
@@ -165,10 +171,10 @@ export type TTX_NUMBER_MAP = {
 }
 
 export type TTX_TYPE_MAP = {
-    issue: ISignatureGeneratorConstructor<IISSUE_PROPS_V2>;
+    issue: ISignatureGeneratorConstructor<IISSUE_PROPS>;
     transfer: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
-    reissue: ISignatureGeneratorConstructor<IREISSUE_PROPS>;
-    burn: ISignatureGeneratorConstructor<IBURN_PROPS>;
+    reissue: ISignatureGeneratorConstructor<IREISSUE_PROPS_V2>;
+    burn: ISignatureGeneratorConstructor<IBURN_PROPS_V2>;
     exchange: ISignatureGeneratorConstructor<ILEASE_PROPS>;
     lease: ISignatureGeneratorConstructor<ILEASE_PROPS>;
     cancelLeasing: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS>;
