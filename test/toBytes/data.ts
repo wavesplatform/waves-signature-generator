@@ -1,6 +1,9 @@
 import {
-    IBURN_PROPS, IBURN_PROPS_V2,
+    IBURN_PROPS,
+    IBURN_PROPS_V2,
     ICANCEL_LEASING_PROPS,
+    ICANCEL_LEASING_PROPS_V2,
+    ICREATE_ALIAS_PROPS,
     IEXCHANGE_PROPS,
     IEXCHANGE_PROPS_V2,
     IISSUE_PROPS,
@@ -25,6 +28,7 @@ export type T_TRANSACTION_PROPS = IISSUE_PROPS |
     IBURN_PROPS |
     ILEASE_PROPS |
     ICANCEL_LEASING_PROPS |
+    ICREATE_ALIAS_PROPS |
     ISET_ASSET_SCRIPT_PROPS |
     ISET_SCRIPT_PROPS |
     ISPONSORSHIP_PROPS
@@ -140,7 +144,7 @@ export const TEST_TRANSACTIONS_DATA: Array<{ data: T_TRANSACTION_PROPS; type: TR
             fee: new BigNumber(100000000),
             timestamp: 1540555014220,
             version: 2,
-            chainId: 87,
+            chainId: MAINNET_BYTE,
             assetId: 'H4r9fS7bn78CPhj7cjTYUMHz3idB2ZxRPx5HcjFRJJCX',
             quantity: new BigNumber(100000000000),
             reissuable: true
@@ -152,23 +156,7 @@ export const TEST_TRANSACTIONS_DATA: Array<{ data: T_TRANSACTION_PROPS; type: TR
             35, 64, 232, 0, 0, 0, 23, 72, 118, 232, 0, 1, 0, 0, 0, 0, 5, 245, 225, 0, 0, 0, 1, 102, 176, 60, 0, 76
         ])
     },
-    {
-        data: {
-            senderPublicKey: '27C8ksVhVFUXyngF1F8TfyCGLmkDMsm2QuTv4VvhBpJU',
-            fee: new BigNumber(100000),
-            timestamp: 1543422169742,
-            chainId: 87,
-            version: 2,
-            assetId: 'DsMgnQwqwr9JVg24BRk8gQ8Z64zKdjPhn1uHRPVmLpD5',
-            quantity: new BigNumber(100000000),
-        } as IBURN_PROPS_V2,
-        type: TRANSACTION_TYPE_NUMBER.BURN,
-        bytes: Uint8Array.from([6, 2, 87, 16, 113, 194, 191, 58, 129, 20, 158, 230, 197, 166, 98, 76, 99, 66,
-            135, 118, 233, 165, 158, 26, 117, 23, 246, 57, 123, 217, 249, 243, 168, 55, 65, 191, 50, 172, 87, 73, 99,
-            86, 183, 177, 108, 174, 101, 100, 120, 181, 252, 89, 91, 74, 253, 195, 254, 165, 235, 59, 193, 248, 101,
-            152, 81, 127, 16, 0, 0, 0, 0, 5, 245, 225, 0, 0, 0, 0, 0, 0, 1, 134, 160, 0, 0, 1, 103, 91, 33, 82, 142
-        ])
-    },
+
     {
         data: {
             senderPublicKey: '7kPFrHDiGw1rCm7LPszuECwWYL3dMf6iMifLRDJQZMzy',
@@ -297,5 +285,122 @@ export const TEST_TRANSACTIONS_DATA: Array<{ data: T_TRANSACTION_PROPS; type: TR
             111, 121, 213, 192, 129, 139, 0, 0, 0, 0, 0, 1, 39, 200, 0, 0, 0, 0, 0, 15, 65, 56, 0, 0, 0, 0, 0, 0, 0, 18,
             0, 0, 0, 0, 0, 4, 147, 144, 0, 0, 0, 0, 0, 4, 147, 224, 0, 0, 1, 104, 76, 244, 57, 22
         ])
+    },
+    {
+        data: {
+            senderPublicKey: 'EhuzuzEWHhZGo1th6YGy34AecoRP4sVi863xXCQUmgUT',
+            fee: new BigNumber(100000),
+            timestamp: 1528814759445,
+            version: 1,
+            assetId: '56w2Jbj8MGKwSWyTXvCzkqKKHiyX7C2zrgCQb2CEwM52',
+            quantity: new BigNumber(10000000000),
+        } as IBURN_PROPS_V2,
+        type: TRANSACTION_TYPE_NUMBER.BURN,
+        bytes: Uint8Array.from([6, 203, 163, 22, 135, 237, 134, 116, 94, 1, 135, 19, 238, 100, 196, 40, 36,
+            139, 49, 8, 27, 231, 63, 242, 33, 246, 121, 125, 33, 38, 255, 158, 100, 60, 243, 188, 51, 40, 50, 171, 127,
+            250, 21, 177, 193, 184, 177, 138, 23, 92, 24, 210, 68, 71, 245, 101, 191, 92, 144, 53, 107, 150, 174, 248,
+            25, 0, 0, 0, 2, 84, 11, 228, 0, 0, 0, 0, 0, 0, 1, 134, 160, 0, 0, 1, 99, 244, 117, 238, 21])
+    },
+    {
+        data: {
+            senderPublicKey: '27C8ksVhVFUXyngF1F8TfyCGLmkDMsm2QuTv4VvhBpJU',
+            fee: new BigNumber(100000),
+            timestamp: 1543422169742,
+            chainId: MAINNET_BYTE,
+            version: 2,
+            assetId: 'DsMgnQwqwr9JVg24BRk8gQ8Z64zKdjPhn1uHRPVmLpD5',
+            quantity: new BigNumber(100000000),
+        } as IBURN_PROPS_V2,
+        type: TRANSACTION_TYPE_NUMBER.BURN,
+        bytes: Uint8Array.from([6, 2, 87, 16, 113, 194, 191, 58, 129, 20, 158, 230, 197, 166, 98, 76, 99, 66,
+            135, 118, 233, 165, 158, 26, 117, 23, 246, 57, 123, 217, 249, 243, 168, 55, 65, 191, 50, 172, 87, 73, 99,
+            86, 183, 177, 108, 174, 101, 100, 120, 181, 252, 89, 91, 74, 253, 195, 254, 165, 235, 59, 193, 248, 101,
+            152, 81, 127, 16, 0, 0, 0, 0, 5, 245, 225, 0, 0, 0, 0, 0, 0, 1, 134, 160, 0, 0, 1, 103, 91, 33, 82, 142
+        ])
+    },
+    {
+        data: {
+            senderPublicKey: "b8AB1PQWE7kH55cS48uDTV5fezrAyDTCf7iePyXNzNm",
+            fee:  new BigNumber(100000),
+            timestamp: 1528813353617,
+            version: 1,
+            amount:  new BigNumber(500000000),
+            recipient: "3P2HNUd5VUPLMQkJmctTPEeeHumiPN2GkTb"
+        } as ILEASE_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.LEASE,
+        bytes: Uint8Array.from([ 8, 0, 8, 189, 215, 92, 61, 104, 71, 120, 249, 69, 188, 133, 166, 0, 155, 193,
+            24, 183, 22, 111, 111, 236, 205, 82, 243, 237, 62, 223, 115, 163, 189, 26, 1, 87, 3, 223, 123, 99, 217, 4,
+            50, 24, 208, 205, 153, 142, 44, 81, 36, 110, 29, 209, 96, 55, 94, 242, 250, 154, 0, 0, 0, 0, 29, 205, 101,
+            0, 0, 0, 0, 0, 0, 1, 134, 160, 0, 0, 1, 99, 244, 96, 122, 145])
+    },
+    {
+        data: {
+            senderPublicKey: "27C8ksVhVFUXyngF1F8TfyCGLmkDMsm2QuTv4VvhBpJU",
+            fee:  new BigNumber(100000),
+            timestamp: 1543922401531,
+            version: 2,
+            amount:  new BigNumber(50000000000),
+            recipient: "3PEDGbdcSYAorLoV4oDVSJPTezGUPFrZj8f"
+        } as ILEASE_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.LEASE,
+        bytes: Uint8Array.from([8, 2, 0, 16, 113, 194, 191, 58, 129, 20, 158, 230, 197, 166, 98, 76, 99, 66,
+            135, 118, 233, 165, 158, 26, 117, 23, 246, 57, 123, 217, 249, 243, 168, 55, 65, 1, 87, 134, 186, 107, 125,
+            95, 44, 61, 52, 136, 233, 54, 73, 184, 20, 79, 160, 152, 16, 141, 174, 109, 125, 95, 116, 0, 0, 0, 11, 164,
+            59, 116, 0, 0, 0, 0, 0, 0, 1, 134, 160, 0, 0, 1, 103, 120, 242, 64, 251])
+    },
+    {
+        data: {
+            senderPublicKey: "DFYiAU7CJ3Vm3n2eofLVzfxuSBxjVTuR3bsdJqvyY7s",
+            fee: new BigNumber(100000),
+            timestamp: 1528764508254,
+            version: 1,
+            transactionId: "CwbYAN5635JFsjg9P7rHRuYTRGsX7UuLuhGqnCocWCYF"
+        } as ICANCEL_LEASING_PROPS_V2,
+        type: TRANSACTION_TYPE_NUMBER.CANCEL_LEASING,
+        bytes: Uint8Array.from([9, 3, 35, 106, 240, 202, 147, 105, 122, 61, 98, 171, 49, 118, 68, 182, 155,
+            147, 144, 135, 161, 239, 93, 247, 161, 52, 199, 28, 243, 144, 237, 230, 58, 0, 0, 0, 0, 0, 1, 134, 160, 0,
+            0, 1, 99, 241, 119, 40, 94, 177, 108, 248, 166, 139, 12, 240, 236, 11, 55, 207, 45, 118, 135, 41, 201, 178, 242,
+            215, 251, 167, 0, 90, 114, 127, 219, 19, 208, 178, 227, 93, 88])
+    },
+    {
+        data: {
+            senderPublicKey: "2M25DqL2W4rGFLCFadgATboS8EPqyWAN3DjH12AH5Kdr",
+            fee: new BigNumber(100000),
+            timestamp: 1548157067513,
+            chainId: MAINNET_BYTE,
+            version: 2,
+            transactionId: "2BB8bfVgxcUh3qNCEZ2QYEPcZFgvU5JmSoR12VG7phMV"
+        } as ICANCEL_LEASING_PROPS_V2,
+        type: TRANSACTION_TYPE_NUMBER.CANCEL_LEASING,
+        bytes: Uint8Array.from([9, 2, 87, 19, 252, 132, 31, 108, 218, 109, 24, 75, 198, 202, 86, 159, 217,
+            210, 255, 88, 88, 90, 106, 253, 69, 144, 38, 209, 216, 59, 162, 141, 206, 251, 97, 0, 0, 0, 0, 0, 1, 134,
+            160, 0, 0, 1, 104, 117, 90, 32, 249, 17, 118, 243, 62, 62, 38, 190, 102, 93, 75, 137, 211, 247, 119, 157, 211, 0,
+            212, 101, 28, 127, 102, 179, 132, 224, 70, 59, 1, 187, 250, 187, 220])
+    },
+    {
+        data: {
+            senderPublicKey: "31roLYdCifJaxyZS53FJpChijUYmtxMyLPFX57qJJ2ut",
+            fee: new BigNumber(100000),
+            timestamp: 1528823663546,
+            version: 1,
+            alias: "pp43529ita"
+        } as ICREATE_ALIAS_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.CREATE_ALIAS,
+        bytes: Uint8Array.from([10, 29, 239, 174, 129, 132, 160, 17, 56, 115, 86, 210, 91, 239, 125, 159, 106,
+            118, 100, 254, 136, 97, 114, 128, 17, 110, 153, 195, 54, 148, 94, 171, 87, 0, 14, 2, 87, 0, 10, 112, 112,
+            52, 51, 53, 50, 57, 105, 116, 97, 0, 0, 0, 0, 0, 1, 134, 160, 0, 0, 1, 99, 244, 253, 203, 186])
+    },
+    {
+        data: {
+            senderPublicKey: "27C8ksVhVFUXyngF1F8TfyCGLmkDMsm2QuTv4VvhBpJU",
+            fee: new BigNumber(100000),
+            timestamp: 1543434665440,
+            version: 2,
+            alias: "yyyyy"
+        } as ICREATE_ALIAS_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.CREATE_ALIAS,
+        bytes: Uint8Array.from([10, 2, 16, 113, 194, 191, 58, 129, 20, 158, 230, 197, 166, 98, 76, 99, 66, 135,
+            118, 233, 165, 158, 26, 117, 23, 246, 57, 123, 217, 249, 243, 168, 55, 65, 0, 9, 2, 87, 0, 5, 121, 121, 121,
+            121, 121, 0, 0, 0, 0, 0, 1, 134, 160, 0, 0, 1, 103, 91, 223, 253, 224])
     }
 ];

@@ -17,7 +17,9 @@ import {
     StringWithLength,
     ScriptVersion,
     Transfers,
-    TRANSACTION_TYPE_NUMBER, IEXCHANGE_PROPS, IEXCHANGE_PROPS_V2, Int, IREISSUE_PROPS_V2, IBURN_PROPS_V2
+    TRANSACTION_TYPE_NUMBER, IEXCHANGE_PROPS, IEXCHANGE_PROPS_V2, Int,
+    IREISSUE_PROPS_V2, IBURN_PROPS_V2,
+    ICANCEL_LEASING_PROPS_V2
 } from '..';
 import {
     IBURN_PROPS,
@@ -404,7 +406,6 @@ export const EXCHANGE_V2 = generate<IEXCHANGE_PROPS_V2>([
 
 export const LEASE = generate<ILEASE_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.LEASE,
-    constants.TRANSACTION_TYPE_VERSION.LEASE,
     0, // Asset id for lease custom asset (dos't work)
     new Base58('senderPublicKey'),
     new Recipient('recipient'),
@@ -413,12 +414,31 @@ export const LEASE = generate<ILEASE_PROPS>([
     new Int('timestamp', 8)
 ]);
 
-TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.LEASE] = LEASE;
-TX_TYPE_MAP[constants.TRANSACTION_TYPE.LEASE] = LEASE;
+export const LEASE_V2 = generate<ILEASE_PROPS>([
+    constants.TRANSACTION_TYPE_NUMBER.LEASE,
+    2,
+    0, // Asset id for lease custom asset (dos't work)
+    new Base58('senderPublicKey'),
+    new Recipient('recipient'),
+    new Int('amount', 8),
+    new Int('fee', 8),
+    new Int('timestamp', 8),
+]);
+
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.LEASE] = LEASE_V2;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.LEASE] = LEASE_V2;
 
 export const CANCEL_LEASING = generate<ICANCEL_LEASING_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.CANCEL_LEASING,
-    constants.TRANSACTION_TYPE_VERSION.CANCEL_LEASING,
+    new Base58('senderPublicKey'),
+    new Int('fee', 8),
+    new Int('timestamp', 8),
+    new Base58('transactionId')
+]);
+
+export const CANCEL_LEASING_V2 = generate<ICANCEL_LEASING_PROPS_V2>([
+    constants.TRANSACTION_TYPE_NUMBER.CANCEL_LEASING,
+    2,
     new Int('chainId', 1),
     new Base58('senderPublicKey'),
     new Int('fee', 8),
@@ -426,20 +446,28 @@ export const CANCEL_LEASING = generate<ICANCEL_LEASING_PROPS>([
     new Base58('transactionId')
 ]);
 
-TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.CANCEL_LEASING] = CANCEL_LEASING;
-TX_TYPE_MAP[constants.TRANSACTION_TYPE.CANCEL_LEASING] = CANCEL_LEASING;
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.CANCEL_LEASING] = CANCEL_LEASING_V2;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.CANCEL_LEASING] = CANCEL_LEASING_V2;
 
 export const CREATE_ALIAS = generate<ICREATE_ALIAS_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.CREATE_ALIAS,
-    constants.TRANSACTION_TYPE_VERSION.CREATE_ALIAS,
     new Base58('senderPublicKey'),
     new Alias('alias'),
     new Int('fee', 8),
     new Int('timestamp', 8)
 ]);
 
-TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.CREATE_ALIAS] = CREATE_ALIAS;
-TX_TYPE_MAP[constants.TRANSACTION_TYPE.CREATE_ALIAS] = CREATE_ALIAS;
+export const CREATE_ALIAS_V2 = generate<ICREATE_ALIAS_PROPS>([
+    constants.TRANSACTION_TYPE_NUMBER.CREATE_ALIAS,
+    2,
+    new Base58('senderPublicKey'),
+    new Alias('alias'),
+    new Int('fee', 8),
+    new Int('timestamp', 8)
+]);
+
+TX_NUMBER_MAP[constants.TRANSACTION_TYPE_NUMBER.CREATE_ALIAS] = CREATE_ALIAS_V2;
+TX_TYPE_MAP[constants.TRANSACTION_TYPE.CREATE_ALIAS] = CREATE_ALIAS_V2;
 
 export const MASS_TRANSFER = generate<IMASS_TRANSFER_PROPS>([
     constants.TRANSACTION_TYPE_NUMBER.MASS_TRANSFER,
@@ -531,13 +559,16 @@ export const BYTES_GENERATORS_MAP: Record<TRANSACTION_TYPE_NUMBER, Record<number
         2: EXCHANGE_V2
     },
     [TRANSACTION_TYPE_NUMBER.LEASE]: {
-        2: LEASE
+        1: LEASE,
+        2: LEASE_V2
     },
     [TRANSACTION_TYPE_NUMBER.CANCEL_LEASING]: {
-        2: CANCEL_LEASING
+        1: CANCEL_LEASING,
+        2: CANCEL_LEASING_V2
     },
     [TRANSACTION_TYPE_NUMBER.CREATE_ALIAS]: {
-        2: CREATE_ALIAS
+        1: CREATE_ALIAS,
+        2: CREATE_ALIAS_V2
     },
     [TRANSACTION_TYPE_NUMBER.MASS_TRANSFER]: {
         1: MASS_TRANSFER

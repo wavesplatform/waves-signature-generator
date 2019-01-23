@@ -68,16 +68,23 @@ export interface ILEASE_PROPS extends IDEFAULT_PROPS {
     recipient: string;
     amount: TLong;
     fee: TLong;
+    version: number;
 }
 
 export interface ICANCEL_LEASING_PROPS extends IDEFAULT_PROPS {
     fee: TLong;
     transactionId: string;
+    version: number;
+}
+
+export interface ICANCEL_LEASING_PROPS_V2 extends ICANCEL_LEASING_PROPS {
+    chainId: number;
 }
 
 export interface ICREATE_ALIAS_PROPS extends IDEFAULT_PROPS {
     alias: string;
     fee: TLong;
+    version: number;
 }
 
 export interface IMASS_TRANSFER_PROPS extends IDEFAULT_PROPS {
@@ -159,9 +166,9 @@ export type TTX_NUMBER_MAP = {
     4: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
     5: ISignatureGeneratorConstructor<IREISSUE_PROPS_V2>;
     6: ISignatureGeneratorConstructor<IBURN_PROPS_V2>;
-    7: ISignatureGeneratorConstructor<ILEASE_PROPS>;
+    7: ISignatureGeneratorConstructor<IEXCHANGE_PROPS_V2>;
     8: ISignatureGeneratorConstructor<ILEASE_PROPS>;
-    9: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS>;
+    9: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS_V2>;
     10: ISignatureGeneratorConstructor<ICREATE_ALIAS_PROPS>;
     11: ISignatureGeneratorConstructor<IMASS_TRANSFER_PROPS>;
     12: ISignatureGeneratorConstructor<IDATA_PROPS>;
@@ -175,9 +182,9 @@ export type TTX_TYPE_MAP = {
     transfer: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
     reissue: ISignatureGeneratorConstructor<IREISSUE_PROPS_V2>;
     burn: ISignatureGeneratorConstructor<IBURN_PROPS_V2>;
-    exchange: ISignatureGeneratorConstructor<ILEASE_PROPS>;
+    exchange: ISignatureGeneratorConstructor<IEXCHANGE_PROPS_V2>;
     lease: ISignatureGeneratorConstructor<ILEASE_PROPS>;
-    cancelLeasing: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS>;
+    cancelLeasing: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS_V2>;
     createAlias: ISignatureGeneratorConstructor<ICREATE_ALIAS_PROPS>;
     massTransfer: ISignatureGeneratorConstructor<IMASS_TRANSFER_PROPS>;
     data: ISignatureGeneratorConstructor<IDATA_PROPS>;
