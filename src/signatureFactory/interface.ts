@@ -92,11 +92,13 @@ export interface IMASS_TRANSFER_PROPS extends IDEFAULT_PROPS {
     transfers: Array<IMASS_TRANSFER_TRANSFERS>;
     fee: TLong;
     attachment: string;
+    version: number;
 }
 
 export interface IDATA_PROPS extends IDEFAULT_PROPS {
     data: Array<IDATA_ENTRY>;
     fee: TLong;
+    version: number;
 }
 
 export interface IORDER_PROPS extends IDEFAULT_PROPS {

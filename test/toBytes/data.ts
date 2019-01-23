@@ -4,10 +4,12 @@ import {
     ICANCEL_LEASING_PROPS,
     ICANCEL_LEASING_PROPS_V2,
     ICREATE_ALIAS_PROPS,
+    IDATA_PROPS,
     IEXCHANGE_PROPS,
     IEXCHANGE_PROPS_V2,
     IISSUE_PROPS,
     ILEASE_PROPS,
+    IMASS_TRANSFER_PROPS,
     IORDER_PROPS,
     IREISSUE_PROPS,
     ISET_ASSET_SCRIPT_PROPS,
@@ -29,6 +31,8 @@ export type T_TRANSACTION_PROPS = IISSUE_PROPS |
     ILEASE_PROPS |
     ICANCEL_LEASING_PROPS |
     ICREATE_ALIAS_PROPS |
+    IMASS_TRANSFER_PROPS |
+    IDATA_PROPS |
     ISET_ASSET_SCRIPT_PROPS |
     ISET_SCRIPT_PROPS |
     ISPONSORSHIP_PROPS
@@ -402,5 +406,105 @@ export const TEST_TRANSACTIONS_DATA: Array<{ data: T_TRANSACTION_PROPS; type: TR
         bytes: Uint8Array.from([10, 2, 16, 113, 194, 191, 58, 129, 20, 158, 230, 197, 166, 98, 76, 99, 66, 135,
             118, 233, 165, 158, 26, 117, 23, 246, 57, 123, 217, 249, 243, 168, 55, 65, 0, 9, 2, 87, 0, 5, 121, 121, 121,
             121, 121, 0, 0, 0, 0, 0, 1, 134, 160, 0, 0, 1, 103, 91, 223, 253, 224])
+    },
+    {
+        data: {
+            senderPublicKey: "2M25DqL2W4rGFLCFadgATboS8EPqyWAN3DjH12AH5Kdr",
+            fee: new BigNumber(200000),
+            timestamp: 1547553087818,
+            version: 1,
+            attachment: "",
+            assetId: "WAVES",
+            transfers: [
+                {
+                    recipient: "alias:W:merry",
+                    amount: new BigNumber(1)
+                },
+                {
+                    recipient: "alias:W:b.volkov",
+                    amount: new BigNumber(1)
+                }
+            ]
+        } as IMASS_TRANSFER_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.MASS_TRANSFER,
+        bytes: Uint8Array.from([11, 1, 19, 252, 132, 31, 108, 218, 109, 24, 75, 198, 202, 86, 159, 217, 210,
+            255, 88, 88, 90, 106, 253, 69, 144, 38, 209, 216, 59, 162, 141, 206, 251, 97, 0, 0, 2, 2, 87, 0, 5, 109,
+            101, 114, 114, 121, 0, 0, 0, 0, 0, 0, 0, 1, 2, 87, 0, 8, 98, 46, 118, 111, 108, 107, 111, 118, 0, 0, 0, 0,
+            0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 13, 64, 0, 0])
+    },
+    {
+        data: {
+            senderPublicKey: "G9rStAuSaNjMi9KZNVfHymhCUeaWLFqAy88VtTAJre3q",
+            fee: new BigNumber(100000),
+            timestamp: 1523101012149,
+            version: 1,
+            data: [
+                {
+                    key: "bool",
+                    type: "boolean",
+                    value: true
+                }
+            ],
+        } as IDATA_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.DATA,
+        bytes: Uint8Array.from([    12, 1, 225, 35, 220, 2, 179, 125, 144, 119, 17, 183, 146, 243, 98, 211,
+            44, 63, 144, 99, 118, 90, 175, 179, 3, 196, 213, 255, 119, 247, 33, 192, 193, 48, 0, 1, 0, 4, 98, 111, 111,
+            108, 1, 1, 0, 0, 1, 98, 159, 229, 16, 181, 0, 0, 0, 0, 0, 1, 134, 160])
+    },
+    {
+        data: {
+            senderPublicKey: "3LZmDK7vuSBsDmFLxJ4qihZynUz8JF9e88dNu5fsus5p",
+            fee: new BigNumber(2082496),
+            chainId: MAINNET_BYTE,
+            timestamp: 1537973512182,
+            version: 1,
+            script: "base64:AQQAAAAEaW5hbAIAAAAESW5hbAQAAAAFZWxlbmECAAAAB0xlbnVza2EEAAAABGxvdmUCAAAAC0luYWxMZW51c2thCQAAAAAAAAIJAAEsAAAAAgUAAAAEaW5hbAUAAAAFZWxlbmEFAAAABGxvdmV4ZFt5",
+            data: [
+                {
+                    key: "bool",
+                    type: "boolean",
+                    value: true
+                }
+            ],
+        } as ISET_SCRIPT_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.SET_SCRIPT,
+        bytes: Uint8Array.from([ 13, 1, 87, 34, 186, 116, 34, 172, 44, 197, 73, 214, 113, 5, 102, 225, 116,
+            239, 194, 226, 141, 33, 84, 123, 133, 156, 120, 24, 208, 196, 25, 42, 49, 161, 31, 1, 0, 114, 1, 4, 0, 0,
+            0, 4, 105, 110, 97, 108, 2, 0, 0, 0, 4, 73, 110, 97, 108, 4, 0, 0, 0, 5, 101, 108, 101, 110, 97, 2, 0, 0,
+            0, 7, 76, 101, 110, 117, 115, 107, 97, 4, 0, 0, 0, 4, 108, 111, 118, 101, 2, 0, 0, 0, 11, 73, 110, 97, 108,
+            76, 101, 110, 117, 115, 107, 97, 9, 0, 0, 0, 0, 0, 0, 2, 9, 0, 1, 44, 0, 0, 0, 2, 5, 0, 0, 0, 4, 105, 110,
+            97, 108, 5, 0, 0, 0, 5, 101, 108, 101, 110, 97, 5, 0, 0, 0, 4, 108, 111, 118, 101, 120, 100, 91, 121, 0, 0,
+            0, 0, 0, 31, 198, 192, 0, 0, 1, 102, 22, 93, 103, 246])
+    },
+    {
+        data: {
+            senderPublicKey: "5v5D5pqzKGBejtvtEeyDJXG28iQwMViu1uuetEcyQp9v",
+            fee: new BigNumber(100000000),
+            timestamp: 1534448057070,
+            version: 1,
+            assetId: "FN76goSi7hQn6gQ8aezKVwyDvhkWx5ekXbP3sNLWqavN",
+            minSponsoredAssetFee: new BigNumber(10)
+        } as ISPONSORSHIP_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.SPONSORSHIP,
+        bytes: Uint8Array.from([14, 1, 73, 7, 73, 249, 92, 224, 250, 196, 197, 215, 145, 181, 242, 89, 118,
+            154, 157, 211, 177, 145, 86, 56, 110, 26, 28, 79, 104, 102, 42, 185, 59, 89, 213, 107, 181, 131, 53, 233,
+            67, 195, 210, 149, 159, 86, 185, 205, 47, 135, 243, 63, 62, 50, 137, 9, 145, 100, 216, 180, 56, 250, 62,
+            91, 49, 43, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 5, 245, 225, 0, 0, 0, 1, 101, 68, 59, 58, 238])
+    },
+    {
+        data: {
+            senderPublicKey: "AwQYJRHZNd9bvF7C13uwnPiLQfTzvDFJe7DTUXxzrGQS",
+            fee: new BigNumber(100000000),
+            timestamp: 1547201038106,
+            version: 1,
+            chainId: MAINNET_BYTE,
+            assetId: "7qJUQFxniMQx45wk12UdZwknEW9cDgvfoHuAvwDNVjYv",
+            script: "base64:AQa3b8tH",
+        } as ISET_SCRIPT_PROPS,
+        type: TRANSACTION_TYPE_NUMBER.SET_ASSET_SCRIPT,
+        bytes: Uint8Array.from([15, 1, 87, 147, 169, 41, 147, 120, 117, 209, 248, 102, 80, 198, 167, 151, 88,
+            252, 101, 239, 78, 102, 145, 237, 53, 60, 11, 27, 118, 74, 153, 102, 16, 51, 3, 101, 133, 193, 172, 62, 4,
+            7, 125, 186, 133, 226, 25, 146, 253, 98, 105, 161, 123, 178, 123, 129, 74, 232, 247, 174, 75, 193, 37, 170,
+            20, 192, 83, 0, 0, 0, 0, 5, 245, 225, 0, 0, 0, 1, 104, 60, 94, 71, 26, 1, 0, 6, 1, 6, 183, 111, 203, 71])
     }
 ];
