@@ -1,10 +1,9 @@
 import {
-    ISSUE,
-    TRANSFER,
-    REISSUE,
-    LEASE,
-    CANCEL_LEASING,
-    CREATE_ALIAS,
+    ISSUE_V2,
+    REISSUE_V2,
+    LEASE_V2,
+    CANCEL_LEASING_V2,
+    CREATE_ALIAS_V2,
     MASS_TRANSFER,
     DATA,
     SET_SCRIPT,
@@ -13,7 +12,7 @@ import {
     MAINNET_BYTE,
     TRANSACTION_TYPE_NUMBER,
     TRANSACTION_TYPE_VERSION,
-    TX_NUMBER_MAP, parseReissueTx, parseDataTx
+    TX_NUMBER_MAP, parseReissueTx, parseDataTx, TRANSFER_V2
 } from '../../src';
 import TRANSACTIONS_DATA from './transactionsData';
 import { BigNumber } from '@waves/data-entities';
@@ -37,7 +36,7 @@ describe('parse', () => {
 
         const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.ISSUE];
 
-        new ISSUE(data).getBytes().then(bytes => {
+        new ISSUE_V2(data).getBytes().then(bytes => {
             expect(parseIssueTx(bytes)).toEqual(data);
             done();
         }).catch(done);
@@ -48,7 +47,7 @@ describe('parse', () => {
 
         const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.TRANSFER];
 
-        new TRANSFER(data).getBytes().then(bytes => {
+        new TRANSFER_V2(data).getBytes().then(bytes => {
             expect(parseTransferTx(bytes)).toEqual(data);
             done();
         }).catch(done);
@@ -59,7 +58,7 @@ describe('parse', () => {
 
         const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.REISSUE];
 
-        new REISSUE(data).getBytes().then(bytes => {
+        new REISSUE_V2(data).getBytes().then(bytes => {
             expect(parseReissueTx(bytes)).toEqual(data);
             done();
         }).catch(done);
@@ -70,7 +69,8 @@ describe('parse', () => {
 
         const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.LEASE];
 
-        new LEASE(data).getBytes().then(bytes => {
+        new LEASE_V2(data).getBytes().then(bytes => {
+            // console.log(bytes);
             expect(parseLeaseTx(bytes)).toEqual(data);
             done();
         }).catch(done);
@@ -81,7 +81,7 @@ describe('parse', () => {
 
         const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.CANCEL_LEASING];
 
-        new CANCEL_LEASING(data).getBytes().then(bytes => {
+        new CANCEL_LEASING_V2(data).getBytes().then(bytes => {
             expect(parseCancelLeaseTx(bytes)).toEqual(data);
             done();
         }).catch(done);
@@ -92,7 +92,7 @@ describe('parse', () => {
 
         const data = TRANSACTIONS_DATA[TRANSACTION_TYPE_NUMBER.CREATE_ALIAS];
 
-        new CREATE_ALIAS(data).getBytes().then(bytes => {
+        new CREATE_ALIAS_V2(data).getBytes().then(bytes => {
             expect(parseCreateAliasTx(bytes)).toEqual(data);
             done();
         }).catch(done);

@@ -22,7 +22,6 @@ export interface IDEFAULT_PROPS {
 }
 
 export interface IISSUE_PROPS extends IDEFAULT_PROPS {
-    chainId: number;
     name: string;
     description: string;
     quantity: TLong;
@@ -30,6 +29,7 @@ export interface IISSUE_PROPS extends IDEFAULT_PROPS {
     reissuable: boolean;
     script: string;
     fee: TLong;
+    version: number;
 }
 
 export interface ITRANSFER_PROPS extends IDEFAULT_PROPS {
@@ -39,6 +39,7 @@ export interface ITRANSFER_PROPS extends IDEFAULT_PROPS {
     fee: TLong;
     recipient: string;
     attachment: string;
+    version: number;
 }
 
 export interface IREISSUE_PROPS extends IDEFAULT_PROPS {
@@ -48,26 +49,42 @@ export interface IREISSUE_PROPS extends IDEFAULT_PROPS {
     fee: TLong;
 }
 
+export interface IREISSUE_PROPS_V2 extends IREISSUE_PROPS {
+    chainId: number;
+}
+
 export interface IBURN_PROPS extends IDEFAULT_PROPS {
     assetId: string;
     quantity: TLong;
-    fee: string;
+    fee: TLong;
+    version: number;
+}
+
+export interface IBURN_PROPS_V2 extends IBURN_PROPS {
+    chainId: number;
 }
 
 export interface ILEASE_PROPS extends IDEFAULT_PROPS {
     recipient: string;
     amount: TLong;
     fee: TLong;
+    version: number;
 }
 
 export interface ICANCEL_LEASING_PROPS extends IDEFAULT_PROPS {
     fee: TLong;
     transactionId: string;
+    version: number;
+}
+
+export interface ICANCEL_LEASING_PROPS_V2 extends ICANCEL_LEASING_PROPS {
+    chainId: number;
 }
 
 export interface ICREATE_ALIAS_PROPS extends IDEFAULT_PROPS {
     alias: string;
     fee: TLong;
+    version: number;
 }
 
 export interface IMASS_TRANSFER_PROPS extends IDEFAULT_PROPS {
@@ -75,11 +92,13 @@ export interface IMASS_TRANSFER_PROPS extends IDEFAULT_PROPS {
     transfers: Array<IMASS_TRANSFER_TRANSFERS>;
     fee: TLong;
     attachment: string;
+    version: number;
 }
 
 export interface IDATA_PROPS extends IDEFAULT_PROPS {
     data: Array<IDATA_ENTRY>;
     fee: TLong;
+    version: number;
 }
 
 export interface IORDER_PROPS extends IDEFAULT_PROPS {
@@ -147,11 +166,11 @@ export interface IDATA_ENTRY {
 export type TTX_NUMBER_MAP = {
     3: ISignatureGeneratorConstructor<IISSUE_PROPS>;
     4: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
-    5: ISignatureGeneratorConstructor<IREISSUE_PROPS>;
-    6: ISignatureGeneratorConstructor<IBURN_PROPS>;
-    7: ISignatureGeneratorConstructor<ILEASE_PROPS>;
+    5: ISignatureGeneratorConstructor<IREISSUE_PROPS_V2>;
+    6: ISignatureGeneratorConstructor<IBURN_PROPS_V2>;
+    7: ISignatureGeneratorConstructor<IEXCHANGE_PROPS_V2>;
     8: ISignatureGeneratorConstructor<ILEASE_PROPS>;
-    9: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS>;
+    9: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS_V2>;
     10: ISignatureGeneratorConstructor<ICREATE_ALIAS_PROPS>;
     11: ISignatureGeneratorConstructor<IMASS_TRANSFER_PROPS>;
     12: ISignatureGeneratorConstructor<IDATA_PROPS>;
@@ -163,11 +182,11 @@ export type TTX_NUMBER_MAP = {
 export type TTX_TYPE_MAP = {
     issue: ISignatureGeneratorConstructor<IISSUE_PROPS>;
     transfer: ISignatureGeneratorConstructor<ITRANSFER_PROPS>;
-    reissue: ISignatureGeneratorConstructor<IREISSUE_PROPS>;
-    burn: ISignatureGeneratorConstructor<IBURN_PROPS>;
-    exchange: ISignatureGeneratorConstructor<ILEASE_PROPS>;
+    reissue: ISignatureGeneratorConstructor<IREISSUE_PROPS_V2>;
+    burn: ISignatureGeneratorConstructor<IBURN_PROPS_V2>;
+    exchange: ISignatureGeneratorConstructor<IEXCHANGE_PROPS_V2>;
     lease: ISignatureGeneratorConstructor<ILEASE_PROPS>;
-    cancelLeasing: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS>;
+    cancelLeasing: ISignatureGeneratorConstructor<ICANCEL_LEASING_PROPS_V2>;
     createAlias: ISignatureGeneratorConstructor<ICREATE_ALIAS_PROPS>;
     massTransfer: ISignatureGeneratorConstructor<IMASS_TRANSFER_PROPS>;
     data: ISignatureGeneratorConstructor<IDATA_PROPS>;
