@@ -337,7 +337,7 @@ TX_TYPE_MAP[constants.TRANSACTION_TYPE.BURN] = BURN_V2;
 
 export class Order extends ByteProcessor {
 
-    public process(value: IORDER_PROPS & ({ proofs: Array<string> } | { signature: string })): Promise<Uint8Array> {
+    public process(value: IORDER_PROPS & ({ version: 2, proofs: Array<string> } | { version?: 1, signature: string })): Promise<Uint8Array> {
         const version = value.version || 0;
         const generator = (MATCHER_BYTES_GENERATOR_MAP as any).CREATE_ORDER[version] as ISignatureGeneratorConstructor<IORDER_PROPS>;
 
@@ -347,7 +347,7 @@ export class Order extends ByteProcessor {
 
         let signatureBytes: Uint8Array;
 
-        if ('proofs' in value) {
+        if (value.version === 2) {
             const proofsBytes = value.proofs.map(proof => {
                 const proofBytes = base58.decode(proof);
 
@@ -370,7 +370,7 @@ export class Order extends ByteProcessor {
             return concatUint8Arrays(
                 Uint8Array.from(convert.longToByteArray(bytes.length + signatureBytes.length, 4)),
                 Uint8Array.from(convert.longToByteArray(version || 1, 1)),
-                bytes,
+                bytes.slice(version === 2 ? 1 : 0),
                 signatureBytes
             );
         });
