@@ -213,6 +213,11 @@ export const CANCEL_ORDER_SIGNATURE = generate<ICANCEL_ORDER_PROPS>([
     new Base58('orderId')
 ]);
 
+export const CANCEL_ALL_ORDERS_SIGNATURE = generate<IDEFAULT_PROPS>([
+    new Base58('senderPublicKey'),
+    new Int('timestamp', 8)
+]);
+
 export const MATCHER_BYTES_GENERATOR_MAP = {
     CREATE_ORDER: {
         1: CREATE_ORDER_SIGNATURE,
@@ -223,6 +228,9 @@ export const MATCHER_BYTES_GENERATOR_MAP = {
     },
     CANCEL_ORDER: {
         1: CANCEL_ORDER_SIGNATURE
+    },
+    CANCEL_ALL_ORDERS: {
+        1: CANCEL_ALL_ORDERS_SIGNATURE
     }
 };
 
