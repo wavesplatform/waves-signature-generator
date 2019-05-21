@@ -19,7 +19,7 @@ import {
     MAINNET_BYTE,
     TRANSACTION_TYPE_NUMBER
 } from '../../src';
-import { BigNumber } from '@waves/data-entities';
+import { BigNumber } from '@waves/bignumber';
 
 export type T_TRANSACTION_PROPS = IISSUE_PROPS |
     ITRANSFER_PROPS |

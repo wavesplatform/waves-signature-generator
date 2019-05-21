@@ -1,5 +1,5 @@
 import { MAINNET_BYTE, TRANSACTION_TYPE_NUMBER, TRANSACTION_TYPE_VERSION } from '../../src';
-import { BigNumber } from '@waves/data-entities';
+import { BigNumber } from '@waves/bignumber';
 
 
 export default {

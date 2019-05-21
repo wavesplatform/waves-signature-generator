@@ -1,5 +1,5 @@
 import { utils, libs } from '../../src';
-import { BigNumber } from '@waves/data-entities';
+import { BigNumber } from '@waves/bignumber';
 
 const STRING = 'some where long string with !*:-( что-то';
 const BYTES = Uint8Array.from([

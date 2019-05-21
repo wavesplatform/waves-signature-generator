@@ -1,4 +1,4 @@
-import { BigNumber } from '@waves/data-entities';
+import { BigNumber } from '@waves/bignumber';
 import { toByteArray } from 'base64-js';
 import base58 from '../libs/base58';
 import convert from '../utils/convert';

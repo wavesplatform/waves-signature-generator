@@ -1,5 +1,5 @@
 var CryptoJS = require('crypto-js');
-var BigNumber = require('@waves/data-entities').BigNumber;
+var BigNumber = require('@waves/bignumber').BigNumber;
 
 
 /** START OF THE LICENSED CODE */
@@ -125,15 +125,15 @@ var converters = function () {
             return value;
         },
         byteArrayToBigInteger: function (bytes) {
-            var baseNumber = new BigNumber('256', 10);
-            var value = new BigNumber('0', 10);
+            var baseNumber = new BigNumber('256');
+            var value = new BigNumber('0');
             var temp1;
 
             for (var i = bytes.length - 1; i >= 0; i--) {
                 var byte = bytes[i];
                 temp1 = new BigNumber(byte)
-                    .times(baseNumber.pow(bytes.length - 1 - i));
-                value = value.plus(temp1);
+                    .mul(baseNumber.pow(bytes.length - 1 - i));
+                value = value.add(temp1);
             }
 
             return value;
@@ -141,7 +141,7 @@ var converters = function () {
         byteArrayToSignBigInteger: function (bytes) {
             var isMinus = bytes[0] >= 128 && bytes.length === 8;
 
-            var value = new BigNumber('0', 10);
+            var value = new BigNumber('0');
 
             var temp1;
 
@@ -151,13 +151,13 @@ var converters = function () {
                     byte = (~byte) & 255;
                 }
                 temp1 = new BigNumber(byte)
-                    .times(new BigNumber('256', 10).pow(bytes.length - 1 - i));
-                value = value.plus(temp1);
+                    .mul(new BigNumber('256').pow(bytes.length - 1 - i));
+                value = value.add(temp1);
             }
 
             if (isMinus) {
-                value = value.plus(1);
-                value = new BigNumber(0).minus(value);
+                value = value.add(1);
+                value = new BigNumber(0).sub(value);
             }
             return value;
         },

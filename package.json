@@ -10,7 +10,8 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "@types/crypto-js": "^3.1.43",
-    "@waves/data-entities": "^1.6.0",
+    "@waves/bignumber": "0.0.1-a5",
+    "@waves/data-entities": "^2.0.0-a3",
     "base64-js": "1.3.0",
     "crypto-js": "3.1.9-1"
   },
@@ -25,11 +26,11 @@
     "uglify-full": "node_modules/.bin/uglifyjs dist/signature-generator.js -o dist/signature-generator.min.js",
     "uglify-partial": "node_modules/.bin/uglifyjs dist/signature-generator.partial.js -o dist/signature-generator.partial.min.js",
     "build-full": "node_modules/.bin/browserify dist/index.js -s wavesSignatureGenerator --node -o dist/signature-generator.js",
-    "build-partial": "node_modules/.bin/browserify dist/index.js -u @waves/data-entities --node -s wavesSignatureGenerator -o dist/signature-generator.partial.js",
+    "build-partial": "node_modules/.bin/browserify dist/index.js -u @waves/bignumber -u @waves/data-entities --node -s wavesSignatureGenerator -o dist/signature-generator.partial.js",
     "build": "npm run compile && npm run build-full && npm run build-partial && npm run uglify"
   },
   "jest": {
-    "collectCoverage": true,
+    "collectCoverage": false,
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"

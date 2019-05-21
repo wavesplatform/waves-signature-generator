@@ -15,7 +15,7 @@ import {
     TX_NUMBER_MAP, parseReissueTx, parseDataTx, TRANSFER_V2
 } from '../../src';
 import TRANSACTIONS_DATA from './transactionsData';
-import { BigNumber } from '@waves/data-entities';
+import { BigNumber } from '@waves/bignumber';
 import {
     parseIssueTx,
     parseLeaseTx,

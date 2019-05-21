@@ -65,7 +65,7 @@ const byteToSignBigNumber = shift => (bytes, start) => {
 // @ts-ignore
 const byteToNumber = shift => (bytes, start) => {
     const result = byteToBigNumber(shift)(bytes, start);
-    return { shift, value: result.value.toNumber() };
+    return { shift, value: Number(result.value.toFixed()) };
 };
 
 // @ts-ignore

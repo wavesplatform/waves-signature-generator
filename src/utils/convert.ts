@@ -1,11 +1,11 @@
 import { TBuffer } from '../interface';
 import converters from '../../libs/converters';
-import { BigNumber } from '@waves/data-entities';
+import { BigNumber } from '@waves/bignumber';
 
 
 function performBitwiseAnd(a: BigNumber, b: BigNumber): number {
-    const sa = a.toString(2).split('.')[0];
-    const sb = b.toString(2).split('.')[0];
+    const sa = a.bn.toString(2).split('.')[0];
+    const sb = b.bn.toString(2).split('.')[0];
     const len = Math.min(sa.length, sb.length);
 
     const s1 = sa.slice(sa.length - len);
@@ -123,7 +123,7 @@ export default {
         const isMinus = input.lt(new BigNumber(0));
         const performBitwiseAnd255 = performBitwiseAnd.bind(null, new BigNumber(255));
         if (isMinus) {
-            input = input.plus(1, 10);
+            input = input.add(1);
         }
 
         const bytes = new Array(8);
