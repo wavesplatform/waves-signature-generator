@@ -131,6 +131,11 @@ export default {
     },
 
     isValidAddress(address: string) {
+        return this.isValidAddressWithNetworkByte(address, config.getNetworkByte());
+    },
+
+    isValidAddressWithNetworkByte(address: string, byteData: number | string): boolean {
+        const byte: number = typeof byteData === 'number' ? byteData : byteData.charCodeAt(0);
 
         if (!address || typeof address !== 'string') {
             throw new Error('Missing or invalid address');
@@ -138,7 +143,7 @@ export default {
 
         const addressBytes = base58.decode(address);
 
-        if (addressBytes[0] !== 1 || addressBytes[1] !== config.getNetworkByte()) {
+        if (addressBytes[0] !== 1 || addressBytes[1] !== byte) {
             return false;
         }
 
