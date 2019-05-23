@@ -53,6 +53,31 @@ function strengthenPassword(password: string, rounds: number = 5000): string {
     return password;
 }
 
+function validateAddress(address: string, byteData: number | string): boolean {
+    const byte: number = typeof byteData === 'number' ? byteData : byteData.charCodeAt(0);
+
+    if (!address || typeof address !== 'string') {
+        throw new Error('Missing or invalid address');
+    }
+
+    const addressBytes = base58.decode(address);
+
+    if (addressBytes[0] !== 1 || addressBytes[1] !== byte) {
+        return false;
+    }
+
+    const key = addressBytes.slice(0, 22);
+    const check = addressBytes.slice(22, 26);
+    const keyHash = hashChain(key).slice(0, 4);
+
+    for (let i = 0; i < 4; i++) {
+        if (check[i] !== keyHash[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 export default {
 
@@ -130,35 +155,12 @@ export default {
 
     },
 
-    isValidAddress(address: string) {
-        return this.isValidAddressWithNetworkByte(address, config.getNetworkByte());
+    isValidAddress(address: string): boolean {
+        return validateAddress(address, config.getNetworkByte());
     },
 
     isValidAddressWithNetworkByte(address: string, byteData: number | string): boolean {
-        const byte: number = typeof byteData === 'number' ? byteData : byteData.charCodeAt(0);
-
-        if (!address || typeof address !== 'string') {
-            throw new Error('Missing or invalid address');
-        }
-
-        const addressBytes = base58.decode(address);
-
-        if (addressBytes[0] !== 1 || addressBytes[1] !== byte) {
-            return false;
-        }
-
-        const key = addressBytes.slice(0, 22);
-        const check = addressBytes.slice(22, 26);
-        const keyHash = hashChain(key).slice(0, 4);
-
-        for (let i = 0; i < 4; i++) {
-            if (check[i] !== keyHash[i]) {
-                return false;
-            }
-        }
-
-        return true;
-
+        return validateAddress(address, byteData);
     },
 
     buildRawAddress(publicKeyBytes: Uint8Array): string {
